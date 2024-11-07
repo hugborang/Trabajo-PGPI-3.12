@@ -2,20 +2,20 @@
 
 {% load static %}
 
-
-
 {% block style_css %}
-    <link rel="stylesheet" href="{% static 'css/home_header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+<link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
 {% endblock %}
 
 
 
 {% block contenido %}
+<div class="content-register">
+    <h1 class="register-title">Registrarse</h1>
     <form method="post" action="{% url 'register' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Registrar</button>
     </form>
+</div>
 {% endblock %}
-

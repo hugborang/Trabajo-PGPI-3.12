@@ -8,28 +8,25 @@
 <link rel="icon" href="{% static 'images/logo.jfif' %}" type="image/x-icon">
 
 
-<body>
+<body
     <header>
         <div class="navbar">
             <div class="logo">
                 <a href="{% url 'home' %}">  
                     <img src="{% static 'images/logo.jfif' %}" alt="Logo" style="height: 80px; margin-right: 10px;"> 
                 </a>                
-                {% block encabezado %}<h1>RentaHogar</h1>{% endblock %}
             </div>
-            <div><h1>Bienvenido</h1></div>
+            <h1 class="home-title">RentaHogar</h1>
             <div class="user-menu">
-                <span class="user-menu-icon"><i class="fas fa-user"></i></span>
-                <div class="dropdown-content">
                     <a href="/auth/login">Iniciar sesión</a>
                     <a href="/auth/register">Registrarse</a>
-                </div>
             </div>
         </div>
     </header>
+</body>
 
     <section class="contenido">
         {% block contenido %}{% endblock %}
     </section>
-</body>
+
 </html>
