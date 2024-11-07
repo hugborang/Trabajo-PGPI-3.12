@@ -1,4 +1,3 @@
-# models/user.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
@@ -6,22 +5,21 @@ class CustomUser(AbstractUser):
     surnames = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
     ROLE_CHOICES = [
-        ('propietario', 'Propietario'),
-        ('inquilino', 'Inquilino'),
+        ('owner', 'Propietario'),
+        ('customer', 'Inquilino'),
     ]
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='inquilino')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer')
 
-    # Especificar un related_name único para evitar conflictos
     groups = models.ManyToManyField(
         Group,
-        related_name='customuser_set',  # Cambia esto a un nombre único
+        related_name='customuser_set',  
         blank=True,
         help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.'
     )
     
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='customuser_set',  # Cambia esto a un nombre único
+        related_name='customuser_set', 
         blank=True,
         help_text='Specific permissions for this user.'
     )
@@ -30,11 +28,10 @@ class CustomUser(AbstractUser):
         return self.username
 
 
- # Métodos adicionales para verificar el rol
     @property
-    def is_propietario(self):
-        return self.role == 'propietario'
+    def is_owner(self):
+        return self.role == 'owner'
 
     @property
-    def is_inquilino(self):
-        return self.role == 'inquilino'
+    def is_customer(self):
+        return self.role == 'customer'

@@ -1,1 +1,1 @@
-from .user import CustomUser  # Importa tu modelo de usuario
+from .user import CustomUser

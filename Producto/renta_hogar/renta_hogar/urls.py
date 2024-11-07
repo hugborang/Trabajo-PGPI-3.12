@@ -18,16 +18,16 @@ from django import urls
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import RedirectView
-from app.views.users import register, user_login 
+from app.views.auth import register, user_login, user_logout 
 from app.views.home import inicio
-from app.views.book import reserva
-
+from app.views.customers import customer_menu
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/register/', register, name='register'),  
     path('auth/login/', user_login, name='login'),
-    path('book/', reserva, name='book'),
+    path('auth/logout/', user_logout, name='logout'),
     path('home/', inicio, name='home'),
+    path('customer_menu/', customer_menu, name='customer_menu'),
     
     path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
 

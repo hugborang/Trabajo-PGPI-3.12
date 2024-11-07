@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login as auth_login, logout
 from app.forms.CustomUserCreationForm import CustomUserCreationForm  
 
 def register(request):
@@ -21,13 +21,18 @@ def user_login(request):
             user = form.get_user()
             auth_login(request, user)
             
-            # Redireccionar según el rol del usuario
-            if user.role == 'inquilino':
-                return redirect('book/')  # Asegúrate de que 'book' esté definido en tus URLs
-            elif user.role == 'propietario':
-                return redirect('owner_dashboard')  # Cambia esto a la vista adecuada para propietarios
+            if user.role == 'customer':
+                return redirect('/customer_menu')  
+            elif user.role == 'owner':
+                return redirect('/owner_menu')  
             
-            return redirect('home')  # Redirige a una página predeterminada si no coincide ningún rol
+            return redirect('home')  
     else:
         form = AuthenticationForm()
     return render(request, 'auth/login.html', {'form': form})
+
+
+
+def user_logout(request):
+    logout(request)  
+    return redirect('home')  
