@@ -1,13 +1,20 @@
 {% extends "headers/home_header.html" %}
-{% block titulo %}Nuevo Usuario{% endblock %}
-{% block encabezado %}
-    <h1>Nuevo Usuario</h1>
-{% endblock %}
-{% block contenido %}
-<form method="post" action="{% url 'register' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p><input type="submit" value="Registrar" /></p>
-</form>
 
+{% load static %}
+
+
+{% block style_css %}
+    <link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
 {% endblock %}
+
+
+
+{% block contenido %}
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Registrar</button>
+    </form>
+{% endblock %}
+

@@ -1,26 +1,23 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block titulo %}Título de la página{% endblock %}</title>
-    
-    <!-- Carga de Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-    {% block style_css %}
-    <link rel="stylesheet" href="{% static 'css/home_header.css' %}">
-    {% endblock %}
-</head>
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+{% endblock %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" href="{% static 'images/logo.jfif' %}" type="image/x-icon">
+
+
 <body>
     <header>
         <div class="navbar">
             <div class="logo">
                 <a href="{% url 'home' %}">  
                     <img src="{% static 'images/logo.jfif' %}" alt="Logo" style="height: 80px; margin-right: 10px;"> 
-                </a>                {% block encabezado %}<h1>RentaHogar</h1>{% endblock %}
+                </a>                
+                {% block encabezado %}<h1>RentaHogar</h1>{% endblock %}
             </div>
+            <div><h1>Bienvenido</h1></div>
             <div class="user-menu">
                 <span class="user-menu-icon"><i class="fas fa-user"></i></span>
                 <div class="dropdown-content">

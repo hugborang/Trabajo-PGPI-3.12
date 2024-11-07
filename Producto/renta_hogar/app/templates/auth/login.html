@@ -1,6 +1,5 @@
 {% extends "headers/home_header.html" %}
 
-{% block titulo %}Iniciar Sesión{% endblock %}
 
 {% block encabezado %}
 {% endblock %}
@@ -8,10 +7,10 @@
 {% block contenido %}
 
 <h1>Iniciar Sesión</h1>
-    <div class="main-content"> <!-- Añadido un contenedor para el contenido principal -->
+    <div class="main-content"> 
         <form id="formulario" method="post" action="">
             {% csrf_token %}
-            {{ form.as_p }}  <!-- Esto renderiza el formulario -->
+            {{ form.as_p }} 
             <p><input type="submit" value="Iniciar Sesión" /></p>
         </form>
     </div>

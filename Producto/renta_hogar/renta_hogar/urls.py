@@ -17,16 +17,20 @@ Including another URLconf
 from django import urls
 from django.contrib import admin
 from django.urls import path
-from app.views.users import register, user_login  # Asegúrate de que la vista esté correctamente importada
+from django.views.generic.base import RedirectView
+from app.views.users import register, user_login 
 from app.views.home import inicio
 from app.views.book import reserva
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/register/', register, name='register'),  # Aquí usas la vista importada
+    path('auth/register/', register, name='register'),  
     path('auth/login/', user_login, name='login'),
     path('book/', reserva, name='book'),
     path('home/', inicio, name='home'),
+    
+    path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
+
 
 
 
