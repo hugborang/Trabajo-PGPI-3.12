@@ -1,0 +1,17 @@
+{% extends "headers/home_header.html" %}
+
+
+{% block encabezado %}
+{% endblock %}
+
+{% block contenido %}
+
+<h1>Edita tus datos</h1>
+    <div class="main-content"> 
+        <form id="formulario" method="post" action="">
+            {% csrf_token %}
+            {{ form.as_p }} 
+            <p><input type="submit" value="Actualiza" /></p>
+        </form>
+    </div>
+{% endblock %}
