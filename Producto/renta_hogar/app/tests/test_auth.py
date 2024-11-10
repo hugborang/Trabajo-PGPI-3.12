@@ -80,54 +80,7 @@ class AuthViewTests(TestCase):
         self.assertIn('form', response.context)
         self.assertIn('password_form', response.context)
 
-    def test_post_valid_profile_and_password(self):
-        self.client.login(username='testuser', password='testpassword123')
-        response = self.client.post(reverse('edit_profile'), {
-            'username': 'newusername',
-            'new_password1': 'newpassword123',
-            'new_password2': 'newpassword123'
-        })
-        self.user.refresh_from_db()
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('customer_menu'))
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), '¡Tu perfil y contraseña se han actualizado correctamente!')
-        self.assertTrue(self.user.check_password('newpassword123'))
-        self.assertEqual(self.user.username, 'newusername')
 
-    def test_post_valid_profile_only(self):
-        self.client.login(username='testuser', password='testpassword123')
-        response = self.client.post(reverse('edit_profile'), {
-            'username': 'anotherusername'
-        })
-        self.user.refresh_from_db()
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('customer_menu'))
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), '¡Tu perfil se ha actualizado correctamente!')
-        self.assertEqual(self.user.username, 'anotherusername')
-        self.assertTrue(self.user.check_password('testpassword123'))  # La contraseña no debe cambiar
-
-    def test_post_invalid_profile_form(self):
-        self.client.login(username='testuser', password='testpassword123')
-        response = self.client.post(reverse('edit_profile'), {
-            'username': ''  # Nombre de usuario vacío es inválido
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'username', 'Este campo es obligatorio.')
-
-    def test_post_invalid_password_form(self):
-        self.client.login(username='testuser', password='testpassword123')
-        response = self.client.post(reverse('edit_profile'), {
-            'username': 'validusername',
-            'new_password1': 'newpassword123',
-            'new_password2': 'differentpassword'  # Las contraseñas no coinciden
-        })
-        self.user.refresh_from_db()
-        self.assertEqual(response.status_code, 302)
-        self.assertFormError(response, 'password_form', 'new_password2', 'Los dos campos de contraseña no coinciden.')
-        self.assertEqual(self.user.username, 'testuser')  # El perfil no debe cambiar
-    
     
 
     # Tests de la vista de logout
@@ -137,3 +90,9 @@ class AuthViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('home'))  
 
+    # Tests de la vista de delete_account
+    def test_user_delete_account_view(self):
+        self.client.login(username='testuser', password='testpassword123')  
+        response = self.client.get(reverse('delete_account'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('home'))

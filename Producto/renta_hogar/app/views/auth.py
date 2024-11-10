@@ -4,6 +4,7 @@ from django.contrib.auth import login as auth_login, logout
 from app.forms.CustomUserCreationForm import CustomUserCreationForm, CustomUserChangeForm 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 
 def register(request):
@@ -34,7 +35,6 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'auth/login.html', {'form': form})
 
-from django.contrib.auth import update_session_auth_hash
 
 @login_required
 def edit_profile(request):
@@ -65,6 +65,11 @@ def edit_profile(request):
 
     return render(request, 'auth/edit_profile.html', {'form': form, 'password_form': password_form})
 
+
+@login_required
+def delete_account(request):
+    request.user.delete()
+    return redirect('home')
 
 @login_required
 def user_logout(request):
