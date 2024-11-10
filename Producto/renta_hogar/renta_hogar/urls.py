@@ -18,10 +18,14 @@ from django import urls
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import RedirectView
+from app.views import createApartment
 from app.views.auth import register, user_login, user_logout, edit_profile
 from app.views.home import inicio
 from app.views.customers import customer_menu
 from app.views.owners import owner_menu
+from django.conf import settings
+from django.conf.urls.static import static
+from app.views import owners
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,11 +36,15 @@ urlpatterns = [
     path('home/', inicio, name='home'),
     path('customer_menu/', customer_menu, name='customer_menu'),
     path('owner_menu/', owner_menu, name='owner_menu'),
-
-    
+    path('owner_menu/', owners.owner_menu, name='owner_menu'),
+    path('add_apartment/', createApartment.add_apartment, name='add_apartment'),
     path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
 
 
 
 
 ]
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
