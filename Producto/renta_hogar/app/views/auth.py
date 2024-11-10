@@ -40,27 +40,21 @@ from django.contrib.auth import update_session_auth_hash
 def edit_profile(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
-        # Si el usuario está cambiando la contraseña, usamos el formulario de PasswordChangeForm
         password_form = PasswordChangeForm(user=request.user, data=request.POST)
 
         if form.is_valid():
-            # Si se ha enviado una nueva contraseña y es válida
             if password_form.is_valid():
-                # Guardamos la contraseña actualizada
                 user = form.save(commit=False)
-                user.set_password(password_form.cleaned_data['new_password1'])  # La nueva contraseña
+                user.set_password(password_form.cleaned_data['new_password1'])  
                 user.save()
 
-                # Actualizamos la sesión para que el usuario no se desconecte
                 update_session_auth_hash(request, user)
 
                 messages.success(request, '¡Tu perfil y contraseña se han actualizado correctamente!')
             else:
-                # Si no hay cambios en la contraseña, solo guardamos los otros datos
                 form.save()
                 messages.success(request, '¡Tu perfil se ha actualizado correctamente!')
 
-            # Redirigir según el rol del usuario
             if request.user.role == 'customer':
                 return redirect('customer_menu')
             elif request.user.role == 'owner':
