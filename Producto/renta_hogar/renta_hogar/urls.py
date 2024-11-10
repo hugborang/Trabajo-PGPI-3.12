@@ -18,7 +18,7 @@ from django import urls
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
-from app.views.auth import register, user_login, user_logout, edit_profile, delete_account
+from app.views.auth import register, user_login, user_logout, edit_profile, delete_account, menu
 from app.views.home import inicio
 from app.views.customers import customer_menu
 from app.views.owners import owner_menu
@@ -36,6 +36,7 @@ urlpatterns = [
     path('home/', inicio, name='home'),
     path('customer_menu/', customer_menu, name='customer_menu'),
     path('owner_menu/', owner_menu, name='owner_menu'),
+    path('auth/menu/', menu, name='menu'),
 
 
     path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
