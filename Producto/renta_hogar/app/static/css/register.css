@@ -1,0 +1,81 @@
+.content-register {
+    background-color: #267b3f; /* Blanco */
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+
+}
+
+.register-title {
+    color: #ffffff; /* Azul Marino */
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.contenido {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; 
+    background-color: #6bcd82; /* Verde */
+    box-sizing: border-box; 
+}
+
+/* Centrar el formulario */
+.form-container {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Añadir un poco de espacio a los lados */
+}
+
+/* Estilo del formulario */
+
+
+
+/* Estilos de los campos de entrada */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px; /* Aumento del padding para mayor espacio */
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem; /* Aumento de tamaño de texto para mayor legibilidad */
+    box-sizing: border-box;
+}
+
+/* Estilo del botón */
+button {
+    background: linear-gradient(45deg, #4CAF50, #45a049); /* Gradiente suave */
+    color: white;
+    padding: 15px; /* Aumento de padding */
+    width: 100%;
+    border: none;
+    border-radius: 8px; /* Bordes redondeados más pronunciados */
+    cursor: pointer;
+    font-size: 1.1rem; /* Aumento del tamaño de texto */
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s; /* Transición suave para color y efectos */
+    box-sizing: border-box;
+}
+
+/* Efectos de hover en el botón */
+button:hover {
+    background: linear-gradient(45deg, #45a049, #4CAF50); /* Cambio de gradiente al hacer hover */
+    transform: translateY(-4px); /* Movimiento más notorio al pasar el mouse */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra más visible al hacer hover */
+}
+
+/* Efecto al hacer clic en el botón */
+button:active {
+    transform: translateY(2px); /* Se mueve ligeramente hacia abajo */
+    box-shadow: none; /* Elimina la sombra al hacer clic */
+}
+
+

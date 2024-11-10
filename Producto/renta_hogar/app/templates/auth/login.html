@@ -1,0 +1,21 @@
+{% extends "headers/home_header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="content-login">
+    <h1 class="login-title">Iniciar Sesión</h1>
+    <form id="formulario" method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="Iniciar Sesión" /></p>
+    </form>
+</div>
+{% endblock %}

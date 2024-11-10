@@ -1,0 +1,70 @@
+.content-login {
+    background-color: #267b3f; /* Blanco */
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+
+}
+
+.contenido {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; 
+    background-color: #6bcd82; /* Verde */
+    box-sizing: border-box; 
+}
+
+
+.login-title {
+    color: #ffffff; /* Azul Marino */
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Campos del formulario */
+#formulario p {
+    margin-bottom: 15px;
+}
+
+#formulario label {
+    color: #7F8C8D; /* Gris Oscuro */
+    font-weight: 600;
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+/* Campos de entrada */
+#formulario input[type="text"],
+#formulario input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #BDC3C7;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Botón de enviar */
+#formulario input[type="submit"] {
+    background-color: #27AE60; /* Verde Salvia */
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#formulario input[type="submit"]:hover {
+    background-color: #1E8449; /* Verde Salvia más oscuro */
+}

@@ -1,0 +1,36 @@
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+{% endblock %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+
+
+<body
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <a href="{% url 'home' %}">  
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 80px; margin-right: 10px;"> 
+                </a>                
+            </div>
+            <h1 class="home-title">RentaHogar</h1>
+            <div class="user-menu">
+                <span>Usuario</span> <!-- Nombre visible del menú de usuario -->
+                <div class="user-menu-content">
+                    <a href="/auth/login">Iniciar sesión</a>
+                    <a href="/auth/register">Registrarse</a>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+</body>
+
+    <section class="contenido">
+        {% block contenido %}{% endblock %}
+    </section>
+
+</html>
