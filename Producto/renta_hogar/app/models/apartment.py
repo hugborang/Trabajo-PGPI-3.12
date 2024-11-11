@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator
 
 class Apartment(models.Model):
     owner = models.ForeignKey(
@@ -8,9 +9,11 @@ class Apartment(models.Model):
         related_name="apartments",
         limit_choices_to={'role': 'owner'}
     )
-    address = models.CharField(max_length=255)
-    #photos = models.ImageField(upload_to="apartments/photos", blank=True, null=True)
-    guest_count = models.PositiveIntegerField()
+    address = models.CharField(max_length=255, unique=True)
+    guest_count = models.PositiveIntegerField(
+        validators=[MinValueValidator(1, message="La capacidad de huéspedes debe ser mayor que 0")],
+        
+    )
     description = models.TextField(blank=True, null=True)
     is_visible = models.BooleanField(default=False)
 

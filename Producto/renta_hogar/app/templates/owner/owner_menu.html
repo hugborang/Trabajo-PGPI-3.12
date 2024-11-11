@@ -14,11 +14,21 @@
     <h3>Mis Apartamentos</h3>
     <ul>
         {% for apartment in apartments %}
-            <li>{{ apartment.address }} - Capacidad: {{ apartment.guest_count }} huéspedes</li>
+            <li>
+                {{ apartment.address }} - Capacidad: {{ apartment.guest_count }} huéspedes
+                <!-- Botón de eliminar -->
+                <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                        Eliminar
+                    </button>
+                </form>
+            </li>
         {% empty %}
             <li>No tienes apartamentos registrados.</li>
         {% endfor %}
     </ul>
 </div>
 {% endblock %}
+
 

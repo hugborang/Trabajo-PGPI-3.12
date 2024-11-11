@@ -2,3 +2,12 @@
 __pycache__/
 *.pyc
 *.pyo
+
+# Ignorar la base de datos
+db.sqlite3
+
+# Ignorar la carpeta media (archivos subidos por el usuario)
+media/
+
+# Ignorar configuraciones sensibles (si corresponde)
+*.env
