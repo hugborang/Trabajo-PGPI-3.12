@@ -15,12 +15,12 @@ class CustomUserChangeForm(forms.ModelForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         label='Nueva contraseña',
-        required=False
+        required=True
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         label='Confirmar nueva contraseña',
-        required=False
+        required=True
     )
     
     class Meta:

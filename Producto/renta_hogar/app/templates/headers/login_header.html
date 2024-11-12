@@ -1,7 +1,7 @@
 {% load static %}
 
 {% block style_css %}
-<link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
 {% endblock %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -12,15 +12,14 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <a >  
+                <a href="{% url 'menu' %}">
                     <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 80px; margin-right: 10px;"> 
                 </a>                
-                {% block encabezado %}<h1>RentaHogar</h1>{% endblock %}
             </div>
-            <div><h1>Bienvenido</h1></div>
+            <h1 class="home-title">RentaHogar</h1>
             <div class="user-menu">
                 <span class="user-menu-icon"><i class="fas fa-user"></i></span>
-                <div class="dropdown-content">
+                <div class="user-menu-content">
                     <a href="/auth/edit_profile">Editar perfil</a>
                     <a href="/auth/logout">Cerrar Sesión</a>
                 </div>

@@ -29,7 +29,7 @@
     display: block;
 }
 
-/* Contenedor del menú desplegable */
+
 /* Contenedor del menú desplegable */
 .user-menu-content {
     display: none; /* Oculto por defecto */
@@ -73,7 +73,7 @@ body {
     align-items: center;
     margin: 0 auto;
     padding: 0 1.5rem;
-    background-color: #638cce;
+    background-color: #638cce
 }
 
 

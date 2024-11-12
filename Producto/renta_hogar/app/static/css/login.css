@@ -1,5 +1,5 @@
 .content-login {
-    background-color: #267b3f; /* Blanco */
+    background-color: #76a1d6;
     padding: 30px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -16,13 +16,13 @@
     align-items: center;
     width: 100%;
     height: 100%; 
-    background-color: #6bcd82; /* Verde */
+    background-color: #e2ebf7;
     box-sizing: border-box; 
 }
 
 
 .login-title {
-    color: #ffffff; /* Azul Marino */
+    color: #354573;
     font-size: 24px;
     margin-bottom: 20px;
 }
@@ -33,7 +33,7 @@
 }
 
 #formulario label {
-    color: #7F8C8D; /* Gris Oscuro */
+    color: #354573; /* Gris Oscuro */
     font-weight: 600;
     display: block;
     text-align: left;
@@ -54,7 +54,7 @@
 
 /* Botón de enviar */
 #formulario input[type="submit"] {
-    background-color: #27AE60; /* Verde Salvia */
+    background-color: #354573;
     color: #FFFFFF;
     border: none;
     padding: 10px 20px;
@@ -66,5 +66,5 @@
 }
 
 #formulario input[type="submit"]:hover {
-    background-color: #1E8449; /* Verde Salvia más oscuro */
+    background-color: #354573;
 }
