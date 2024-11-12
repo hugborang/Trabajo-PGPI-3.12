@@ -10,12 +10,13 @@
 
 
 {% block contenido %}
+
 <div class="content-register">
     <h1 class="register-title">Registrarse</h1>
-    <form method="post" action="{% url 'register' %}">
+    <form id="formulario" method="post" action="{% url 'register' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Registrar</button>
+        <p><input type="submit" value="Registrarse" /></p>
     </form>
 </div>
 {% endblock %}

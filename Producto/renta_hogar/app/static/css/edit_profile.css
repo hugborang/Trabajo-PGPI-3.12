@@ -1,0 +1,121 @@
+.content-edit-profile {
+    background-color: #76a1d6;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+
+}
+
+.contenido {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; 
+    background-color: #eeecfb;
+    box-sizing: border-box; 
+}
+
+
+.register-title {
+    color: #354573;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+
+/* Campos del formulario */
+#formulario p {
+    margin-bottom: 15px;
+}
+
+#formulario label {
+    color: #354573; /* Gris Oscuro */
+    font-weight: 600;
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+/* Campos de entrada */
+#formulario input[type="text"],
+#formulario input[type="password"],
+#formulario input[type="email"]
+ {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #BDC3C7;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Botón de enviar */
+#formulario input[type="submit"] {
+    background-color: #354573;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#formulario input[type="submit"]:hover {
+    background-color: #354573;
+}
+
+/* CSS para el botón de eliminar cuenta */
+.btn-danger {
+    background-color: #e74c3c; /* Rojo peligroso */
+    font-weight: 600;
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor */
+    transition: background-color 0.3s ease; /* Efecto suave en hover */
+}
+
+.btn-danger:hover {
+    background-color: #c0392b; /* Rojo más oscuro al hacer hover */
+}
+
+.btn-danger:focus {
+    outline: none; /* Quitar el borde de enfoque */
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); /* Sombra al hacer focus */
+}
+
+/* Estilo para el botón Cancelar */
+.btn-secondary {
+    background-color: #aaa; /* Color gris neutro */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    font-weight: 600;
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor */
+    transition: background-color 0.3s ease; /* Efecto suave en hover */
+    margin-top: 10px; /* Margen superior */
+}
+
+/* Efecto cuando el usuario pasa el mouse sobre el botón */
+.btn-secondary:hover {
+    background-color: #888; /* Gris más oscuro */
+}
+
+/* Efecto cuando el botón está en foco */
+.btn-secondary:focus {
+    outline: none; /* Quitar borde de enfoque */
+    box-shadow: 0 0 5px rgba(170, 170, 170, 0.5); /* Sombra de enfoque */
+}
+
