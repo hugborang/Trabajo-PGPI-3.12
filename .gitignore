@@ -11,3 +11,4 @@ media/
 
 # Ignorar configuraciones sensibles (si corresponde)
 *.env
+venv/

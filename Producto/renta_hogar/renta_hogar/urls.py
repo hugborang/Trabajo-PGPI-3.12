@@ -26,7 +26,7 @@ from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
-from app.views.apartment import delete_apartment, add_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,6 +41,7 @@ urlpatterns = [
     path('add_apartment/', add_apartment, name='add_apartment'),
     path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
+    path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
 ]
 
 from django.conf import settings

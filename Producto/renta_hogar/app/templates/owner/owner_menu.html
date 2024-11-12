@@ -23,6 +23,8 @@
                         Eliminar
                     </button>
                 </form>
+                <!-- Botón de editar -->
+                <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-primary btn-sm">Editar</a>
             </li>
         {% empty %}
             <li>No tienes apartamentos registrados.</li>
