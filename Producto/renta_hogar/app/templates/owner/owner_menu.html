@@ -1,13 +1,36 @@
 {% extends "headers/login_header.html" %}
-
-
 {% block titulo %}Renta Hogar{% endblock %}
 
-
 {% block contenido %}
-
 <h1>Bienvenido a RentaHogar</h1>
-    <div class="main-content"> <!-- Añadido un contenedor para el contenido principal -->
-       <h1> Menu de propietarios</h1>
-    </div>
+
+<div class="main-content">
+    <h2>Menú de Propietarios</h2>
+    
+    <!-- Botón para añadir apartamento -->
+    <a href="{% url 'add_apartment' %}" class="btn btn-primary">Añadir Apartamento</a>
+
+    <!-- Listado de apartamentos -->
+    <h3>Mis Apartamentos</h3>
+    <ul>
+        {% for apartment in apartments %}
+            <li>
+                {{ apartment.address }} - Capacidad: {{ apartment.guest_count }} huéspedes
+                <!-- Botón de eliminar -->
+                <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                        Eliminar
+                    </button>
+                </form>
+                <!-- Botón de editar -->
+                <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-primary btn-sm">Editar</a>
+            </li>
+        {% empty %}
+            <li>No tienes apartamentos registrados.</li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
+
+

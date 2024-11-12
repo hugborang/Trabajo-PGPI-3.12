@@ -1,0 +1,56 @@
+from django.test import TestCase
+from app.models import Apartment
+from django.contrib.auth import get_user_model
+
+class ApartmentTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username='testuser',
+            password='testpassword123',
+            role='owner'  
+        )
+
+    def test_create_partment(self):
+        response = self.client.post('/add_apartment/', {
+            'name': 'test apartment',
+            'address': 'test address',
+            'owner': self.user.id,
+            'description': 'test description',
+            'isVisible': False,
+            'guest_count': 2,
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/add_apartment/')
+
+    def test_update_apartment(self):
+        apartment = Apartment.objects.create(
+            name='test apartment',
+            address='test address',
+            owner=self.user,
+            description='test description',
+            isVisible=False,
+            guest_count=2,
+        )
+        response = self.client.post(f'/edit_partment/{apartment.id}/', {
+            'name': 'test apartment updated',
+            'address': 'test address updated',
+            'owner': self.user.id,
+            'description': 'test description updated',
+            'isVisible': True,
+            'guest_count': 3,
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/edit_apartment/{apartment.id}/')
+
+    def test_delete_apartment(self):
+        apartment = Apartment.objects.create(
+            name='test apartment',
+            address='test address',
+            owner=self.user,
+            description='test description',
+            isVisible=False,
+            guest_count=2,
+        )
+        response = self.client.post(f'/delete_apartment/{apartment.id}/')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/apartments/')
