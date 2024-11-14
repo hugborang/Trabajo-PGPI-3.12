@@ -1,0 +1,81 @@
+
+.contenido {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; 
+    background-color: #eeecfb;
+    box-sizing: border-box; 
+}
+
+
+/* Contenedor principal */
+.add-apartment-container {
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+.add-apartment-form h2 {
+    text-align: center;
+    color: #000000;
+    font-size: 24px;
+}
+
+/* Estilos del formulario */
+.add-apartment-form {
+    background-color: #76a1d6;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+.add-apartment-form label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+.add-apartment-form input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.add-apartment-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #5cb85c;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-apartment-form button:hover {
+    background-color: #4cae4c;
+}
+
+/* Enlace para volver al menú */
+.back-to-menu {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    color: #5cb85c;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-to-menu:hover {
+    color: #4cae4c;
+}
