@@ -16,6 +16,7 @@ class Apartment(models.Model):
     )
     description = models.TextField(blank=True, null=True)
     is_visible = models.BooleanField(default=False)
+    price = models.DecimalField(max_digits=10,decimal_places=2,validators=[MinValueValidator(0, message="El precio no puede ser negativo")],)
 
     def __str__(self):
         return f"{self.address} - {self.owner.username}"
