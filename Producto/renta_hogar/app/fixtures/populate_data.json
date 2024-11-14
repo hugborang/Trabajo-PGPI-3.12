@@ -1,0 +1,116 @@
+[
+    {
+        "model": "app.customuser",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$870000$rh8QeQ4UL0MG6FrMAryF7c$NyWPcBVLmIigUxujAujNYCTm2icUbmzTAY5HzPksGQM=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "owner1",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2024-11-14T12:00:00Z",
+            "surnames": "Doe",
+            "email": "owner1@example.com",
+            "role": "owner"
+        }
+    },
+    {
+        "model": "app.customuser",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$870000$iHZ51AUdUidNLPD0SZfDvH$YPpf25YA/L7w4WA0br3F0Tw67MiTkJFsJ4ovBLylFWs=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "owner2",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2024-11-14T12:05:00Z",
+            "surnames": "Smith",
+            "email": "owner2@example.com",
+            "role": "owner"
+        }
+    },
+    {
+        "model": "app.customuser",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$870000$c56bkuExeqgJjOfmVVaQk4$sRL3wYw8J94wKFQxhwhBz4u8hWkyTbc5H+qxSRF7A+g=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "customer1",
+            "first_name": "Charlie",
+            "last_name": "Brown",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-11-14T12:10:00Z",
+            "surnames": "Brown",
+            "email": "customer1@example.com",
+            "role": "customer"
+        }
+    },
+    {
+        "model": "app.apartment",
+        "pk": 1,
+        "fields": {
+            "owner": 1,
+            "address": "123 City Street",
+            "guest_count": 4,
+            "description": "Modern apartment with city views.",
+            "is_visible": true
+        }
+    },
+    {
+        "model": "app.apartment",
+        "pk": 2,
+        "fields": {
+            "owner": 1,
+            "address": "456 Park Avenue",
+            "guest_count": 2,
+            "description": "Cozy apartment near the park.",
+            "is_visible": true
+        }
+    },
+    {
+        "model": "app.apartment",
+        "pk": 3,
+        "fields": {
+            "owner": 2,
+            "address": "789 Ocean Drive",
+            "guest_count": 3,
+            "description": "Spacious apartment close to the beach.",
+            "is_visible": true
+        }
+    },
+    {
+        "model": "app.apartmentphoto",
+        "pk": 1,
+        "fields": {
+            "apartment": 1,
+            "photo": "apartments/photos/city_apartment.jpg",
+            "uploaded_at": "2024-11-14T12:20:00Z"
+        }
+    },
+    {
+        "model": "app.apartmentphoto",
+        "pk": 2,
+        "fields": {
+            "apartment": 2,
+            "photo": "apartments/photos/park_apartment.jpg",
+            "uploaded_at": "2024-11-14T12:21:00Z"
+        }
+    },
+    {
+        "model": "app.apartmentphoto",
+        "pk": 3,
+        "fields": {
+            "apartment": 3,
+            "photo": "apartments/photos/beach_apartment.jpg",
+            "uploaded_at": "2024-11-14T12:22:00Z"
+        }
+    }
+]
