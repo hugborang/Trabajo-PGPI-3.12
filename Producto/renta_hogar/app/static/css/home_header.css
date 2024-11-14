@@ -74,6 +74,11 @@ body {
     margin: 0 auto;
     padding: 0 1.5rem;
     background-color: #638cce;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 
