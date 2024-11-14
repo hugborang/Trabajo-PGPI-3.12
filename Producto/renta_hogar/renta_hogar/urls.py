@@ -26,7 +26,7 @@ from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
-from app.views.apartment import delete_apartment, add_apartment, edit_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment, search_apartment
 from app.views.reservation import create_reservation, delete_reservation
 
 app_name = 'app'
@@ -34,13 +34,22 @@ app_name = 'app'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #Auths
     path('auth/register/', register, name='register'),  
     path('auth/login/', user_login, name='login'),
     path('auth/logout/', user_logout, name='logout'),
     path('auth/edit_profile/', edit_profile, name='edit_profile'),
     path('auth/delete_account/', delete_account, name='delete_account'),
-    path('home/', inicio, name='home'),
+    path('auth/menu/', menu, name='menu'),
+    #Home
+    path('home/', search_apartment, name='home'),
+    path('home/search/', search_apartment, name='home'),
+
+    #Customer
     path('customer_menu/', customer_menu, name='customer_menu'),
+
+    #Owner
     path('owner_menu/', owner_menu, name='owner_menu'),
     path('owner_menu/', owners.owner_menu, name='owner_menu'),
     path('add_apartment/', add_apartment, name='add_apartment'),

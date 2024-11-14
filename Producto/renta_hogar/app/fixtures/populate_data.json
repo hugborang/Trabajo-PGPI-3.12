@@ -118,6 +118,24 @@
         }
     },
     {
+        "model": "app.availability",
+        "pk": 1,
+        "fields": {
+            "apartment": 1,
+            "start_date": "2024-11-14",
+            "end_date": "2024-11-22"
+        }
+    },
+    {
+        "model": "app.availability",
+        "pk": 2,
+        "fields": {
+            "apartment": 1,
+            "start_date": "2024-12-01",
+            "end_date": "2024-12-13"
+        }
+    },
+    {
         "model": "app.reservation",
         "pk": 1,
         "fields": {
