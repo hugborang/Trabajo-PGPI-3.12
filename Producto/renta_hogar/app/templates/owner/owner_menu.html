@@ -1,8 +1,14 @@
 {% extends "headers/login_header.html" %}
-{% block titulo %}Renta Hogar{% endblock %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/owner_menu.css' %}">
+{% endblock %}
+
 
 {% block contenido %}
-<h1>Bienvenido a RentaHogar</h1>
 
 <div class="main-content">
     <h2>Menú de Propietarios</h2>
@@ -15,21 +21,23 @@
     <ul>
         {% for apartment in apartments %}
             <li>
-                {{ apartment.address }} - Capacidad: {{ apartment.guest_count }} huéspedes
-                <!-- Botón de eliminar -->
-                <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
-                        Eliminar
-                    </button>
-                </form>
-                <!-- Botón de editar -->
-                <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-primary btn-sm">Editar</a>
+                <span>{{ apartment.address }} - Capacidad: {{ apartment.guest_count }} huéspedes</span>
+                <div class="action-buttons">
+                    <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-primary btn-sm">Editar</a>
+                    <!-- Botón de eliminar -->
+                    <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
             </li>
         {% empty %}
             <li>No tienes apartamentos registrados.</li>
         {% endfor %}
     </ul>
+    
 </div>
 {% endblock %}
 

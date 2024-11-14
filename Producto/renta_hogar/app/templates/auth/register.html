@@ -13,7 +13,7 @@
 
 <div class="content-register">
     <h1 class="register-title">Registrarse</h1>
-    <form id="formulario" method="post" action="{% url 'register' %}">
+    <form class = "formulario-add_apartment" id="formulario" method="post" action="{% url 'register' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <p><input type="submit" value="Registrarse" /></p>

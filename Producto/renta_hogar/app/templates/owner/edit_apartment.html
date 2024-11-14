@@ -1,17 +1,25 @@
 {% extends "headers/login_header.html" %}
 
-{% block titulo %}Editar Apartamento{% endblock %}
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/add_apartment.css' %}">
+{% endblock %}
 
 {% block contenido %}
-<h2>Editar Apartamento</h2>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <label for="photos">Fotos del Apartamento:</label>
-    <input type="file" name="photos" multiple>  <!-- Permitir la subida de múltiples fotos -->
-    <button type="submit">Guardar Apartamento</button>
-</form>
+<div class="add-apartment-container">
+    <form class="add-apartment-form" method="post" enctype="multipart/form-data">
+        <h2>Editar Apartamento</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label for="photos">Fotos del Apartamento:</label>
+        <input type="file" name="photos" multiple>  
+        <button type="submit">Guardar Apartamento</button>
+    </form>
 
-<a href="{% url 'owner_menu' %}">Volver al Menú de Propietario</a>
+    <a class="back-to-menu" href="{% url 'owner_menu' %}">Volver al Menú de Propietario</a>
+</div>
+
 {% endblock %}
