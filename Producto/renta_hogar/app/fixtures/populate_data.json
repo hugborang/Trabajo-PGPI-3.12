@@ -61,7 +61,8 @@
             "address": "123 City Street",
             "guest_count": 4,
             "description": "Modern apartment with city views.",
-            "is_visible": true
+            "is_visible": true, 
+            "precio": 100.00
         }
     },
     {
@@ -72,7 +73,8 @@
             "address": "456 Park Avenue",
             "guest_count": 2,
             "description": "Cozy apartment near the park.",
-            "is_visible": true
+            "is_visible": true,
+            "precio": 200.00
         }
     },
     {
@@ -83,7 +85,9 @@
             "address": "789 Ocean Drive",
             "guest_count": 3,
             "description": "Spacious apartment close to the beach.",
-            "is_visible": true
+            "is_visible": true,
+            "precio": 300.00
+            
         }
     },
     {
