@@ -62,7 +62,7 @@
             "guest_count": 4,
             "description": "Modern apartment with city views.",
             "is_visible": true, 
-            "precio": 100.00
+            "price": 100.00
         }
     },
     {
@@ -74,7 +74,7 @@
             "guest_count": 2,
             "description": "Cozy apartment near the park.",
             "is_visible": true,
-            "precio": 200.00
+            "price": 200.00
         }
     },
     {
@@ -86,7 +86,7 @@
             "guest_count": 3,
             "description": "Spacious apartment close to the beach.",
             "is_visible": true,
-            "precio": 300.00
+            "price": 300.00
             
         }
     },
