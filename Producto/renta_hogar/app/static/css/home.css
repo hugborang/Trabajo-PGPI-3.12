@@ -1,6 +1,8 @@
 .contenido-home {
     padding: 20px;
     background-color: #f9f9f9;
+    display: flex;
+    margin-top: 5%; /* Margen superior del 5%, probablemente haya que cambiar*/
 }
 
 .filtros-container {

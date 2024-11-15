@@ -1,0 +1,101 @@
+{% extends "headers/login_header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="contenido-home">
+    <div class="filtros-container">
+        <form method="get" action="{% url 'customer_menu' %}" class="filtros" id="search_form">
+            <div class="filtro">
+                <label for="price_min">Precio mínimo/noche:</label>
+                <input type="number" id="price_min" name="precio_min" placeholder="Ej: 50"
+                    value="{{ request.GET.precio_min|default:'' }}">
+        
+                <label for="price_max">Precio máximo/noche:</label>
+                <input type="number" id="price_max" name="precio_max" placeholder="Ej: 500"
+                    value="{{ request.GET.precio_max|default:'' }}">
+            </div>
+            <div class="filtro">
+                <label for="huespedes">Número de huéspedes:</label>
+                <input type="number" id="huespedes" name="huespedes" placeholder="Ej: 4"
+                    value="{{ request.GET.huespedes|default:'' }}">
+                <button type="submit" class="btn-buscar" style="margin-top: 25px;">Buscar</button>
+            </div>
+            <div class="filtro">
+                <label for="fecha_inicio">Fecha de entrada:</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio|default:'' }}">
+        
+                <label for="fecha_fin">Fecha de salida:</label>
+                <input type="date" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin|default:'' }}">
+            </div>
+            <button type="button" class="boton-borrar" onclick="resetFilters()">Borrar filtros</button>
+        </form>
+        
+    </div>
+
+    <div class="resultados">
+        <h2>Resultados de búsqueda</h2>
+        {% if apartments %}
+        <div>
+            <a href="/auth/login"></a>
+            <ul>
+                {% for apartment in apartments %}
+                <li>
+                    <img src="{{ apartment.photos.first.photo.url }}" alt="Foto de {{ apartment.address }}"
+                        class="apartment-photo">    
+                    <p class="apartment-details">Número de huéspedes: {{ apartment.guest_count }}</p>
+                    <p class="apartment-details">Dirección: {{ apartment.address }}</p>
+                    <p class="price">Precio/noche: {{ apartment.price }}€</p>
+                </li>   
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <p>No se encontraron apartamentos que coincidan con los filtros.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.toString()) {
+            console.log("Enviando formulario al cargar la página");
+            document.getElementById('search_form').submit();
+        } else {
+            console.log("Parámetros detectados en la URL, no se envía automáticamente.");
+        }
+    };
+
+    const filtros = document.querySelectorAll('.filtro input');
+    filtros.forEach(filtro => {
+        filtro.addEventListener('change', function () {
+            console.log("Cambio detectado en:", filtro.name, "Valor:", filtro.value);
+            document.getElementById('search_form').submit();
+        });
+    });
+
+     document.getElementById('search_form').addEventListener('reset', function (event) {
+        setTimeout(() => {
+            console.log("Formulario reseteado. Enviando...");
+            document.getElementById('search_form').submit();
+        }, 0); 
+    });
+
+
+
+</script>
+<script>
+    function resetFilters() {
+        const baseURL = "{% url 'customer_menu' %}"; // Nombre de la URL de tu vista
+        console.log("Redirigiendo a la URL base para borrar filtros.");
+        window.location.href = baseURL; // Redirige a la página base
+    }
+</script>
+

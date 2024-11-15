@@ -13,10 +13,31 @@
 
 <div class="content-register">
     <h1 class="register-title">Registrarse</h1>
-    <form class = "formulario-add_apartment" id="formulario" method="post" action="{% url 'register' %}">
+    <form id="formulario" method="post" action="">
         {% csrf_token %}
-        {{ form.as_p }}
-        <p><input type="submit" value="Registrarse" /></p>
+        <div>
+            <label for="id_username">Nombre de usuario:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="id_email">Email</label>
+            {{ form.email }}
+        </div>
+        <div>
+            <label for="id_password1">Contraseña</label>
+            {{ form.password1 }}
+        </div>
+        <div>
+            <label for="id_password2">Repita la contraseña</label>
+            {{ form.password2 }}
+        </div>
+        <div>
+            <label for="id_role">Rol</label>
+            {{ form.role }}
+        </div>
+        <div>
+            <p><input type="submit" value="Iniciar Sesión" /></p>
+        </div>
     </form>
 </div>
 {% endblock %}
