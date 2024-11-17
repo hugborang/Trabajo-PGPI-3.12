@@ -13,9 +13,22 @@
     <form class="add-apartment-form" method="post" enctype="multipart/form-data">
         <h2>Añadir Apartamento</h2>
         {% csrf_token %}
+        
+        <!-- Mostrar errores generales -->
+        {% if form.non_field_errors %}
+        <ul class="errorlist nonfield">
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Mostrar errores específicos -->
         {{ form.as_p }}
+
         <label for="photos">Fotos del Apartamento:</label>
-        <input type="file" name="photos" multiple>  <!-- Permitir la subida de múltiples fotos -->
+        <input type="file" name="photos" multiple>
+        
         <button type="submit">Guardar Apartamento</button>
     </form>
 

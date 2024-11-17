@@ -13,9 +13,40 @@
     <form class="add-apartment-form" method="post" enctype="multipart/form-data">
         <h2>Editar Apartamento</h2>
         {% csrf_token %}
+        
+        <!-- Mostrar errores del formulario -->
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        
         {{ form.as_p }}
-        <label for="photos">Fotos del Apartamento:</label>
-        <input type="file" name="photos" multiple>  
+        
+        <!-- Fotos existentes -->
+        <h3>Fotos existentes</h3>
+        <ul>
+            {% for photo in existing_photos %}
+                <li>
+                    <input type="checkbox" name="existing_photos" value="{{ photo.id }}" checked>
+                    <img src="{{ photo.photo.url }}" alt="Foto del apartamento" style="max-width: 100px; margin: 10px 0;">
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <!-- Subir nuevas fotos -->
+        <h3>Subir nuevas fotos</h3>
+        <label for="photos">Nuevas Fotos del Apartamento:</label>
+        <input type="file" name="photos" multiple accept=".jpg,.jpeg,.png,.gif">  
+        
         <button type="submit">Guardar Apartamento</button>
     </form>
 

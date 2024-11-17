@@ -1,4 +1,5 @@
 # models/apartment_photo.py
+from PIL import Image
 from django.db import models
 from django.core.exceptions import ValidationError
 from .apartment import Apartment
@@ -8,6 +9,12 @@ def validate_image_extension(value):
     ext = os.path.splitext(value.name)[1].lower()
     if ext not in ['.jpg', '.jpeg', '.png', '.gif']:
         raise ValidationError("Solo se permiten archivos de imagen con las extensiones: .jpg, .jpeg, .png, .gif")
+    
+    try:
+        image = Image.open(value)
+        image.verify()
+    except (IOError, SyntaxError):
+        raise ValidationError("El archivo no es una imagen válida.")
 
 class ApartmentPhoto(models.Model):
     apartment = models.ForeignKey(

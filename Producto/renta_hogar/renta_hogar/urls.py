@@ -18,7 +18,6 @@ from django import urls
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
-from app.views import createApartment
 from app.views.auth import register, user_login, user_logout, edit_profile
 from app.views.auth import register, user_login, user_logout, edit_profile, delete_account, menu
 from app.views.home import inicio
@@ -27,7 +26,7 @@ from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
-from app.views.apartment import delete_apartment, add_apartment, edit_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
 
 app_name = 'app'
 
