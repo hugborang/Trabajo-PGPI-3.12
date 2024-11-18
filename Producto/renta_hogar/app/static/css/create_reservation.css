@@ -1,0 +1,179 @@
+/* Contenedor principal de la reserva */
+.reservation-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #76a1d6;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra */
+    font-family: 'Arial', sans-serif;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrado completo */
+}
+
+body {
+    background-color: #eeecfb; /* Por ejemplo, un verde claro */
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Título principal */
+.reservation-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333333;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Información del apartamento */
+.apartment-info {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: center; /* Centra verticalmente el contenido */
+}
+
+/* Imagen del apartamento */
+.apartment-photo img {
+    width: 200px;
+    height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Detalles del apartamento */
+.apartment-details {
+    flex: 1;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.apartment-details h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #444444;
+}
+
+.apartment-details p {
+    margin: 5px 0;
+    color: #666666;
+    font-size: 14px;
+}
+
+/* Formulario */
+.reservation-form {
+    margin-top: 20px;
+    text-align: center; /* Centra el contenido */
+}
+
+.reservation-form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333333;
+    font-weight: bold;
+    text-align: left;
+}
+
+.reservation-form select {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 14px;
+    display: inline-block;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.date-row {
+    display: flex;
+    gap: 10px; /* Espaciado entre los elementos */
+    justify-content: space-between; /* Asegura una separación uniforme */
+}
+
+.date-row select {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centra el texto */
+}
+
+.date-row select:first-child {
+    margin-right: 5px;
+}
+
+.date-row select:last-child {
+    margin-left: 5px;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Mensajes de error */
+.errorlist .error {
+    color: #d9534f;
+    font-size: 14px;
+    margin-bottom: 10px;
+    background-color: #f8d7da;
+    padding: 8px;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+}
+
+.error-messages {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+.error {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .apartment-info {
+        flex-direction: column;
+    }
+
+    .apartment-photo img {
+        width: 100%;
+        height: auto;
+    }
+}

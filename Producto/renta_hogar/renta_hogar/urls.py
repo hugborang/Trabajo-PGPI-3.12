@@ -21,12 +21,13 @@ from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, user_logout, edit_profile
 from app.views.auth import register, user_login, user_logout, edit_profile, delete_account, menu
 from app.views.home import inicio
-from app.views.customers import customer_menu
+from app.views.customers import customer_menu, manage_reservations
 from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment
+from app.views.reservation import create_reservation, delete_reservation
 
 app_name = 'app'
 
@@ -46,6 +47,9 @@ urlpatterns = [
     path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
     path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
+    path('manage_reservations/', manage_reservations, name='manage_reservations'),
+    path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
+    path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
     path('auth/menu/', menu, name='menu'),
 
 
