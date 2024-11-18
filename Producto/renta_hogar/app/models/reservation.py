@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from app.models import Apartment
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 class Reservation(models.Model):
     cust = models.ForeignKey(
@@ -18,11 +19,17 @@ class Reservation(models.Model):
     end_date = models.DateField()
 
     def clean(self):
-        # Validación: Las fechas de inicio y fin deben ser válidas
+        # Validación de fechas futuras
+        if self.start_date < timezone.now().date():
+            raise ValidationError("La fecha de inicio debe ser en el futuro.")
+        if self.end_date < timezone.now().date():
+            raise ValidationError("La fecha de fin debe ser en el futuro.")
+
+        # Validación de rango de fechas
         if self.start_date >= self.end_date:
             raise ValidationError("La fecha de inicio debe ser anterior a la fecha de fin.")
 
-        # Validación: Verificar disponibilidad del apartamento
+        # Validación de solapamiento
         overlapping_reservations = Reservation.objects.filter(
             apartment=self.apartment,
             end_date__gt=self.start_date,
@@ -33,3 +40,4 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"Reserva de {self.cust.username} en {self.apartment.address} ({self.start_date} - {self.end_date})"
+
