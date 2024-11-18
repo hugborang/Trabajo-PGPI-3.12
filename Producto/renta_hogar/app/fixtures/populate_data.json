@@ -95,7 +95,7 @@
         "pk": 1,
         "fields": {
             "apartment": 1,
-            "photo": "apartments/photos/city_apartment.jpg",
+            "photo": "apartments/photos/001city_apartment.jpeg",
             "uploaded_at": "2024-11-14T12:20:00Z"
         }
     },
@@ -104,7 +104,7 @@
         "pk": 2,
         "fields": {
             "apartment": 2,
-            "photo": "apartments/photos/park_apartment.jpg",
+            "photo": "apartments/photos/001park_apartment.jpg",
             "uploaded_at": "2024-11-14T12:21:00Z"
         }
     },
@@ -113,7 +113,7 @@
         "pk": 3,
         "fields": {
             "apartment": 3,
-            "photo": "apartments/photos/beach_apartment.jpg",
+            "photo": "apartments/photos/001beach_apartment.jpeg",
             "uploaded_at": "2024-11-14T12:22:00Z"
         }
     }

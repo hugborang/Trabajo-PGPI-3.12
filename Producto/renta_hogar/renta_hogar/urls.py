@@ -26,7 +26,7 @@ from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
-from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment
 
 app_name = 'app'
 
