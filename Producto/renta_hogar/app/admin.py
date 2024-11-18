@@ -16,9 +16,9 @@ class ApartmentPhotoInline(admin.TabularInline):
     
 @admin.register(Apartment)
 class ApartmentAdmin(admin.ModelAdmin):
-    list_display = ('address', 'owner', 'guest_count', 'is_visible')
+    list_display = ('address', 'owner', 'guest_count', 'is_visible', 'price')
     search_fields = ('address', 'owner__username')
-    list_filter = ('is_visible', 'guest_count')
+    list_filter = ('is_visible', 'guest_count', 'price')
     inlines = [ApartmentPhotoInline]  # Permite agregar fotos al editar un apartamento
 
 @admin.register(Availability)

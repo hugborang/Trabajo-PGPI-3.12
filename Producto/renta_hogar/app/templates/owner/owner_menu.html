@@ -7,50 +7,43 @@
 <link rel="stylesheet" href="{% static 'css/owner_menu.css' %}">
 {% endblock %}
 
-
 {% block contenido %}
+<div class="content-property-management">
+    <h1>Gestión de Propiedades</h1>
+    <div class="add-property-btn-container">
+        <a href="{% url 'add_apartment' %}" class="add-property-btn">
+            <i class="fas fa-plus-circle"></i> Añadir Apartamento
+        </a>
+    </div>
 
-<div class="main-content">
-    <h2>Menú de Propietarios</h2>
-
-    <!-- Botón para añadir apartamento -->
-    <a href="{% url 'add_apartment' %}" class="btn btn-primary">Añadir Apartamento</a>
-
-    <!-- Listado de apartamentos -->
-    <h3>Mis Apartamentos</h3>
-    <ul>
+    <div class="apartments-list">
         {% for apartment in apartments %}
-        <li>
-
-            <div class="apartment-photo">
+            <div class="apartment-card">
                 {% if apartment.photos.exists %}
-                <img src="{{ apartment.photos.first.photo.url }}" alt="Foto de {{ apartment.address }}"
-                    class="apartment-photo">
+                    <img src="{{ apartment.photos.first.photo.url }}" alt="Foto de {{ apartment.address }}">
                 {% else %}
-                <span>No hay fotos disponibles</span>
+                    <img src="{% static 'images/default-apartment.jpg' %}" alt="Foto no disponible">
                 {% endif %}
+                <div class="apartment-details">
+                    <h4>{{ apartment.address }}</h4>
+                    <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
+                    <p><strong>Precio:</strong> {{ apartment.price }} €</p>
+                </div>
+                <div class="apartment-actions">
+                    <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-edit">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
             </div>
-            <span>{{ apartment.address }}</span>
-            <span>Capacidad: {{ apartment.guest_count }} huéspedes</span>
-            <span>¿Visible?: {{ apartment.is_visible }}</span>
-            <span>Descripción: {{ apartment.description }}</span>
-
-            <div class="action-buttons">
-                <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-primary btn-sm">Editar</a>
-                <!-- Botón de eliminar -->
-                <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
-                        Eliminar
-                    </button>
-                </form>
-            </div>
-        </li>
         {% empty %}
-        <li>No tienes apartamentos registrados.</li>
+            <p class="no-apartments">No tienes apartamentos registrados.</p>
         {% endfor %}
-    </ul>
+    </div>
 </div>
-
 {% endblock %}
