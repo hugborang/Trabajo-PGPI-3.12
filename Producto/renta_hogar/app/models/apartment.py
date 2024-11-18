@@ -19,6 +19,7 @@ class Apartment(models.Model):
                                 validators=[MinValueValidator(0, message="El precio no puede ser negativo")],
                                 )
 
+
     def __str__(self):
         return f"{self.address} - {self.owner.username}"
 
