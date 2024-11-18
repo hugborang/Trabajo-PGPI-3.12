@@ -1,15 +1,25 @@
 /* Contenedor principal */
 .reservations-container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
+    width: 100%;
+    min-height: calc(100vh - 120px); /* Ocupa toda la altura restante, menos el header */
+    background-color: #eeecfb;
+    padding: 20px 0; /* Espacio alrededor del contenido */
+    box-sizing: border-box;
 }
 
+/* Elimina el margen no deseado del body */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Título */
 .reservations-container h1 {
     text-align: center;
     font-size: 32px;
     color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* Espacio entre el título y las reservas */
 }
 
 /* Lista de reservas */
@@ -54,13 +64,13 @@
 .reservation-info h2 {
     font-size: 20px;
     margin-bottom: 10px;
-    color: #333;
+    color: #fff; /* Cambiado a blanco para mayor contraste */
 }
 
 .reservation-info p {
     font-size: 14px;
     margin-bottom: 5px;
-    color: #555;
+    color: #fff;
 }
 
 /* Acciones de reserva */
