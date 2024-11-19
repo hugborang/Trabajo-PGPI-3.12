@@ -14,37 +14,47 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django import urls
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, user_logout, edit_profile
 from app.views.auth import register, user_login, user_logout, edit_profile, delete_account, menu
-from app.views.home import inicio
-from app.views.customers import customer_menu, manage_reservations
+from app.views.customers import customer_menu, manage_reservations, customer_apartment_detail
 from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
-from app.views.apartment import delete_apartment, add_apartment, edit_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment, search_apartment
 from app.views.reservation import create_reservation, delete_reservation
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
+from app.views.home import search_apartment
 
 app_name = 'app'
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #Home
+    path('home/search/', search_apartment, name='home_search'),
+      
+    #Auths
     path('auth/register/', register, name='register'),  
     path('auth/login/', user_login, name='login'),
     path('auth/logout/', user_logout, name='logout'),
     path('auth/edit_profile/', edit_profile, name='edit_profile'),
     path('auth/delete_account/', delete_account, name='delete_account'),
-    path('home/', inicio, name='home'),
+    path('auth/menu/', menu, name='menu'),
+
+
+    #Customer
     path('customer_menu/', customer_menu, name='customer_menu'),
+    path('customer_apartment_detail/<int:apartment_id>/', customer_apartment_detail, name='customer_apartment_detail'),
+
+    #Owner
     path('owner_menu/', owner_menu, name='owner_menu'),
     path('owner_menu/', owners.owner_menu, name='owner_menu'),
     path('add_apartment/', add_apartment, name='add_apartment'),
-    path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
     path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
     path('manage_reservations/', manage_reservations, name='manage_reservations'),
@@ -53,7 +63,7 @@ urlpatterns = [
     path('auth/menu/', menu, name='menu'),
 
 
-    path('', RedirectView.as_view(url='home/', permanent=False)),  # Ruta por defecto al iniciar la app
+    path('', RedirectView.as_view(url='home/search', permanent=False)),  # Ruta por defecto al iniciar la app
 
 
 

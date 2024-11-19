@@ -125,3 +125,4 @@ def edit_apartment(request, apartment_id):
         'apartment': apartment,
         'edit_mode': True,
     })
+
