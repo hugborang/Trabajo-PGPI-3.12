@@ -1,9 +1,9 @@
-{% extends "headers/login_header.html" %}
+{% extends "headers/header.html" %}
 
 {% load static %}
 
 {% block style_css %}
-<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
 {% endblock %}
 
@@ -36,7 +36,7 @@
             {{ form.password2 }}
         </div>
     <div>        
-        <p><input type="submit" value="Actualiza" /></p>
+        <p><input type="submit" value="Actualizar" /></p>
     </form>
 
 

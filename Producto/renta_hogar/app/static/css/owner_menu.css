@@ -3,6 +3,11 @@
     background-color: #f5f5ff;
     padding: 20px;
     border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .apartments-list {
@@ -70,6 +75,7 @@
 }
 
 .add-property-btn-container {
+    margin-top: 50px;
     margin-bottom: 20px;
 }
 

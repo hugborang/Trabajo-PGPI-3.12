@@ -40,7 +40,6 @@ def add_apartment(request):
             for photo in photos:
                 ApartmentPhoto.objects.create(apartment=apartment, photo=photo)
 
-            messages.success(request, "Apartamento añadido exitosamente.")
             return redirect('owner_menu')
 
         return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
@@ -60,7 +59,6 @@ def delete_apartment(request, apartment_id):
 
     if request.method == "POST":
         apartment.delete()
-        messages.success(request, "Apartamento eliminado exitosamente.")
         return redirect('owner_menu')
 
     return redirect('owner_menu')

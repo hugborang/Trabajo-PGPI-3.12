@@ -1,9 +1,9 @@
-{% extends "headers/login_header.html" %}
+{% extends "headers/header.html" %}
 
 {% load static %}
 
 {% block style_css %}
-<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/reservations.css' %}">
 {% endblock %}
 
@@ -23,6 +23,7 @@
                         <p><strong>Capacidad:</strong> {{ reservation.apartment.guest_count }} huéspedes</p>
                         <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
                         <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
+                        <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
                     </div>
                     <div class="reservation-actions">
                         <form action="{% url 'delete_reservation' reservation.id %}" method="post">

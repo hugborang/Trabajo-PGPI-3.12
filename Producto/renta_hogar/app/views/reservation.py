@@ -38,7 +38,8 @@ def create_reservation(request, apartment_id):
                 cust=request.user,
                 apartment=apartment,
                 start_date=start_date,
-                end_date=end_date
+                end_date=end_date,
+                total_price=apartment.price * (end_date - start_date).days
             )
             reservation.full_clean()  # Valida con las reglas del modelo
             reservation.save()

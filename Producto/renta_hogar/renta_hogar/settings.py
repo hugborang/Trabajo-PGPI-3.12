@@ -15,6 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOGOUT_REDIRECT_URL = '/'  # Redirigir a la página principal después de cerrar sesión
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,6 +29,21 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Duración de la sesión (1 hora en este caso)
+SESSION_COOKIE_AGE = 3600  # Tiempo en segundos
+
+# Renovar la sesión con cada solicitud
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Mantener la sesión al cerrar el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# CSRF no debe depender de sesiones directamente
+CSRF_USE_SESSIONS = False
+
+# En desarrollo, mantener esto en False
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
 # Application definition
 

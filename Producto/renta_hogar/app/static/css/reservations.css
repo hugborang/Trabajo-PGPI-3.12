@@ -1,17 +1,11 @@
 /* Contenedor principal */
 .reservations-container {
+    margin-top: 80px;
     width: 100%;
-    min-height: calc(100vh - 120px); /* Ocupa toda la altura restante, menos el header */
+    min-height: 100%; /* Asegura que ocupe toda la altura disponible */
     background-color: #eeecfb;
-    padding: 20px 0; /* Espacio alrededor del contenido */
     box-sizing: border-box;
-}
-
-/* Elimina el margen no deseado del body */
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    padding: 20px 0; /* Espaciado superior e inferior */
 }
 
 /* Título */
@@ -19,7 +13,7 @@ body {
     text-align: center;
     font-size: 32px;
     color: #333;
-    margin-bottom: 20px; /* Espacio entre el título y las reservas */
+    margin-bottom: 30px; /* Espacio más grande entre el título y las reservas */
 }
 
 /* Lista de reservas */
@@ -27,7 +21,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    align-items: flex-start; /* Asegura que las tarjetas no se centren verticalmente */
+    padding: 0 20px; /* Espaciado lateral para las tarjetas */
 }
 
 /* Tarjeta de reserva */
@@ -64,7 +60,7 @@ body {
 .reservation-info h2 {
     font-size: 20px;
     margin-bottom: 10px;
-    color: #fff; /* Cambiado a blanco para mayor contraste */
+    color: #fff;
 }
 
 .reservation-info p {

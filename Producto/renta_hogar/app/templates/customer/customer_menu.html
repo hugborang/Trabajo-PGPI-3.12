@@ -1,9 +1,9 @@
-{% extends "headers/login_header.html" %}
+{% extends "headers/header.html" %}
 
 {% load static %}
 
 {% block style_css %}
-<link rel="stylesheet" href="{% static 'css/login_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
@@ -42,7 +42,7 @@
         {% if apartments %}
             <ul>
                 {% for apartment in apartments %}
-                <a href="{% url 'customer_apartment_detail' apartment_id=apartment.id %}">
+                <a href="{% url 'create_reservation' apartment_id=apartment.id %}">
                     <li>
 
                         <img src="{{ apartment.photos.first.photo.url }}" alt="Foto de {{ apartment.address }}"
