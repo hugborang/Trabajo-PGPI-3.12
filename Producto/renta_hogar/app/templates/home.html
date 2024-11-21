@@ -1,9 +1,9 @@
-{% extends "headers/home_header.html" %}
+{% extends "headers/header.html" %}
 
 {% load static %}
 
 {% block style_css %}
-<link rel="stylesheet" href="{% static 'css/home_header.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
@@ -35,6 +35,9 @@
             </div>
             <button type="button" class="boton-borrar" id="clear_filters">Borrar filtros</button>
         </form>
+        {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
+            {% endif %}
     </div>
 
     <div class="resultados">

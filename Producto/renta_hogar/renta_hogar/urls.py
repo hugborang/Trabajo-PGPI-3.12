@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, user_logout, edit_profile
@@ -24,7 +25,7 @@ from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views import owners
-from app.views.apartment import delete_apartment, add_apartment, edit_apartment, search_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment
 from app.views.reservation import create_reservation, delete_reservation
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
 from app.views.home import search_apartment
@@ -41,7 +42,7 @@ urlpatterns = [
     #Auths
     path('auth/register/', register, name='register'),  
     path('auth/login/', user_login, name='login'),
-    path('auth/logout/', user_logout, name='logout'),
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('auth/edit_profile/', edit_profile, name='edit_profile'),
     path('auth/delete_account/', delete_account, name='delete_account'),
     path('auth/menu/', menu, name='menu'),
@@ -50,6 +51,9 @@ urlpatterns = [
     #Customer
     path('customer_menu/', customer_menu, name='customer_menu'),
     path('customer_apartment_detail/<int:apartment_id>/', customer_apartment_detail, name='customer_apartment_detail'),
+    path('manage_reservations/', manage_reservations, name='manage_reservations'),
+    path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
+    path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
 
     #Owner
     path('owner_menu/', owner_menu, name='owner_menu'),
@@ -57,9 +61,7 @@ urlpatterns = [
     path('add_apartment/', add_apartment, name='add_apartment'),
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
     path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
-    path('manage_reservations/', manage_reservations, name='manage_reservations'),
-    path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
-    path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
+   
     path('auth/menu/', menu, name='menu'),
 
 

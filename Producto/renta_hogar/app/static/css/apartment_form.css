@@ -1,12 +1,10 @@
 .contenido {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 80px;
     width: 100%;
-    height: 100vh; 
+    min-height: 100%; /* Asegura que ocupe toda la altura disponible */
     background-color: #eeecfb;
-    box-sizing: border-box; 
-    padding: 20px;
+    box-sizing: border-box;
+    padding: 20px 0; /* Espaciado superior e inferior */
 }
 
 /* Contenedor principal */
