@@ -1,0 +1,148 @@
+/* Esta va a ser la fuente que usamos en todo */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.contenido-home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e2ebf7
+}
+
+.home-title {
+    color: white;
+    font-size: 2.5rem;
+    text-align: start;
+    margin-top: 10px;
+}
+
+/* Estilos para el menú de usuario */
+.user-menu {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.user-menu-icon {
+    cursor: pointer;
+    font-size: 20px;
+    color: black;
+}
+
+.user-menu a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+    display: block;
+}
+
+.user-menu-content {
+    display: none; /* Ocultarlo por defecto */
+    position: absolute;
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    text-align: left;
+    min-width: 200px;
+}
+
+/* Estilo de cada enlace dentro del desplegable */
+.user-menu-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.user-menu-content a:hover {
+    background-color: #ddd;
+}
+
+/* Mostrar el menú al pasar el mouse */
+.user-menu:hover .user-menu-content {
+    display: block;
+}
+
+.user-menu-item {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+.user-menu-item:last-child {
+    border-bottom: none; /* Quitar borde al último elemento */
+}
+
+/* Efecto hover en los elementos del menú */
+.user-menu-item:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+/* Botón "Cerrar Sesión" estilizado como enlace */
+.logout-btn {
+    background: none; /* Sin fondo */
+    border: none; /* Sin bordes */
+    padding: 12px 16px; /* Consistente con los enlaces */
+    color: #333; /* Mismo color que los enlaces */
+    text-align: left; /* Texto alineado a la izquierda */
+    font-size: 14px; /* Tamaño de fuente igual al de los enlaces */
+    font-weight: normal; /* Mismo grosor de letra que los enlaces */
+    cursor: pointer; /* Hacer que parezca clickeable */
+    width: 100%; /* Asegurarse de que ocupe todo el ancho */
+}
+
+.logout-btn:hover {
+    background-color: #f5f5f5; /* Efecto hover igual al de los enlaces */
+    color: #333; /* Mismo color al hacer hover */
+    text-decoration: none; /* Evitar subrayado */
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0px;
+    display: block;
+    overflow-y: auto; /* Añade scrollbar solo si el contenido desborda verticalmente */
+    overflow-x: hidden; /* Oculta la scrollbar horizontal si no es necesaria */
+    background-color: #eeecfb;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 0;
+    background-color: #638cce;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 5px;
+}
+

@@ -1,0 +1,95 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+{% endblock %}
+
+
+{% block encabezado %}
+{% endblock %}
+
+{% block contenido %}
+
+
+
+<div class="content-edit-profile">
+    <h1>Edita tus datos</h1>
+    <form id="formulario" method="post" action="">
+        {% csrf_token %}
+        <div>
+            <label for="id_username">Nombre de usuario:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="id_email">Email</label>
+            {{ form.email }}
+        </div>
+        <div>
+            <label for="id_password1">Nueva contraseña</label>
+            {{ form.password1 }}
+        </div>
+        <div>
+            <label for="id_password2">Confirmar la contraseña</label>
+            {{ form.password2 }}
+        </div>
+    <div>        
+        <p><input type="submit" value="Actualizar" /></p>
+    </form>
+
+
+
+<button type="button" class="btn btn-danger" onclick="openModal()">Eliminar cuenta</button>
+
+<!-- Modal de confirmación -->
+<div id="deleteAccountModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Confirmar eliminación</h2>
+        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+        <form method="post" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar cuenta</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Función para abrir el modal
+    function openModal() {
+        document.getElementById("deleteAccountModal").style.display = "block";
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        document.getElementById("deleteAccountModal").style.display = "none";
+    }
+
+    // Cierra el modal si el usuario hace clic fuera del contenido
+    window.onclick = function(event) {
+        const modal = document.getElementById("deleteAccountModal");
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
+
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+
+
+{% endblock %}

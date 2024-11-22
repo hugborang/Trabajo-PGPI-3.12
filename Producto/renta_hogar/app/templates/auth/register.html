@@ -1,0 +1,85 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+
+
+{% block contenido %}
+
+<div class="content-register">
+    <h1 class="register-title">Registrarse</h1>
+    <form id="formulario" method="post">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_username">Nombre de usuario:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <ul class="error-list">
+                    {% for error in form.username.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_email">Correo Electrónico:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="error-list">
+                    {% for error in form.email.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_password1">Contraseña:</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <ul class="error-list">
+                    {% for error in form.password1.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="id_password2">Repita la contraseña:</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <ul class="error-list">
+                    {% for error in form.password2.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_role">Rol:</label>
+            {{ form.role }}
+            {% if form.role.errors %}
+                <ul class="error-list">
+                    {% for error in form.role.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div>
+            <p><input type="submit" value="Registrarse" /></p>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

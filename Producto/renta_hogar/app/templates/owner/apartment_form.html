@@ -1,0 +1,58 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/apartment_form.css' %}">
+{% endblock %}
+
+{% block contenido %}
+
+<div class="add-apartment-container">
+    <form class="add-apartment-form" method="post" enctype="multipart/form-data">
+        <h2>{{ edit_mode|yesno:"Editar Apartamento,Añadir Apartamento" }}</h2>
+        {% csrf_token %}
+        
+        <!-- Mostrar errores del formulario -->
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Renderizar campos del formulario -->
+        {{ form.as_p }}
+        
+        <!-- Fotos existentes solo si estamos en modo edición -->
+        {% if edit_mode and apartment.photos.exists %}
+            <h3>Fotos existentes</h3>
+            <ul>
+                {% for photo in apartment.photos.all %}
+                    <li>
+                        <input type="checkbox" name="existing_photos" value="{{ photo.id }}" checked>
+                        <img src="{{ photo.photo.url }}" alt="Foto del apartamento" style="max-width: 100px; margin: 10px 0;">
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        <!-- Subir nuevas fotos -->
+        <h3>{% if edit_mode %}Añadir Nuevas Fotos{% else %}Subir Fotos del Apartamento{% endif %}</h3>
+        <label for="photos">Fotos del Apartamento:</label>
+        <input type="file" name="photos" multiple accept=".jpg,.jpeg,.png,.gif">  
+        
+        <button type="submit">{{ edit_mode|yesno:"Guardar Cambios,Guardar Apartamento" }}</button>
+    </form>
+
+    <a class="back-to-menu" href="{% url 'owner_menu' %}">Volver al Menú de Propietario</a>
+</div>
+
+{% endblock %}

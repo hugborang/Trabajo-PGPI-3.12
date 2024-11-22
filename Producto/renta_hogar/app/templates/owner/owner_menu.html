@@ -1,0 +1,49 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/owner_menu.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="content-property-management">
+    <h1>Gestión de Propiedades</h1>
+    <div class="add-property-btn-container">
+        <a href="{% url 'add_apartment' %}" class="add-property-btn">
+            <i class="fas fa-plus-circle"></i> Añadir Apartamento
+        </a>
+    </div>
+
+    <div class="apartments-list">
+        {% for apartment in apartments %}
+            <div class="apartment-card">
+                {% if apartment.photos.exists %}
+                    <img src="{{ apartment.photos.first.photo.url }}" alt="Foto de {{ apartment.address }}">
+                {% else %}
+                    <img src="{% static 'images/default-apartment.jpg' %}" alt="Foto no disponible">
+                {% endif %}
+                <div class="apartment-details">
+                    <h4>{{ apartment.address }}</h4>
+                    <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
+                    <p><strong>Precio:</strong> {{ apartment.price }} €</p>
+                </div>
+                <div class="apartment-actions">
+                    <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-edit">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p class="no-apartments">No tienes apartamentos registrados.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

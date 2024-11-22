@@ -1,0 +1,109 @@
+/* Contenedor principal */
+.reservations-container {
+    margin-top: 80px;
+    width: 100%;
+    min-height: 100%; /* Asegura que ocupe toda la altura disponible */
+    background-color: #eeecfb;
+    box-sizing: border-box;
+    padding: 20px 0; /* Espaciado superior e inferior */
+}
+
+/* Título */
+.reservations-container h1 {
+    text-align: center;
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 30px; /* Espacio más grande entre el título y las reservas */
+}
+
+/* Lista de reservas */
+.reservations-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    align-items: flex-start; /* Asegura que las tarjetas no se centren verticalmente */
+    padding: 0 20px; /* Espaciado lateral para las tarjetas */
+}
+
+/* Tarjeta de reserva */
+.reservation-card {
+    background-color: #638cce;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reservation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Foto del apartamento */
+.reservation-photo img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Información de la reserva */
+.reservation-info {
+    padding: 15px;
+}
+
+.reservation-info h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.reservation-info p {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+/* Acciones de reserva */
+.reservation-actions {
+    padding: 10px;
+    text-align: center;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+}
+
+.reservation-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.reservation-actions .btn i {
+    margin-right: 5px;
+}
+
+.reservation-actions .btn:hover {
+    background-color: #c82333;
+}
+
+/* Mensaje cuando no hay reservas */
+.no-reservations {
+    text-align: center;
+    font-size: 18px;
+    color: #777;
+    margin-top: 50px;
+}

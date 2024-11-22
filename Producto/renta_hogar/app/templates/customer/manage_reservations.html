@@ -1,0 +1,43 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/reservations.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="reservations-container">
+    <h1>Gestión de Reservas</h1>
+
+    {% if reservations %}
+        <div class="reservations-list">
+            {% for reservation in reservations %}
+                <div class="reservation-card">
+                    <div class="reservation-photo">
+                        <img src="{{ reservation.apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
+                    </div>
+                    <div class="reservation-info">
+                        <h2>{{ reservation.apartment.address }}</h2>
+                        <p><strong>Capacidad:</strong> {{ reservation.apartment.guest_count }} huéspedes</p>
+                        <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
+                        <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
+                        <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
+                    </div>
+                    <div class="reservation-actions">
+                        <form action="{% url 'delete_reservation' reservation.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Cancelar Reserva
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-reservations">No tienes reservas activas.</p>
+    {% endif %}
+</div>
+{% endblock %}
