@@ -10,8 +10,10 @@ from app.models import Apartment, ApartmentPhoto, Availability
 from app.models.apartmentPhoto import validate_image_extension
 from app.models.availability import validate_date_range
 from django.shortcuts import redirect, get_object_or_404
+from app.utils.decorator import requires_role
 
 @login_required
+@requires_role('owner')
 def add_apartment(request):
     if request.user.role != 'owner':
         return HttpResponseForbidden("No tienes permiso para añadir apartamentos.")
@@ -51,6 +53,7 @@ def add_apartment(request):
     return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
 
 @login_required
+@requires_role('owner')
 def delete_apartment(request, apartment_id):
     try:
         apartment = Apartment.objects.get(id=apartment_id)
@@ -67,6 +70,7 @@ def delete_apartment(request, apartment_id):
     return redirect('owner_menu')
 
 @login_required
+@requires_role('owner')
 def edit_apartment(request, apartment_id):
     if request.user.role != 'owner':
         return HttpResponseForbidden("No tienes permiso para editar apartamentos.")

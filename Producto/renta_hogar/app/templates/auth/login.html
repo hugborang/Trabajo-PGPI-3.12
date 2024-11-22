@@ -11,20 +11,39 @@
 
 <div class="content-login">
     <h1 class="login-title">Iniciar Sesión</h1>
-    <form id="formulario" method="post" action="">
+    <form id="formulario" method="post">
         {% csrf_token %}
+        
         <div>
-            <label for="id_username">Nombre de usuario:</label>
-            {{ form.username }}
+            <label for="id_email">Correo Electrónico:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="error-list">
+                    {% for error in form.email.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
+        
         <div>
             <label for="id_password">Contraseña:</label>
             {{ form.password }}
+            {% if form.password.errors %}
+                <ul class="error-list">
+                    {% for error in form.password.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
+
         <div>
             <p><input type="submit" value="Iniciar Sesión" /></p>
         </div>
     </form>
 </div>
+
+
 
 {% endblock %}

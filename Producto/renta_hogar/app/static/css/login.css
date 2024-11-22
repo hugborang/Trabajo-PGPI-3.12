@@ -42,7 +42,8 @@
 
 /* Campos de entrada */
 #formulario input[type="text"],
-#formulario input[type="password"] {
+#formulario input[type="password"], 
+#formulario input[type="email"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #BDC3C7;
