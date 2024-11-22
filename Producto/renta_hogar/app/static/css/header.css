@@ -121,6 +121,7 @@ body {
     display: block;
     overflow-y: auto; /* Añade scrollbar solo si el contenido desborda verticalmente */
     overflow-x: hidden; /* Oculta la scrollbar horizontal si no es necesaria */
+    background-color: #eeecfb;
 }
 
 /* Navbar */

@@ -1,18 +1,30 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-from django.contrib.auth import login as auth_login, logout
+from django.contrib.auth import login, logout
 from app.forms.CustomUserCreationForm import CustomUserCreationForm, CustomUserChangeForm 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-
+from app.forms.EmailAuthenticationForm import EmailAuthenticationForm
+from app.utils.correo import enviar_notificacion_correo
 
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)  
         if form.is_valid():
             form.save()
+            role = form.cleaned_data['role']  
+            username = form.cleaned_data['username']
+            
+            if role == 'customer':
+                mensaje = "Gracias"+ username+ "por registrarte en RentaHogar, como nuevo inquilino busca y disfruta de los mejores apartamentos al mejor precio"
+            else:
+                mensaje = "Gracias" + username+ "por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero" 
+                
+            enviar_notificacion_correo("!Bienvenido a RentaHogar!", mensaje, form.cleaned_data['email'])
+            
             return redirect('/auth/login/')
+
     else:
         form = CustomUserCreationForm()
     return render(request, 'auth/register.html', {'form': form})
@@ -21,21 +33,23 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = EmailAuthenticationForm(data=request.POST)
         if form.is_valid():
+
             user = form.get_user()
-            auth_login(request, user)
-            
+            login(request, user)
+
             if user.role == 'customer':
                 return redirect('/customer_menu')  
             elif user.role == 'owner':
                 return redirect('/owner_menu')  
-            
-            return redirect('home')  
-    else:
-        form = AuthenticationForm()
-    return render(request, 'auth/login.html', {'form': form})
 
+        else: 
+            print("Errores->" , form.errors)
+    else:
+        form = EmailAuthenticationForm()
+
+    return render(request, 'auth/login.html', {'form': form})
 
 
 @login_required

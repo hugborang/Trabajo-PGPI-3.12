@@ -1,12 +1,11 @@
 .contenido-home {
-    padding: 20px;
     background-color: #eeecfb;
     display: flex;
+    margin-top:15vh;
+    justify-content: flex-start;
 }
 
-.filtros-container {
-    margin-top: 200px;
-}
+
 
 .filtros {
     display: flex;
@@ -46,7 +45,7 @@
     font-size: 1rem;
     font-weight: bold;
     color: #fff;
-    background-color: #007bff;
+    background-color: #638cce;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -126,8 +125,8 @@
 }
 
 .boton-borrar {
-    background-color: #007bff; /* Color de fondo rojo para llamar la atención */
-    color: white; /* Texto en blanco */
+    background-color: #638cce; 
+    color: white; 
     border: none;
     padding: 10px 20px;
     font-size: 1rem;

@@ -1,12 +1,13 @@
 .content-register {
     background-color: #76a1d6;
-    padding: 30px;
+    padding: 50px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     width: 100%;
     text-align: center;
     align-items: center;
+    margin-top: 12%;
 
 }
 
@@ -84,3 +85,4 @@ select {
     cursor: pointer; /* Cursor tipo puntero */
     transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Efecto de transición suave */
 }
+
