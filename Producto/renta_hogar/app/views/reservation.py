@@ -13,27 +13,22 @@ def create_reservation(request, apartment_id):
         return HttpResponseForbidden("Solo los inquilinos pueden realizar reservas.")
 
     apartment = get_object_or_404(Apartment, id=apartment_id)
-    current_year = datetime.now().year
-
-    # Rango para días, meses y años
-    days = range(1, 32)
-    months = [{"value": i, "name": datetime(2000, i, 1).strftime("%B")} for i in range(1, 13)]
-    years = list(range(current_year, current_year + 5))
 
     errors = []
 
     if request.method == "POST":
-        day_start = request.POST.get("start_day")
-        month_start = request.POST.get("start_month")
-        year_start = request.POST.get("start_year")
-        day_end = request.POST.get("end_day")
-        month_end = request.POST.get("end_month")
-        year_end = request.POST.get("end_year")
+        start_date = datetime.strptime(request.POST["start_date"], "%Y-%m-%d").date()
+        end_date = datetime.strptime(request.POST["end_date"], "%Y-%m-%d").date()
+        for date in apartment.availabilities.all():
+            if date.start_date <= start_date and date.end_date >= end_date:
+                break
+            errors.append("El apartamento no está disponible en las fechas seleccionadas.")
+            return render(request, "customer/create_reservation.html", {
+                "apartment": apartment,
+                "errors": errors,
+            })
 
         try:
-            start_date = datetime(year=int(year_start), month=int(month_start), day=int(day_start)).date()
-            end_date = datetime(year=int(year_end), month=int(month_end), day=int(day_end)).date()
-
             reservation = Reservation(
                 cust=request.user,
                 apartment=apartment,
@@ -41,19 +36,14 @@ def create_reservation(request, apartment_id):
                 end_date=end_date,
                 total_price=apartment.price * (end_date - start_date).days
             )
-            reservation.full_clean()  # Valida con las reglas del modelo
+            reservation.full_clean()
             reservation.save()
             return redirect("manage_reservations")
         except ValidationError as e:
             errors.extend(e.messages)
-        except (ValueError, TypeError):
-            errors.append("Las fechas proporcionadas no son válidas.")
 
     return render(request, "customer/create_reservation.html", {
         "apartment": apartment,
-        "days": days,
-        "months": months,
-        "years": years,
         "errors": errors,
     })
 

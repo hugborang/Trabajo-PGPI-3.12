@@ -8,32 +8,38 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="reservation-container">
-    <h1>Reservar Apartamento</h1>
+<div class="availability-container">
+    <h1>Añadir Disponibilidad</h1>
 
     <div class="apartment-info">
         <div class="apartment-photo">
-            <img src="{{ apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
+            {% if apartment.photos.exists %}
+                <img src="{{ apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
+            {% else %}
+                <img src="{% static 'images/default-apartment.jpg' %}" alt="Foto no disponible">
+            {% endif %}
         </div>
         <div class="apartment-details">
             <h2>{{ apartment.address }}</h2>
             <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
-            <p><strong>Precio por noche:</strong> ${{ apartment.price }}</p>
+            <p><strong>Precio por noche:</strong> {{ apartment.price }} €</p>
         </div>
     </div>
 
-    <form method="post" class="reservation-form">
+    <form method="post" class="availability-form">
         {% csrf_token %}
-        
-        {% if errors %}
+
+        {% if form.errors %}
             <div class="error-messages">
-                {% for error in errors %}
-                    <p class="error">{{ error }}</p>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
                 {% endfor %}
             </div>
         {% endif %}
 
-        
+
         <div class="form-group">
             <label for="fecha_inicio">Fecha de inicio:</label>
             <input type="date" id="fecha_inicio" name="start_date" required>
@@ -43,8 +49,8 @@
             <label for="fecha_fin">Fecha de fin:</label>
             <input type="date" id="fecha_fin" name="end_date" required>
         </div>
-                
-        <button type="submit" class="btn btn-primary">Reservar</button>
+
+        <button type="submit" class="btn btn-primary">Añadir Disponibilidad</button>
     </form>
 </div>
 {% endblock %}

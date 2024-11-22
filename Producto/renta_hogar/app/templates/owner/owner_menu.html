@@ -30,6 +30,9 @@
                     <p><strong>Precio:</strong> {{ apartment.price }} €</p>
                 </div>
                 <div class="apartment-actions">
+                    <a href="{% url 'manage_availability' apartment.id %}" class="btn btn-availability">
+                        <i class="fas fa-calendar-alt"></i> Disponibilidad
+                    </a>
                     <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-edit">
                         <i class="fas fa-edit"></i> Editar
                     </a>

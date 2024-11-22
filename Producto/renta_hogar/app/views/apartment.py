@@ -3,10 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseForbidden, Http404
+from django.utils.timezone import now
 from app.forms.Apartmentform import ApartmentForm
-from app.models import Apartment, ApartmentPhoto
+from app.forms.availability_form import AvailabilityForm
+from app.models import Apartment, ApartmentPhoto, Availability
 from app.models.apartmentPhoto import validate_image_extension
-from django.shortcuts import redirect
+from app.models.availability import validate_date_range
+from django.shortcuts import redirect, get_object_or_404
 
 @login_required
 def add_apartment(request):
@@ -124,3 +127,56 @@ def edit_apartment(request, apartment_id):
         'edit_mode': True,
     })
 
+@login_required
+def add_availability(request, apartment_id):
+    apartment = get_object_or_404(Apartment, id=apartment_id)
+
+    if apartment.owner != request.user:
+        return HttpResponseForbidden("No tienes permiso para editar la disponibilidad de este apartamento.")
+    
+    if request.method == 'POST':
+        form = AvailabilityForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+
+            # Validar que no se puede añadir disponibilidad en el pasado a partir de hoy
+            if start_date < now().date() or end_date < now().date():
+                form.add_error(None, "No puedes añadir disponibilidad en el pasado.")
+
+            if not validate_date_range(apartment, start_date, end_date):
+                form.add_error(None, "Ya existe una disponibilidad en ese rango de fechas para este apartamento.")
+
+            if not form.errors:  # Si no hay errores, guardar
+                Availability.objects.create(
+                    apartment=apartment,
+                    start_date=start_date,
+                    end_date=end_date
+                )
+                return redirect('manage_availability', apartment_id=apartment_id)
+            
+        # Si el formulario tiene errores, renderizamos de nuevo
+        return render(request, 'owner/add_availability.html', {
+            'apartment': apartment,
+            'form': form,
+        })
+
+    # En caso de GET, renderizar un formulario vacío
+    form = AvailabilityForm()
+    return render(request, 'owner/add_availability.html', {
+        'apartment': apartment,
+        'form': form,
+    })
+
+
+@login_required
+def delete_availability(request, availability_id):
+    availability = get_object_or_404(Availability, id=availability_id)
+    apartment_id = availability.apartment.id
+    apartment = get_object_or_404(Apartment, id=apartment_id)
+    if apartment.owner != request.user:
+        return HttpResponseForbidden("No tienes permiso para editar la disponibilidad de este apartamento.")
+
+    if request.method == 'POST':
+        availability.delete()
+    return redirect('manage_availability', apartment_id=apartment_id)

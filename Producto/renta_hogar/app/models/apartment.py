@@ -24,8 +24,6 @@ class Apartment(models.Model):
         return f"{self.address} - {self.owner.username}"
 
     def delete(self, *args, **kwargs):
-        if self.has_reservations():
-            raise ValueError("No se puede eliminar un apartamento con reservas asociadas.")
         super().delete(*args, **kwargs)
 
     def has_reservations(self):

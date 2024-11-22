@@ -1,8 +1,10 @@
+from unittest.mock import patch
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
-from app.models import Apartment, ApartmentPhoto
+from freezegun import freeze_time
+from app.models import Apartment, ApartmentPhoto, Availability
 from PIL import Image
 import io
 
@@ -45,6 +47,13 @@ class ApartmentManagementTests(TestCase):
         for photo in photos:
             ApartmentPhoto.objects.create(apartment=self.apartment, photo=photo)
 
+        Availability.objects.create(
+            apartment=self.apartment,
+            start_date="2024-01-01",
+            end_date="2024-01-10"
+        )
+        pass
+
     @staticmethod
     def create_test_image(name="test.jpg", size=(100, 100), color=(255, 0, 0)):
         file = io.BytesIO()
@@ -52,7 +61,7 @@ class ApartmentManagementTests(TestCase):
         image.save(file, format="JPEG")
         file.seek(0)
         return SimpleUploadedFile(name, file.read(), content_type="image/jpeg")
-
+    
     ### Pruebas de añadir apartamento ###
     def test_add_apartment_as_owner(self):
         self.client.login(username="owner1", password="password123")
@@ -326,3 +335,65 @@ class ApartmentManagementTests(TestCase):
         self.assertContains(response, "Solo puedes subir hasta 5 fotos del apartamento")
         self.apartment.refresh_from_db()
         self.assertNotEqual(self.apartment.address, "456 Updated St")
+
+    ### Pruebas añadir disponibilidad a un apartamento ###
+    @freeze_time("2024-01-01")
+    def test_add_availability_as_owner(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
+            'start_date': "2024-01-11",
+            'end_date': "2024-01-20",
+        }, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
+    
+    def test_existing_availability_overlap(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
+            'start_date': "2024-01-05",
+            'end_date': "2024-01-15",
+        })
+
+        self.assertContains(response, "Ya existe una disponibilidad en ese rango de fechas para este apartamento.")
+        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-05", end_date="2024-01-15").exists())
+
+    def test_add_availability_with_end_date_before_start_date(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
+            'start_date': "2024-01-20",
+            'end_date': "2024-01-10",
+        })
+
+        self.assertContains(response, "La fecha de inicio debe ser anterior a la fecha de fin.")
+        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-20", end_date="2024-01-10").exists())
+
+    def test_add_availability_nonexistent_apartment(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("add_availability", args=[100]), {
+            'start_date': "2024-01-11",
+            'end_date': "2024-01-20",
+        })
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
+
+    def test_add_availability_as_customer(self):
+        self.client.login(username="customer1", password="password123")
+        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
+            'start_date': "2024-01-11",
+            'end_date': "2024-01-20",
+        })
+
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
+
+    def test_add_availability_in_the_past(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
+            'start_date': "2023-01-11",
+            'end_date': "2023-01-20",
+        })
+
+        self.assertContains(response, "No puedes añadir disponibilidad en el pasado.")
+        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2023-01-11", end_date="2023-01-20").exists())
