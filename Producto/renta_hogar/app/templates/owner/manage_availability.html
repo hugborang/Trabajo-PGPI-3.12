@@ -1,0 +1,37 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/manage_availability.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="content-availability-management">
+    <h1>Gestión de Disponibilidad</h1>
+
+    <div class="availability-list">
+        {% for availability in availabilities %}
+            <div class="availability-card">
+                <p><strong>Inicio:</strong> {{ availability.start_date }}</p>
+                <p><strong>Fin:</strong> {{ availability.end_date }}</p>
+                <form action="{% url 'delete_availability' availability.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta disponibilidad?');">
+                        <i class="fas fa-trash-alt"></i> Eliminar
+                    </button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="no-availability">No tienes disponibilidades registradas.</p>
+        {% endfor %}
+    </div>
+
+    <div class="add-availability-btn-container">
+        <a href="{% url 'add_availability' apartment.id %}" class="add-availability-btn">
+            <i class="fas fa-plus-circle"></i> Añadir Disponibilidad
+        </a>
+    </div>
+</div>
+{% endblock %}

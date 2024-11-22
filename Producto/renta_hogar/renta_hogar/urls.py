@@ -20,12 +20,12 @@ from django.urls import path
 from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, edit_profile, delete_account, menu
 from app.views.customers import customer_menu, manage_reservations, customer_apartment_detail
-from app.views.owners import owner_menu
+from app.views.owners import owner_menu, manage_availability
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment
 from app.views.reservation import create_reservation, delete_reservation
-from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
+from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_availability, delete_availability
 from app.views.home import search_apartment
 from app.views.error import access_denied
 from django.conf import settings
@@ -63,6 +63,9 @@ urlpatterns = [
     path('add_apartment/', add_apartment, name='add_apartment'),
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
     path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
+    path('manage_availability/<int:apartment_id>/', owners.manage_availability, name='manage_availability'),
+    path('add_availability/<int:apartment_id>/', add_availability, name='add_availability'),
+    path('delete_availability/<int:availability_id>/', delete_availability, name='delete_availability'),
    
     path('auth/menu/', menu, name='menu'),
 

@@ -1,0 +1,77 @@
+.content-availability-management {
+    text-align: center;
+    background-color: #f5f5ff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.availability-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.availability-card {
+    background-color: #76a1d6;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.availability-card p {
+    margin: 5px 0;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+.add-availability-btn-container {
+    margin-top: 20px;
+}
+
+.add-availability-btn {
+    background-color: #17a2b8;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.add-availability-btn:hover {
+    background-color: #117a8b;
+}
+
+.no-availability {
+    font-size: 16px;
+    color: #555;
+    margin-top: 20px;
+}

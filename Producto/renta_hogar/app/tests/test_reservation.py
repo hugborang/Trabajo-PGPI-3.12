@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.timezone import make_aware, datetime
-from app.models import Apartment, Reservation, ApartmentPhoto
+from app.models import Apartment, Reservation, ApartmentPhoto, Availability
 from unittest import mock
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
@@ -39,11 +39,17 @@ class ReservationTests(TestCase):
         )
         photo = self.create_test_image(name="test.jpg")
         ApartmentPhoto.objects.create(apartment=self.apartment, photo=photo)
+        self.availability = Availability.objects.create(
+            apartment=self.apartment,
+            start_date='2024-11-20',
+            end_date='2024-12-10'
+        )
         self.reservation = Reservation.objects.create(
             cust=self.customer,
             apartment=self.apartment,
             start_date='2024-11-20',
-            end_date='2024-11-25'
+            end_date='2024-11-25',
+            total_price=500.00
         )
 
     @staticmethod
@@ -59,12 +65,8 @@ class ReservationTests(TestCase):
         response = self.client.post(
             reverse('create_reservation', args=[self.apartment.id]),
             {
-                "start_day": "26",
-                "start_month": "11",
-                "start_year": "2024",
-                "end_day": "30",
-                "end_month": "11",
-                "end_year": "2024",
+                "start_date": "2024-11-26",
+                "end_date": "2024-11-30"
             }
         )
         self.assertEqual(response.status_code, 302)
@@ -79,12 +81,8 @@ class ReservationTests(TestCase):
     def test_create_reservation_as_owner(self):
         self.client.login(username="owner", password="password123")
         response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
-            "start_day": "26",
-            "start_month": "11",
-            "start_year": "2024",
-            "end_day": "30",
-            "end_month": "11",
-            "end_year": "2024",
+            "start_date": "2024-11-26",
+            "end_date": "2024-11-30"
         })
         self.assertEqual(response.status_code, 403)
         self.assertContains(response, "Solo los inquilinos pueden realizar reservas.", status_code=403)
@@ -98,12 +96,8 @@ class ReservationTests(TestCase):
     def test_create_reservation_overlapping(self):
         self.client.login(username="customer", password="password123")
         response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
-            "start_day": "20",
-            "start_month": "11",
-            "start_year": "2024",
-            "end_day": "25",
-            "end_month": "11",
-            "end_year": "2024",
+            "start_date": "2024-11-23",
+            "end_date": "2024-11-26"
         })
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "El apartamento no está disponible en las fechas seleccionadas.")
@@ -111,12 +105,8 @@ class ReservationTests(TestCase):
     def test_create_reservation_invalid_dates(self):
         self.client.login(username="customer", password="password123")
         response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
-            "start_day": "30",
-            "start_month": "11",
-            "start_year": "2024",
-            "end_day": "26",
-            "end_month": "11",
-            "end_year": "2024",
+            "start_date": "2024-11-30",
+            "end_date": "2024-11-26"
         })
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "La fecha de inicio debe ser anterior a la fecha de fin.")
@@ -127,9 +117,27 @@ class ReservationTests(TestCase):
             end_date='2024-11-26'
         ).exists())
 
+    def test_create_reservation_no_availability(self):
+        self.client.login(username="customer", password="password123")
+        response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
+            "start_date": "2024-12-11",
+            "end_date": "2024-12-13"
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "El apartamento no está disponible en las fechas seleccionadas.")
+        self.assertFalse(Reservation.objects.filter(
+            cust=self.customer,
+            apartment=self.apartment,
+            start_date='2024-12-11',
+            end_date='2024-12-13'
+        ).exists())
+
     def test_delete_reservation_as_customer(self):
         self.client.login(username="customer", password="password123")
-        response = self.client.post(reverse('delete_reservation', args=[self.reservation.id]))
+        with mock.patch("django.utils.timezone.now", 
+        return_value=make_aware(datetime(2024, 11, 17))):
+            response = self.client.post(reverse('delete_reservation', args=[self.reservation.id]))
+        print(response.content.decode())
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Reservation.objects.filter(id=self.reservation.id).exists())
 
