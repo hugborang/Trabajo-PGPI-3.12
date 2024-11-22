@@ -14,18 +14,15 @@ class EmailAuthenticationForm(forms.Form):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
 
-        print("Email:", email)
-        print("Password:", password)
+       
 
         if email and password:
             try:
                 user = CustomUser.objects.get(email=email)
                 if not user.check_password(password):
-                    print("Contraseña incorrecta")
                     self.add_error('password', 'Contraseña incorrecta.')
                 self.user = user
             except CustomUser.DoesNotExist:
-                print("Email no encontrado")
                 self.add_error('email', 'Correo electrónico incorrecto.')
         return self.cleaned_data
     

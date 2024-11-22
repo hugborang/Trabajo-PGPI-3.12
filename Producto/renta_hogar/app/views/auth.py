@@ -44,8 +44,6 @@ def user_login(request):
             elif user.role == 'owner':
                 return redirect('/owner_menu')  
 
-        else: 
-            print("Errores->" , form.errors)
     else:
         form = EmailAuthenticationForm()
 

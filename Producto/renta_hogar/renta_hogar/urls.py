@@ -27,7 +27,9 @@ from app.views.apartment import delete_apartment, add_apartment, edit_apartment
 from app.views.reservation import create_reservation, delete_reservation
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
 from app.views.home import search_apartment
-from app.views.access_denied import access_denied
+from app.views.error import access_denied
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'app'
 
@@ -68,12 +70,9 @@ urlpatterns = [
     path('', RedirectView.as_view(url='home/search', permanent=False)),  # Ruta por defecto al iniciar la app
 
 
-
-
-
 ]
 
-from django.conf import settings
-from django.conf.urls.static import static
 
+
+handler404='app.views.error.error_404'
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

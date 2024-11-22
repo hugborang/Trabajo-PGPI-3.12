@@ -56,8 +56,7 @@ def create_reservation(request, apartment_id):
             reservation.full_clean()  # Valida con las reglas del modelo
             reservation.save()
 
-            print(request.user.email)
-            # Enviar correo al usuario
+
             send_mail(
                 "Nueva reserva creada",
                 f"Se ha creado una nueva reserva para el piso en.",
