@@ -13,7 +13,7 @@
 
 <div class="content-register">
     <h1 class="register-title">Registrarse</h1>
-    <form id="formulario" method="post" action="">
+    <form id="formulario" method="post">
         {% csrf_token %}
         <div>
             <label for="id_username">Nombre de usuario:</label>
@@ -36,7 +36,7 @@
             {{ form.role }}
         </div>
         <div>
-            <p><input type="submit" value="Iniciar Sesión" /></p>
+            <p><input type="submit" value="Registrarse" /></p>
         </div>
     </form>
 </div>

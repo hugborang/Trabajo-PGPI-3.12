@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -5,7 +6,16 @@ from app.models import Apartment, Reservation
 from app.forms.reservation_form import ReservationForm
 from django.http import HttpResponseForbidden
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from datetime import datetime
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseForbidden
+from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
+from django.conf import settings
+from datetime import datetime
+from app.models import Apartment, Reservation
 
 @login_required
 def create_reservation(request, apartment_id):
@@ -31,9 +41,11 @@ def create_reservation(request, apartment_id):
         year_end = request.POST.get("end_year")
 
         try:
+            # Parsear las fechas
             start_date = datetime(year=int(year_start), month=int(month_start), day=int(day_start)).date()
             end_date = datetime(year=int(year_end), month=int(month_end), day=int(day_end)).date()
 
+            # Crear y validar la reserva
             reservation = Reservation(
                 cust=request.user,
                 apartment=apartment,
@@ -43,7 +55,17 @@ def create_reservation(request, apartment_id):
             )
             reservation.full_clean()  # Valida con las reglas del modelo
             reservation.save()
-            return redirect("manage_reservations")
+
+            print(request.user.email)
+            # Enviar correo al usuario
+            send_mail(
+                "Nueva reserva creada",
+                f"Se ha creado una nueva reserva para el piso en.",
+                settings.EMAIL_HOST_USER,
+                [request.user.email],
+                fail_silently=False,
+            )
+            return redirect("manage_reservations")  # Redirigir si todo está bien
         except ValidationError as e:
             errors.extend(e.messages)
         except (ValueError, TypeError):
@@ -56,7 +78,6 @@ def create_reservation(request, apartment_id):
         "years": years,
         "errors": errors,
     })
-
 
 @login_required
 def delete_reservation(request, reservation_id):
