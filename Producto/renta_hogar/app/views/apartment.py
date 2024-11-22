@@ -7,8 +7,10 @@ from app.forms.Apartmentform import ApartmentForm
 from app.models import Apartment, ApartmentPhoto
 from app.models.apartmentPhoto import validate_image_extension
 from django.shortcuts import redirect
+from app.utils.decorator import requires_role
 
 @login_required
+@requires_role('owner')
 def add_apartment(request):
     if request.user.role != 'owner':
         return HttpResponseForbidden("No tienes permiso para añadir apartamentos.")
@@ -48,6 +50,7 @@ def add_apartment(request):
     return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
 
 @login_required
+@requires_role('owner')
 def delete_apartment(request, apartment_id):
     try:
         apartment = Apartment.objects.get(id=apartment_id)
@@ -64,6 +67,7 @@ def delete_apartment(request, apartment_id):
     return redirect('owner_menu')
 
 @login_required
+@requires_role('owner')
 def edit_apartment(request, apartment_id):
     if request.user.role != 'owner':
         return HttpResponseForbidden("No tienes permiso para editar apartamentos.")

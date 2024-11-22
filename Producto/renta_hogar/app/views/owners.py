@@ -1,15 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from ..models import Apartment  # Importa el modelo Apartment
+from ..models import Apartment 
+from app.utils.decorator import requires_role  
 
 @login_required
+@requires_role('owner')
 def owner_menu(request):
-    # Verificar que el usuario sea un propietario
-    if request.user.role != 'owner':
-        messages.error(request, "No tienes permiso para acceder a esta página.")
-        return redirect('home')  # Redirige a la página principal si no es propietario
-
-    # Obtener los apartamentos asociados al propietario
     apartments = Apartment.objects.filter(owner=request.user)
     return render(request, 'owner/owner_menu.html', {'apartments': apartments})

@@ -2,8 +2,10 @@ from django.shortcuts import render
 from app.models import Apartment    
 from django.contrib.auth.decorators import login_required
 from app.models import Reservation
+from app.utils.decorator import requires_role
 
 @login_required
+@requires_role('customer')
 def customer_menu(request):
     price_min = request.GET.get('precio_min')
     price_max = request.GET.get('precio_max')
@@ -31,10 +33,12 @@ def customer_menu(request):
     })
 
 @login_required
+@requires_role('customer')
 def manage_reservations(request):
     reservations = Reservation.objects.filter(cust=request.user)
     return render(request, 'customer/manage_reservations.html', {'reservations': reservations})
 
 @login_required
+@requires_role('customer')
 def customer_apartment_detail(request, apartment_id):
     return render(request, 'customer/customer_apartment_detail.html')

@@ -28,3 +28,6 @@ class EmailAuthenticationForm(forms.Form):
                 print("Email no encontrado")
                 self.add_error('email', 'Correo electrónico incorrecto.')
         return self.cleaned_data
+    
+    def get_user(self):
+        return getattr(self, 'user', None)  

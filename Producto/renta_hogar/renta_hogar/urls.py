@@ -18,17 +18,16 @@ from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.views.generic.base import RedirectView
-from app.views.auth import register, user_login, user_logout, edit_profile
-from app.views.auth import register, user_login, user_logout, edit_profile, delete_account, menu
+from app.views.auth import register, user_login, edit_profile, delete_account, menu
 from app.views.customers import customer_menu, manage_reservations, customer_apartment_detail
 from app.views.owners import owner_menu
 from django.conf import settings
 from django.conf.urls.static import static
-from app.views import owners
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment
 from app.views.reservation import create_reservation, delete_reservation
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_apartment
 from app.views.home import search_apartment
+from app.views.access_denied import access_denied
 
 app_name = 'app'
 
@@ -38,6 +37,8 @@ urlpatterns = [
 
     #Home
     path('home/search/', search_apartment, name='home_search'),
+    path('access_denied/', access_denied, name='access_denied'),
+
       
     #Auths
     path('auth/register/', register, name='register'),  
@@ -57,7 +58,6 @@ urlpatterns = [
 
     #Owner
     path('owner_menu/', owner_menu, name='owner_menu'),
-    path('owner_menu/', owners.owner_menu, name='owner_menu'),
     path('add_apartment/', add_apartment, name='add_apartment'),
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
     path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
