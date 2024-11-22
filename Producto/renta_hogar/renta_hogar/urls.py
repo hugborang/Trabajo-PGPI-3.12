@@ -63,7 +63,7 @@ urlpatterns = [
     path('add_apartment/', add_apartment, name='add_apartment'),
     path('delete_apartment/<int:apartment_id>/', delete_apartment, name='delete_apartment'),
     path('edit_apartment/<int:apartment_id>/', edit_apartment, name='edit_apartment'),
-    path('manage_availability/<int:apartment_id>/', owners.manage_availability, name='manage_availability'),
+    path('manage_availability/<int:apartment_id>/', manage_availability, name='manage_availability'),
     path('add_availability/<int:apartment_id>/', add_availability, name='add_availability'),
     path('delete_availability/<int:availability_id>/', delete_availability, name='delete_availability'),
    
