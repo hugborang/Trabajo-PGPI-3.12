@@ -33,7 +33,6 @@
             </div>
         {% endif %}
 
-        
         <div class="form-group">
             <label for="fecha_inicio">Fecha de inicio:</label>
             <input type="date" id="fecha_inicio" name="start_date" required>
@@ -43,25 +42,89 @@
             <label for="fecha_fin">Fecha de fin:</label>
             <input type="date" id="fecha_fin" name="end_date" required>
         </div>
-                
-        <button type="submit" class="btn btn-primary">Reservar</button>
+
+        <button type="button" data-price="{{ apartment.price }}" class="btn-primary" id="openModalButton" onclick="openModal()">Reservar </button>
+
     </form>
 
-
-<!-- Modal de confirmación -->
-<div id="deleteAccountModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Confirmar eliminación</h2>
-        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
-        <form method="post" action="{% url 'delete_account' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Sí, eliminar cuenta</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        </form>
+    <div id="reservationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeModalButton">&times;</span>
+            <h2>Confirmar Reserva</h2>
+            <p>¿Estás seguro de que deseas confirmar la reserva para las siguientes fechas?</p>
+            <p><strong>Fecha de inicio:</strong> <span id="modalStartDate"></span></p>
+            <p><strong>Fecha de fin:</strong> <span id="modalEndDate"></span></p>
+            <p><strong id="totalPrice">$0.00</strong></p> 
+            <form method="post" action="{% url 'create_reservation' apartment.id %}">
+                {% csrf_token %}
+                <input type="hidden" id="modalStartDateInput" name="start_date">
+                <input type="hidden" id="modalEndDateInput" name="end_date">
+                <button type="submit" class="btn btn-primary">Sí, pagar reserva</button>
+                <button type="button" class="btn btn-secondary" id="closeModalButtonCancel">Cancelar</button>
+            </form>
+        </div>
     </div>
-</div>
-
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const openModalButton = document.getElementById('openModalButton');
+    const reservationModal = document.getElementById('reservationModal');
+    const closeModalButtons = document.querySelectorAll('#closeModalButton, #closeModalButtonCancel');
+
+    function openModal() {
+        const startDate = document.getElementById('fecha_inicio').value;
+        const endDate = document.getElementById('fecha_fin').value;
+
+        if (!startDate || !endDate) {
+            alert('Por favor, selecciona ambas fechas.');
+            return; 
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+         // Calcular la diferencia en días
+        const differenceInTime = end.getTime() - start.getTime();
+        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+        // Obtener el precio por noche desde el atributo data-price del botón
+        const pricePerNight = openModalButton.getAttribute("data-price");
+        const pricePerNightNumber = parseFloat(pricePerNight);
+
+        // Calcular el precio total
+        const totalPrice = pricePerNightNumber * differenceInDays;
+
+        document.getElementById('modalStartDate').textContent = startDate;
+        document.getElementById('modalEndDate').textContent = endDate;
+
+        document.getElementById('modalStartDateInput').value = startDate;
+        document.getElementById('modalEndDateInput').value = endDate;
+
+        document.getElementById('totalPrice').textContent = `Total: $${totalPrice.toFixed(2)}`;
+
+        reservationModal.style.display = 'block';
+    }
+
+    function closeModal() {
+        reservationModal.style.display = 'none';
+    }
+
+    openModalButton.addEventListener('click', openModal);
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
+
+    // Cerrar modal si se hace clic fuera de él
+    window.addEventListener('click', function(event) {
+        if (event.target === reservationModal) {
+            closeModal();
+        }
+    });
+});
+
+</script>
+
 {% endblock %}

@@ -16,11 +16,11 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 from datetime import datetime
 from app.models import Apartment, Reservation
+from app.utils.decorator import requires_role
 
 @login_required
+@requires_role("customer")
 def create_reservation(request, apartment_id):
-    if request.user.role != "customer":
-        return HttpResponseForbidden("Solo los inquilinos pueden realizar reservas.")
 
     apartment = get_object_or_404(Apartment, id=apartment_id)
     current_year = datetime.now().year
@@ -33,42 +33,31 @@ def create_reservation(request, apartment_id):
     errors = []
 
     if request.method == "POST":
-        day_start = request.POST.get("start_day")
-        month_start = request.POST.get("start_month")
-        year_start = request.POST.get("start_year")
-        day_end = request.POST.get("end_day")
-        month_end = request.POST.get("end_month")
-        year_end = request.POST.get("end_year")
 
-        try:
-            # Parsear las fechas
-            start_date = datetime(year=int(year_start), month=int(month_start), day=int(day_start)).date()
-            end_date = datetime(year=int(year_end), month=int(month_end), day=int(day_end)).date()
+        print(request.POST)
+        start_date_str = request.POST.get("start_date")
+        end_date_str = request.POST.get("end_date")
+        
+        print( request.POST.get("start_date"))
+        print(start_date_str)
+        
+        start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+        
+    
+        
+        # Crear y validar la reserva
+        reservation = Reservation(
+            cust=request.user,
+            apartment=apartment,
+            start_date=start_date,
+            end_date=end_date,
+            total_price=apartment.price * (end_date - start_date).days
+        )
+        reservation.full_clean()  # Valida con las reglas del modelo
+        reservation.save()
 
-            # Crear y validar la reserva
-            reservation = Reservation(
-                cust=request.user,
-                apartment=apartment,
-                start_date=start_date,
-                end_date=end_date,
-                total_price=apartment.price * (end_date - start_date).days
-            )
-            reservation.full_clean()  # Valida con las reglas del modelo
-            reservation.save()
-
-
-            send_mail(
-                "Nueva reserva creada",
-                f"Se ha creado una nueva reserva para el piso en.",
-                settings.EMAIL_HOST_USER,
-                [request.user.email],
-                fail_silently=False,
-            )
-            return redirect("manage_reservations")  # Redirigir si todo está bien
-        except ValidationError as e:
-            errors.extend(e.messages)
-        except (ValueError, TypeError):
-            errors.append("Las fechas proporcionadas no son válidas.")
+        return redirect("manage_reservations")  # Redirigir si todo está bien
 
     return render(request, "customer/create_reservation.html", {
         "apartment": apartment,
