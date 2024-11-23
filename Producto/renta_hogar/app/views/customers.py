@@ -37,8 +37,3 @@ def customer_menu(request):
 def manage_reservations(request):
     reservations = Reservation.objects.filter(cust=request.user)
     return render(request, 'customer/manage_reservations.html', {'reservations': reservations})
-
-@login_required
-@requires_role('customer')
-def customer_apartment_detail(request, apartment_id):
-    return render(request, 'customer/customer_apartment_detail.html')

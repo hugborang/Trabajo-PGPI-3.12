@@ -17,15 +17,25 @@ from django.conf import settings
 from datetime import datetime
 from app.models import Apartment, Reservation
 from app.utils.decorator import requires_role
+import json
+
 
 @login_required
 @requires_role("customer")
 def create_reservation(request, apartment_id):
-
     apartment = get_object_or_404(Apartment, id=apartment_id)
     current_year = datetime.now().year
+    
+    reservations = Reservation.objects.filter(apartment=apartment)
+    reserved_days = []
 
-    # Rango para días, meses y años
+    for reservation in reservations:
+        reserved_days += reservation.reserved_days()  
+
+    reserved_dates = [reserved_day.strftime('%Y-%m-%d') for reserved_day in reserved_days]
+
+    reserved_dates_json = json.dumps(reserved_dates)
+
     days = range(1, 32)
     months = [{"value": i, "name": datetime(2000, i, 1).strftime("%B")} for i in range(1, 13)]
     years = list(range(current_year, current_year + 5))
@@ -33,20 +43,12 @@ def create_reservation(request, apartment_id):
     errors = []
 
     if request.method == "POST":
-
-        print(request.POST)
         start_date_str = request.POST.get("start_date")
         end_date_str = request.POST.get("end_date")
-        
-        print( request.POST.get("start_date"))
-        print(start_date_str)
-        
+
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-        
-    
-        
-        # Crear y validar la reserva
+
         reservation = Reservation(
             cust=request.user,
             apartment=apartment,
@@ -54,10 +56,10 @@ def create_reservation(request, apartment_id):
             end_date=end_date,
             total_price=apartment.price * (end_date - start_date).days
         )
-        reservation.full_clean()  # Valida con las reglas del modelo
+        reservation.full_clean()  
         reservation.save()
 
-        return redirect("manage_reservations")  # Redirigir si todo está bien
+        return redirect("manage_reservations")  
 
     return render(request, "customer/create_reservation.html", {
         "apartment": apartment,
@@ -65,7 +67,9 @@ def create_reservation(request, apartment_id):
         "months": months,
         "years": years,
         "errors": errors,
+        "reserved_dates": reserved_dates_json,  # Pasar las fechas en formato JSON
     })
+
 
 @login_required
 def delete_reservation(request, reservation_id):

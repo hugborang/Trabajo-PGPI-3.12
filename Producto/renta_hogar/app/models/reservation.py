@@ -42,3 +42,5 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Reserva de {self.cust.username} en {self.apartment.address} ({self.start_date} - {self.end_date})"
 
+    def reserved_days(self):
+        return [self.start_date + timezone.timedelta(days=i) for i in range((self.end_date - self.start_date).days)]

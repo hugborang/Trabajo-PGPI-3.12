@@ -216,3 +216,20 @@ body {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
 }
+
+.reserved {
+    background-color: rgba(255, 0, 0, 0.5) !important;  /* Color rojo con transparencia */
+    color: white !important;
+    pointer-events: none;  /* Desactivar la selección del día */
+}
+
+.flatpickr-day.disabled {
+    background-color: rgba(255, 0, 0, 0.2) !important;  /* Color transparente de los días no disponibles */
+    color: #333333 !important;
+}
+
+.flatpickr-day.reserved {
+    background-color: red !important;  /* Fondo rojo para los días reservados */
+    color: white !important;  /* Texto blanco */
+    pointer-events: none !important;  /* Desactivar la selección del día */
+}

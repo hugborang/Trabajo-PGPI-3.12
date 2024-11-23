@@ -19,7 +19,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, edit_profile, delete_account, menu
-from app.views.customers import customer_menu, manage_reservations, customer_apartment_detail
+from app.views.customers import customer_menu, manage_reservations
 from app.views.owners import owner_menu, manage_availability
 from django.conf import settings
 from django.conf.urls.static import static
@@ -53,7 +53,6 @@ urlpatterns = [
 
     #Customer
     path('customer_menu/', customer_menu, name='customer_menu'),
-    path('customer_apartment_detail/<int:apartment_id>/', customer_apartment_detail, name='customer_apartment_detail'),
     path('manage_reservations/', manage_reservations, name='manage_reservations'),
     path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
     path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
