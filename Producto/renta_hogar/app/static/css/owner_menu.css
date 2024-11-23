@@ -83,20 +83,70 @@
     background-color: #a71d2a;
 }
 
-.add-property-btn-container {
-    margin-top: 50px;
+/* Contenedor de los botones, centrado en la pantalla */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    padding: 20px;
+    flex-direction: column;
+}
+
+
+.add-property-btn-container,
+.view-reviews-btn-container {
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
 }
 
-.add-property-btn {
-    background-color: #17a2b8;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
+
+.add-property-btn,
+.view-reviews-btn {
+    display: inline-block;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-align: center;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Botón para añadir apartamento */
+.add-property-btn {
+    background-color: #28a745;
+    border: 2px solid #28a745;
+    margin-right: 10px;
 }
 
 .add-property-btn:hover {
-    background-color: #117a8b;
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.view-reviews-btn {
+    background-color: #ffc107;
+    border: 2px solid #ffc107;
+}
+
+.view-reviews-btn:hover {
+    background-color: #e0a800;
+    border-color: #c69500;
+}
+
+/* Iconos dentro de los botones */
+.add-property-btn i,
+.view-reviews-btn i {
+    margin-right: 8px;
+}
+
+/* Espaciado entre los botones */
+.add-property-btn-container,
+.view-reviews-btn-container {
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
 }

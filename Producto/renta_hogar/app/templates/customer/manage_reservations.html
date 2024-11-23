@@ -12,32 +12,43 @@
     <h1>Gestión de Reservas</h1>
 
     {% if reservations %}
-        <div class="reservations-list">
-            {% for reservation in reservations %}
-                <div class="reservation-card">
-                    <div class="reservation-photo">
-                        <img src="{{ reservation.apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
-                    </div>
-                    <div class="reservation-info">
-                        <h2>{{ reservation.apartment.address }}</h2>
-                        <p><strong>Capacidad:</strong> {{ reservation.apartment.guest_count }} huéspedes</p>
-                        <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
-                        <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
-                        <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
-                    </div>
-                    <div class="reservation-actions">
-                        <form action="{% url 'delete_reservation' reservation.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash-alt"></i> Cancelar Reserva
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            {% endfor %}
+    <div class="reservations-list">
+        {% for reservation in reservations %}
+        <div class="reservation-card">
+            <div class="reservation-photo">
+                <img src="{{ reservation.apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
+            </div>
+            <div class="reservation-info">
+                <h2>{{ reservation.apartment.address }}</h2>
+                <p><strong>Capacidad:</strong> {{ reservation.apartment.guest_count }} huéspedes</p>
+                <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
+                <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
+                <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
+            </div>
+            <div class="reservation-actions">
+                <form action="{% url 'delete_reservation' reservation.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Cancelar Reserva
+                    </button>
+                </form>
+            </div>
+            <div class="reservation-actions">
+                {% if user.is_authenticated  %}
+                <form action="{% url 'create_review' apartment_id=reservation.apartment.id %}" method="get">
+                    <button type="submit" class="btn btn-success" style="background-color: rgb(160, 160, 0);">
+                        <i class="fas fa-star"></i> Deja una valoración
+                    </button>
+                </form>
+                {% else %}
+                <p>Debes haber reservado este apartamento para dejar una valoración.</p>
+                {% endif %}
+            </div>
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <p class="no-reservations">No tienes reservas activas.</p>
+    <p class="no-reservations">No tienes reservas activas.</p>
     {% endif %}
 </div>
 {% endblock %}
