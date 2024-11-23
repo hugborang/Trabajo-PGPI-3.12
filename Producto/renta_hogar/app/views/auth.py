@@ -21,7 +21,7 @@ def register(request):
             else:
                 mensaje = "Gracias " + username+ "por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero." 
                 
-            enviar_notificacion_correo("!Bienvenido a RentaHogar!", mensaje, form.cleaned_data['email'])
+            enviar_notificacion_correo("!BIENVENIDO a RentaHogar!", mensaje, form.cleaned_data['email'])
             
             return redirect('/auth/login/')
 

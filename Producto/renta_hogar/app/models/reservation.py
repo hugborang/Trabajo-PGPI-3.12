@@ -18,6 +18,9 @@ class Reservation(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    session_id = models.CharField(max_length=255, null=True, blank=True)  # ID de la sesión de Stripe
+
+
 
     def clean(self):
         # Validación de fechas futuras

@@ -24,7 +24,7 @@ from app.views.owners import owner_menu, manage_availability
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment
-from app.views.reservation import create_reservation, delete_reservation
+from app.views.reservation import create_reservation, delete_reservation, verify_payment
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_availability, delete_availability
 from app.views.home import search_apartment
 from app.views.error import access_denied
@@ -56,6 +56,8 @@ urlpatterns = [
     path('manage_reservations/', manage_reservations, name='manage_reservations'),
     path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
     path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
+    path('verify_payment/', verify_payment, name='verify_payment'),
+
 
     #Owner
     path('owner_menu/', owner_menu, name='owner_menu'),

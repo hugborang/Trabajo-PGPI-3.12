@@ -218,18 +218,11 @@ body {
 }
 
 .reserved {
-    background-color: rgba(255, 0, 0, 0.5) !important;  /* Color rojo con transparencia */
-    color: white !important;
-    pointer-events: none;  /* Desactivar la selección del día */
+    background-color: rgba(255, 0, 0, 0.5) !important; 
+    color: white !important; 
+    pointer-events: none; 
 }
 
-.flatpickr-day.disabled {
-    background-color: rgba(255, 0, 0, 0.2) !important;  /* Color transparente de los días no disponibles */
-    color: #333333 !important;
-}
-
-.flatpickr-day.reserved {
-    background-color: red !important;  /* Fondo rojo para los días reservados */
-    color: white !important;  /* Texto blanco */
-    pointer-events: none !important;  /* Desactivar la selección del día */
+.flatpickr-disabled {
+    background-color: rgba(0, 0, 0, 0.1) !important;  
 }

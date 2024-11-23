@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Exitoso</title>
+</head>
+<body>
+    <h1>¡Gracias por tu reserva!</h1>
+    <p>Tu pago ha sido confirmado y tu reserva para el apartamento <strong>{{ reservation.apartment.address }}</strong> ha sido realizada.</p>
+    <p>Fechas de la reserva: del {{ reservation.start_date }} al {{ reservation.end_date }}</p>
+    <p>Precio total: {{ reservation.total_price }} EUR</p>
+    <a href="/manage_reservations/">Ver mis reservas</a>
+</body>
+</html>

@@ -49,7 +49,7 @@
             <p>¿Estás seguro de que deseas confirmar la reserva para las siguientes fechas?</p>
             <p><strong>Fecha de inicio:</strong> <span id="modalStartDate"></span></p>
             <p><strong>Fecha de fin:</strong> <span id="modalEndDate"></span></p>
-            <p><strong id="totalPrice">$0.00</strong></p> 
+            <p><strong id="totalPrice">€0.00</strong></p> 
             <form method="post" action="{% url 'create_reservation' apartment.id %}">
                 {% csrf_token %}
                 <input type="hidden" id="modalStartDateInput" name="start_date">
@@ -66,13 +66,18 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/es.js"></script>
 <script>
     const reservedDates = JSON.parse('{{ reserved_dates|escapejs }}');
-    console.log(reservedDates); 
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); 
+    const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+
 
     flatpickr("#fecha_rango", {
         locale: "es",  
         dateFormat: "Y-m-d",  
         mode: "range",  
         disable: reservedDates,  
+        minDate: tomorrowFormatted,
         onDayCreate: function(dObj, dStr, dFltr) {
             const dateStr = dStr; 
 
