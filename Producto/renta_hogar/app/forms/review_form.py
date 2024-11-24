@@ -23,26 +23,25 @@ class ReviewForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)  # Recibe el request como parámetro
+        self.request = kwargs.pop('request', None)  
         super().__init__(*args, **kwargs)
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     rating = cleaned_data.get('rating')
-    #     comment = cleaned_data.get('comment')
+    def clean(self):
+        cleaned_data = super().clean()
+        rating = cleaned_data.get('rating')
+        comment = cleaned_data.get('comment')
 
-    #     if not self.request:
-    #         raise ValidationError("Se requiere un objeto request.")
+        if not self.request:
+            raise ValidationError("Se requiere un objeto request.")
 
-    #     # Obtener la reserva y validaciones
-    #     reservation = Reservation.objects.get(user=self.request.user, apartment=self.apartment)  # Suponiendo que hay una relación entre usuario y apartamento
-    #     if reservation.end_date > timezone.now().date():
-    #         raise ValidationError("La reserva debe haber finalizado para dejar una valoración.")
+        reservation = Reservation.objects.get(user=self.request.user, apartment=self.apartment)  
+        if reservation.end_date > timezone.now().date():
+            raise ValidationError("La reserva debe haber finalizado para dejar una valoración.")
 
-    #     if Review.objects.filter(user=self.request.user, apartment=self.apartment).exists():
-    #         raise ValidationError("Ya has dejado una valoración para este apartamento.")
+        if Review.objects.filter(user=self.request.user, apartment=self.apartment).exists():
+            raise ValidationError("Ya has dejado una valoración para este apartamento.")
 
-    #     return cleaned_data
+        return cleaned_data
     
     def get_user(self):
         return getattr(self, 'user', None)

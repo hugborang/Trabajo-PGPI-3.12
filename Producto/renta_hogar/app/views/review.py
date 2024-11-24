@@ -25,7 +25,7 @@ def create_reviews(request, apartment_id):
             except IntegrityError:
                 messages.error(request, "Ya has dejado una valoración para este apartamento.")
         else:
-            messages.error(request, "Por favor, corrige los errores en el formulario.")
+            messages.error(request, "No puedes dejar una valoración hasta que no hayas disfrutado de tu estancia.")
 
     else:
         form = ReviewForm()
@@ -34,8 +34,14 @@ def create_reviews(request, apartment_id):
 
 @login_required
 def apartment_review(request):
+    apartments = Apartment.objects.filter(owner=request.user)
     
-    apartments = Apartment.objects.filter(owner=request.user)  
-    reviews = Review.objects.filter(apartment__in=apartments)
+    apartment_reviews = [
+        {
+            'apartment': apartment,
+            'reviews': Review.objects.filter(apartment=apartment)
+        }
+        for apartment in apartments
+    ]
     
-    return render(request, 'owner/review_list.html', {'reviews': reviews})
+    return render(request, 'owner/review_list.html', {'apartment_reviews': apartment_reviews})

@@ -21,6 +21,7 @@
             <h2>Capacidad: <span class="atribute">{{ apartment.guest_count }}  huéspedes</span></h2>
             <h2>Precio por noche: <span class="atribute">{{ apartment.price }} €</span></h2>
             <h2>Anfitrión: <span class="atribute">{{ apartment.owner }}</span></h2>
+            <h2>Email de contacto: <span class="atribute">{{ apartment.owner.email }}</span></h2>
             <h2>Descripción: <span class="atribute">{{ apartment.description }}</span></h2>
         </div>
     
@@ -52,6 +53,7 @@
             <p>¿Estás seguro de que deseas confirmar la reserva para las siguientes fechas?</p>
             <p><strong>Fecha de inicio:</strong> <span id="modalStartDate"></span></p>
             <p><strong>Fecha de fin:</strong> <span id="modalEndDate"></span></p>
+            <p><strong>Número total de noches:</strong> <span id="modalNight"></span></p>
             <p><strong id="totalPrice">€0.00</strong></p> 
             <form method="post" action="{% url 'create_reservation' apartment.id %}">
                 {% csrf_token %}
@@ -103,6 +105,8 @@
 
                 document.getElementById('modalStartDate').textContent = startDate;
                 document.getElementById('modalEndDate').textContent = endDate;
+                document.getElementById('modalNight').textContent = endDate;
+
 
                 document.getElementById('modalStartDateInput').value = startDate;
                 document.getElementById('modalEndDateInput').value = endDate;
@@ -112,11 +116,13 @@
                 const differenceInDays = differenceInTime / (1000 * 3600 * 24);
                 const totalPrice = pricePerNight * differenceInDays;
 
-                document.getElementById('totalPrice').textContent = `Total: $${totalPrice.toFixed(2)}`;
+                document.getElementById('modalNight').textContent = differenceInDays;
+                document.getElementById('totalPrice').textContent = `Precio total: ${totalPrice.toFixed(2)}€`;
             }
         }
     });
 
+    // Modal
     document.addEventListener('DOMContentLoaded', function () {
         const openModalButton = document.getElementById('openModalButton');
         const reservationModal = document.getElementById('reservationModal');
