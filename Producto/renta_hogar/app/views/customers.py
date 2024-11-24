@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
+from app.models import reservation
 from app.models import Apartment    
 from django.contrib.auth.decorators import login_required
 from app.models import Reservation
@@ -36,9 +39,19 @@ def customer_menu(request):
 @requires_role('customer')
 def manage_reservations(request):
     reservations = Reservation.objects.filter(cust=request.user)
-    return render(request, 'customer/manage_reservations.html', {'reservations': reservations})
+    
+    now = datetime.now().date()
+    
+    
+    for r in reservations:
+        print(r.can_cancel)
+        if r.start_date - now < timedelta(days=30):
+            r.can_cancel = False
+            print(r.can_cancel)
+            
+    print("holaaaaaa")
 
-@login_required
-@requires_role('customer')
-def customer_apartment_detail(request, apartment_id):
-    return render(request, 'customer/customer_apartment_detail.html')
+
+    
+    
+    return render(request, 'customer/manage_reservations.html', {'reservations': reservations})

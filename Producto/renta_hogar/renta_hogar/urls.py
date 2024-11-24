@@ -19,16 +19,18 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, edit_profile, delete_account, menu
-from app.views.customers import customer_menu, manage_reservations, customer_apartment_detail
-from app.views.owners import owner_menu, manage_availability, owner_reviews
+from app.views.customers import customer_menu, manage_reservations
+from app.views.owners import owner_menu, manage_availability
+from app.views.customers import customer_menu, manage_reservations
+from app.views.owners import owner_menu, manage_availability
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment
-from app.views.reservation import create_reservation, delete_reservation
+from app.views.reservation import create_reservation, delete_reservation, verify_payment
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_availability, delete_availability
 from app.views.home import search_apartment
 from app.views.error import access_denied
-from app.views.review import ReviewCreateView
+from app.views.review import create_reviews, apartment_review
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -55,11 +57,11 @@ urlpatterns = [
 
     #Customer
     path('customer_menu/', customer_menu, name='customer_menu'),
-    path('customer_apartment_detail/<int:apartment_id>/', customer_apartment_detail, name='customer_apartment_detail'),
     path('manage_reservations/', manage_reservations, name='manage_reservations'),
     path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
     path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
-    path('review/<int:apartment_id>', ReviewCreateView.as_view(), name='create_review'),
+    path('verify_payment/', verify_payment, name='verify_payment'),
+    path('apartment/reviews/<int:apartment_id>/', create_reviews, name='create_review'),
 
 
     #Owner
@@ -70,7 +72,7 @@ urlpatterns = [
     path('manage_availability/<int:apartment_id>/', manage_availability, name='manage_availability'),
     path('add_availability/<int:apartment_id>/', add_availability, name='add_availability'),
     path('delete_availability/<int:availability_id>/', delete_availability, name='delete_availability'),
-     path('owner/reviews/', owner_reviews, name='owner_reviews'),
+    path('apartment/reviews/', apartment_review, name='owner_review'),
    
     path('auth/menu/', menu, name='menu'),
 

@@ -1,0 +1,21 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+v
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+{% endblock %}
+
+{% block contenido %}
+
+<div class="content-login">
+    <h1 style="color: rgb(0, 0, 0);">Pago Exitoso</h1>
+    <p class="success-message">¡Gracias por tu compra! Tu pago ha sido procesado exitosamente.</p>
+    <form method="get" action="{% url 'manage_reservations' %}">
+        <input type="submit" value="Ver reservas" class="btn btn btn-primary" />
+    </form>
+</div>
+
+{% endblock %}
+

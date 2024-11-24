@@ -1,0 +1,23 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+{% endblock %}
+
+{% block contenido %}
+
+<div class="content-login">
+    <h1 class="login-title">¡Upps! Parece que has recargado la página.</h1>
+    <p class="login-description">
+        El pago se ha completado y se ha realizado la reserva correctamente.
+        Pulse en "Ver reservas" para acceder a la reserva realizada.
+    </p>
+    <form method="get" action="{% url 'manage_reservations' %}">
+        <input type="submit" value="Ver reservas" class="btn btn btn-primary" />
+    </form>
+</div>
+
+{% endblock %}

@@ -1,5 +1,7 @@
+import re
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django import forms
 
 class CustomUser(AbstractUser):
     surnames = models.CharField(max_length=50)
@@ -24,10 +26,12 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.'
     )
 
+
     def __str__(self):
         return self.username
-
-
+    
+    
+    
     @property
     def is_owner(self):
         return self.role == 'owner'

@@ -1,31 +1,35 @@
-.reservation-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: #76a1d6;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
-    font-family: 'Arial', sans-serif;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); 
-}
-
+/* Estilos generales */
 body {
     background-color: #eeecfb; 
     margin: 0;
     font-family: 'Arial', sans-serif;
 }
 
+/* Contenedor de reserva */
+.reservation-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #76a1d6;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    margin-top: 6vh;
+}
+
+/* Título de reserva */
 .reservation-container h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     color: #333333;
-    font-size: 28px;
+    font-size: 35px;
     font-weight: bold;
 }
 
+/* Información del apartamento */
 .apartment-info {
     display: flex;
     flex-direction: row;
@@ -35,19 +39,31 @@ body {
 }
 
 .apartment-photo img {
-    width: 200px;
-    height: 150px;
+    width: 400px;
+    height: 250px;
     border-radius: 8px;
     object-fit: cover;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* Suaviza la transición del zoom */
 }
+
+.apartment-photo img:hover {
+    transform: scale(1.05); /* Ampliación al pasar el cursor (10% más grande) */
+}
+
 
 .apartment-details {
     flex: 1;
     padding: 10px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.206);
+    transition: transform 0.3s ease; /* Suaviza la transición del zoom */
+}
+
+.apartment-details:hover {
+    transform: scale(1.05); /* Ampliación al pasar el cursor (10% más grande) */
+
 }
 
 .apartment-details h2 {
@@ -62,6 +78,7 @@ body {
     font-size: 14px;
 }
 
+/* Formulario de reserva */
 .reservation-form {
     margin-top: 20px;
     text-align: center; 
@@ -87,6 +104,7 @@ body {
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Fila de fechas */
 .date-row {
     display: flex;
     gap: 10px; 
@@ -111,6 +129,7 @@ body {
     margin-left: 5px;
 }
 
+/* Botones generales */
 .btn {
     display: inline-block;
     padding: 12px 20px;
@@ -136,11 +155,15 @@ body {
     margin-top: 2vh;
 }
 
+
 .btn-primary:hover {
     background-color: #0056b3;
     transform: scale(1.05);
 }
 
+
+
+/* Errores */
 .errorlist .error {
     color: #d9534f;
     font-size: 14px;
@@ -165,23 +188,13 @@ body {
     padding: 0;
 }
 
-@media (max-width: 768px) {
-    .apartment-info {
-        flex-direction: column;
-    }
-
-    .apartment-photo img {
-        width: 100%;
-        height: auto;
-    }
-}
-
+/* Modal */
 .modal {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); 
-    width: 60%;
+    width: 70%;
     max-width: 500px;
     height: auto;
     display: none; 
@@ -215,4 +228,75 @@ body {
 .modal-content .btn-secondary {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
+}
+
+.reserved {
+    background-color: rgba(255, 0, 0, 0.5) !important; 
+    color: white !important; 
+    pointer-events: none; 
+}
+
+.flatpickr-disabled {
+    background-color: rgba(0, 0, 0, 0.1) !important;  
+}
+
+@media (max-width: 768px) {
+    .apartment-info {
+        flex-direction: column;
+    }
+
+    .apartment-photo img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+
+.warning-box {
+    background-color: #fff3cd; 
+    border: 1px solid #ffeeba; 
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #856404; 
+    display: flex;
+    align-items: center; 
+}
+
+.warning-icon {
+    font-size: 20px; 
+    margin-right: 4px; 
+    color: #856404; 
+}
+
+.warning-text {
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.atribute {
+    color: #00000096;
+}
+
+.select-date {
+    font-size: 20px;
+    color: #333333;
+}
+
+#fecha_rango {
+    width: 100%; 
+    max-width: 400px;
+    padding: 10px; 
+    font-size: 16px; 
+    border: 2px solid #ccc;
+    border-radius: 8px; 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+    outline: none; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#fecha_rango:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); 
 }

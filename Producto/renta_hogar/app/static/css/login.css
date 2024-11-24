@@ -69,3 +69,26 @@
 #formulario input[type="submit"]:hover {
     background-color: #354573;
 }
+
+.btn {
+    display: inline-block;
+    font-size: 16px;
+    padding: 10px 15px;
+    text-align: center;
+    color: white;
+    background-color: #3b5998; /* Color similar al botón Buscar */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #2d4373; /* Oscurecer al pasar el mouse */
+}
+.login-description {
+    font-size: 14px; /* Tamaño más pequeño */
+    color: #333; /* Color más oscuro para legibilidad */
+    margin-top: 10px; /* Espacio adicional entre el título y la descripción */
+    text-align: center; /* Alineación centrada para mantener consistencia */
+}
