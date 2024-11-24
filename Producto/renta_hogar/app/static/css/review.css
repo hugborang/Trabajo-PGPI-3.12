@@ -3,7 +3,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 30px;
-    background-color: #ffffff;
+    background-color: #76a1d6;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 10%;
@@ -26,7 +26,7 @@
 label {
     font-size: 1.1rem;
     margin-bottom: 10px;
-    color: #555;
+    color: #0c0c0c;
 }
 
 input[type="number"], textarea {
@@ -43,7 +43,7 @@ textarea {
 
 /* Estilo para el botón de envío */
 .btn-submit {
-    background-color: #638cce; 
+    background-color: #354573; 
     color: #fff;
     padding: 12px 20px;
     border: none;
@@ -235,5 +235,16 @@ textarea {
   margin-top: 15px;
 }
 
+/* Si usas FontAwesome, esto te permitirá ver las estrellas */
+.rating-stars .fa-star {
+  font-size: 20px; /* Tamaño de las estrellas */
+  margin-right: 2px; /* Espaciado entre estrellas */
+}
 
+.rating-stars .fa-star {
+  color: gold; /* Cambia el color a dorado para las estrellas llenas */
+}
 
+.rating-stars .fa-star-o {
+  color: lightgray; /* Cambia el color a gris para las estrellas vacías */
+}

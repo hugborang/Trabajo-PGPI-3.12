@@ -17,10 +17,13 @@
             <img src="{{ apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
         </div>
         <div class="apartment-details">
-            <h2>{{ apartment.address }}</h2>
-            <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
-            <p><strong>Precio por noche:</strong> ${{ apartment.price }}</p>
+            <h2>Dirección: <span class="atribute">{{ apartment.address }}</span></h2>
+            <h2>Capacidad: <span class="atribute">{{ apartment.guest_count }}  huéspedes</span></h2>
+            <h2>Precio por noche: <span class="atribute">{{ apartment.price }} €</span></h2>
+            <h2>Anfitrión: <span class="atribute">{{ apartment.owner }}</span></h2>
+            <h2>Descripción: <span class="atribute">{{ apartment.description }}</span></h2>
         </div>
+    
     </div>
 
     <form method="post" class="reservation-form" data-reservations="{{ reserved_dates|escapejs }}">
@@ -35,11 +38,11 @@
         {% endif %}
 
         <div class="form-group">
-            <label for="fecha_rango">Selecciona las fechas en las que quieres alquilar:</label>
+            <h2 class = "select-date">Selecciona las fechas en las que quieres alquilar</h2>
             <input type="text" id="fecha_rango" name="date_range" required>
         </div>
 
-        <button type="button" data-price="{{ apartment.price }}" class="btn-primary" id="openModalButton" onclick="openModal()">Reservar</button>
+        <button type="button" data-price="{{ apartment.price }}" class="btn-primary" style="width: 300px;" id="openModalButton" onclick="openModal()">Reservar</button>
     </form>
 
     <div id="reservationModal" class="modal" style="display: none;">

@@ -7,13 +7,12 @@ body {
 
 /* Contenedor de reserva */
 .reservation-container {
-    max-width: 700px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 50px;
     background-color: #76a1d6;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
-    font-family: 'Arial', sans-serif;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -23,9 +22,9 @@ body {
 /* Título de reserva */
 .reservation-container h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     color: #333333;
-    font-size: 28px;
+    font-size: 35px;
     font-weight: bold;
 }
 
@@ -39,19 +38,31 @@ body {
 }
 
 .apartment-photo img {
-    width: 200px;
-    height: 150px;
+    width: 400px;
+    height: 250px;
     border-radius: 8px;
     object-fit: cover;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* Suaviza la transición del zoom */
 }
+
+.apartment-photo img:hover {
+    transform: scale(1.05); /* Ampliación al pasar el cursor (10% más grande) */
+}
+
 
 .apartment-details {
     flex: 1;
     padding: 10px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.206);
+    transition: transform 0.3s ease; /* Suaviza la transición del zoom */
+}
+
+.apartment-details:hover {
+    transform: scale(1.05); /* Ampliación al pasar el cursor (10% más grande) */
+
 }
 
 .apartment-details h2 {
@@ -258,4 +269,30 @@ body {
 .warning-text {
     line-height: 1.5;
     font-size: 14px;
+}
+
+.atribute {
+    color: #00000096;
+}
+
+.select-date {
+    font-size: 20px;
+    color: #333333;
+}
+
+#fecha_rango {
+    width: 100%; 
+    max-width: 400px;
+    padding: 10px; 
+    font-size: 16px; 
+    border: 2px solid #ccc;
+    border-radius: 8px; 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+    outline: none; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#fecha_rango:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); 
 }

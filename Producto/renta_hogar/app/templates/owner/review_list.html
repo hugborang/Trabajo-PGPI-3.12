@@ -10,24 +10,19 @@
 <h2>Valoraciones de tus apartamentos</h2>
 
 {% if reviews %}
+<h1 >Valoraciones de tus apartamentos </h1>
 <div class="reviews-container">
-    {% for apartment, review_list in reviews.items %}
+    {% for review in reviews %}
     <div class="apartment-reviews">
-        <h3>{{ apartment.address }}</h3>
-        {% if review_list %}
+        <h3>{{ review.apartment.address }}</h3>
         <ul class="review-list">
-            {% for review in review_list %}
             <li class="review-item">
-                <strong>{{ review.user.username }}:</strong>
+                <strong>{{ review.user.email }}:</strong>
                 <span>{{ review.rating }} estrellas</span>
                 <p>{{ review.comment }}</p>
             </li>
-            {% endfor %}
         </ul>
-        {% else %}
-        <p>No hay valoraciones para este apartamento.</p>
-        {% endif %}
-    </div>
+            </div>
     {% endfor %}
 </div>
 {% else %}
