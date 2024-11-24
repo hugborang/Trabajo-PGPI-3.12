@@ -54,8 +54,16 @@
                 {% csrf_token %}
                 <input type="hidden" id="modalStartDateInput" name="start_date">
                 <input type="hidden" id="modalEndDateInput" name="end_date">
-                <button type="submit" class="btn btn-primary">Sí, pagar reserva</button>
-                <button type="button" class="btn btn-secondary" id="closeModalButtonCancel">Cancelar</button>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Sí, pagar reserva</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalButtonCancel">Cancelar</button>
+                </div>
+                <div class="warning-box">
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-text">
+                        <strong>Cuidado:</strong> Una vez pagada la reserva, solo podrás cancelarla si quedan 30 días o más para la fecha de inicio.
+                    </span>
+                </div>
             </form>
         </div>
     </div>

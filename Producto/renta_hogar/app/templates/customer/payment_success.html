@@ -1,15 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago Exitoso</title>
-</head>
-<body>
-    <h1>¡Gracias por tu reserva!</h1>
-    <p>Tu pago ha sido confirmado y tu reserva para el apartamento <strong>{{ reservation.apartment.address }}</strong> ha sido realizada.</p>
-    <p>Fechas de la reserva: del {{ reservation.start_date }} al {{ reservation.end_date }}</p>
-    <p>Precio total: {{ reservation.total_price }} EUR</p>
-    <a href="/manage_reservations/">Ver mis reservas</a>
-</body>
-</html>
+{% extends "headers/header.html" %}
+
+{% load static %}
+v
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+{% endblock %}
+
+{% block contenido %}
+
+<div class="content-login">
+    <h1 style="color: rgb(0, 0, 0);">Pago Exitoso</h1>
+    <p class="success-message">¡Gracias por tu compra! Tu pago ha sido procesado exitosamente.</p>
+    <form method="get" action="{% url 'manage_reservations' %}">
+        <input type="submit" value="Ver reservas" class="btn btn btn-primary" />
+    </form>
+</div>
+
+{% endblock %}
+

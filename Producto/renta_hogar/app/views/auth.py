@@ -17,9 +17,9 @@ def register(request):
             username = form.cleaned_data['username']
             
             if role == 'customer':
-                mensaje = "Gracias "+ username+ "por registrarte en RentaHogar, como nuevo inquilino busca y disfruta de los mejores apartamentos al mejor precio."
+                mensaje = "Gracias "+ username+ " por registrarte en RentaHogar, como nuevo inquilino busca y disfruta de los mejores apartamentos al mejor precio."
             else:
-                mensaje = "Gracias " + username+ "por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero." 
+                mensaje = "Gracias " + username+ " por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero." 
                 
             enviar_notificacion_correo("!BIENVENIDO a RentaHogar!", mensaje, form.cleaned_data['email'])
             

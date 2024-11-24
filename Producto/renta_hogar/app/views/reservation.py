@@ -7,7 +7,8 @@ from app.forms.reservation_form import ReservationForm
 from django.http import HttpResponseForbidden
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.core.mail import send_mail
@@ -66,25 +67,24 @@ def create_reservation(request, apartment_id):
                         'product_data': {
                             'name': f'Reserva de apartamento {apartment.address}',
                         },
-                        'unit_amount': int(reservation.total_price * 100),  # Stripe trabaja con centavos
+                        'unit_amount': int(reservation.total_price * 100),  
                     },
                     'quantity': 1,
                 }],
                 mode='payment',
                 success_url=request.build_absolute_uri('/verify_payment/') + "?session_id={CHECKOUT_SESSION_ID}",
                 cancel_url=request.build_absolute_uri('/reservation/' + str(apartment_id) + "/"),
-                metadata={  # Agrega los datos necesarios aquí
+                metadata={  
                 'apartment_id': str(apartment.id),
                 'start_date': start_date.strftime("%Y-%m-%d"),
                 'end_date': end_date.strftime("%Y-%m-%d"),
                 },
             )
 
-            # Guardamos la reserva antes de redirigir, pero no la confirmamos hasta que el pago se complete.
-            reservation.session_id = session.id  # Guarda el session_id para referencia posterior
-            reservation.status = 'pending'  # Estado pendiente, no confirmado aún
+            reservation.session_id = session.id  
+            reservation.status = 'pending'  
 
-            return redirect(session.url, code=303)  # Redirige a Stripe para completar el pago
+            return redirect(session.url, code=303)  
 
         except Exception as e:
             errors.append(f"Error al crear la sesión de pago: {str(e)}")
@@ -108,25 +108,40 @@ def verify_payment(request):
         })
 
     try:
-        # Verifica el estado del pago en Stripe
         session = stripe.checkout.Session.retrieve(session_id)
         if session.payment_status == 'paid':
-            # Solo guarda la reserva si el pago fue exitoso
+            if Reservation.objects.filter(
+                cust=request.user,
+                apartment=Apartment.objects.get(id=session.metadata['apartment_id']),
+                start_date=datetime.strptime(session.metadata['start_date'], "%Y-%m-%d"),
+                end_date=datetime.strptime(session.metadata['end_date'], "%Y-%m-%d"),
+            ).exists():
+                return render(request, "customer/payment_failed.html", {
+                        "error": "Ya tienes una reserva para este apartamento en estas fechas.",
+                        })
+
+
             reservation = Reservation(
                 cust=request.user,
                 apartment=Apartment.objects.get(id=session.metadata['apartment_id']),
                 start_date=datetime.strptime(session.metadata['start_date'], "%Y-%m-%d"),
                 end_date=datetime.strptime(session.metadata['end_date'], "%Y-%m-%d"),
                 total_price=float(session.amount_total) / 100,
-                session_id=session_id,  # Guarda el session_id para referencia futura
             )
             reservation.save()
 
-            # Enviar notificaciones
+            # Enviar notificaciones l customer
             enviar_notificacion_correo(
                 f"¡FELICIDADES! Pago exitoso para la reserva de {reservation.apartment.address}",
-                f"Has reservado del {reservation.start_date} al {reservation.end_date}. ¡Disfruta de tu estancia!",
-                request.user.email,
+                f"Has reservado del {reservation.start_date} al {reservation.end_date} en el apartamento situado en  {reservation.apartment.address} del propietario {reservation.apartment.owner.username}, contacta con el propietario mediante su email: {reservation.apartment.owner.email}. \nRecuerda que puedes cancelar la reserva hasta 30 días de la fecha de entrada . ¡Disfruta de tu estancia!",
+                request.user.email
+            )
+            
+            # Enviar notificaciones al propietario
+            enviar_notificacion_correo(
+                f"¡FELICIDADES! Pago exitoso para la reserva de {reservation.apartment.address}",
+                f"Se ha reservado del {reservation.start_date} al {reservation.end_date} en el apartamento situado en {reservation.apartment.address} por el cliente {request.user.username}, su email de contacto es: {request.user.email}. \nRecuerda que el cliente puede cancelar la reserva hasta 30 días de la fecha de entrada.",
+                reservation.apartment.owner.email
             )
 
             return render(request, "customer/payment_success.html", {
@@ -147,19 +162,37 @@ def verify_payment(request):
         })
 
 
+from datetime import datetime, timedelta
+from django.db.models import F
+from django.http import HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
+
 @login_required
 def delete_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id)
-
-    if reservation.cust != request.user:
-        return HttpResponseForbidden("No tienes permiso para cancelar esta reserva.")
-
-    # No permitir cancelar la reserva un día antes de la fecha de inicio
-    if (reservation.start_date - timezone.now().date()).days <= 1:
-        return HttpResponseForbidden("No se puede cancelar una reserva un día antes de su fecha de inicio.")
-
+    reservations = Reservation.objects.filter(cust=request.user)
+  
     if request.method == "POST":
         reservation.delete()
+        
+        # Enviar notificación al cliente
+        enviar_notificacion_correo(
+            f"Reserva cancelada para el apartamento {reservation.apartment.address}",
+            f"La reserva del apartamento {reservation.apartment.address} ha sido cancelada.\n"
+            f"Si tienes alguna duda, contacta con el propietario {reservation.apartment.owner.username} mediante su email: {reservation.apartment.owner.email}.",
+            request.user.email
+        )
+        
+        # Enviar notificación al propietario
+        enviar_notificacion_correo(
+            f"Reserva cancelada para el apartamento {reservation.apartment.address}",
+            f"La reserva del apartamento {reservation.apartment.address} ha sido cancelada por el cliente {request.user.username}.\n"
+            f"Puedes contactar con el cliente mediante su email: {request.user.email}.",
+            reservation.apartment.owner.email
+        )
+        
         return redirect("manage_reservations")
 
-    return render(request, "reservation/confirm_delete.html", {"reservation": reservation})
+  
+    
+    return render(request, 'manage_reservations.html', {'reservations': reservations})

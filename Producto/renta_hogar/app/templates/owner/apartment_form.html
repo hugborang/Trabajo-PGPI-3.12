@@ -14,7 +14,6 @@
         <h2>{{ edit_mode|yesno:"Editar Apartamento,Añadir Apartamento" }}</h2>
         {% csrf_token %}
         
-        <!-- Mostrar errores del formulario -->
         {% if form.errors %}
             <ul class="errorlist">
                 {% for error in form.non_field_errors %}
@@ -28,10 +27,25 @@
             </ul>
         {% endif %}
 
-        <!-- Renderizar campos del formulario -->
-        {{ form.as_p }}
+
+        <label for="address">Dirección del apartamento:</label>
+        {{ form.address }}
+
+        <label for="guest_count">Cantidad de huépedes:</label>
+        {{ form.guest_count }}
+
+        <label for="price">Precio por noche:</label>
+        {{ form.price }}
+
+        <label for="description">Descripción del Apartamento:</label>
+        {{ form.description }}
+
+        <label for="availability">Disponible:</label>
+        <div class="availability-buttons">
+            <button type="button" id="availabilityButton" class="btn btn-yes" name="is_visible" value="True" onclick="toggleAvailability()">Sí</button>
+        </div>
+
         
-        <!-- Fotos existentes solo si estamos en modo edición -->
         {% if edit_mode and apartment.photos.exists %}
             <h3>Fotos existentes</h3>
             <ul>
@@ -44,7 +58,6 @@
             </ul>
         {% endif %}
         
-        <!-- Subir nuevas fotos -->
         <h3>{% if edit_mode %}Añadir Nuevas Fotos{% else %}Subir Fotos del Apartamento{% endif %}</h3>
         <label for="photos">Fotos del Apartamento:</label>
         <input type="file" name="photos" multiple accept=".jpg,.jpeg,.png,.gif">  
@@ -55,4 +68,35 @@
     <a class="back-to-menu" href="{% url 'owner_menu' %}">Volver al Menú de Propietario</a>
 </div>
 
+
+<script>
+    function toggleAvailability() {
+        var button = document.getElementById("availabilityButton");
+        if (button.innerHTML === "Sí") {
+            button.innerHTML = "No";
+            button.classList.remove("btn-yes");
+            button.classList.add("btn-no");
+            button.value = "False";  
+        } else {
+            button.innerHTML = "Sí";
+            button.classList.remove("btn-no");
+            button.classList.add("btn-yes");
+            button.value = "True";  
+        }
+    }
+
+    window.onload = function() {
+        var button = document.getElementById("availabilityButton");
+        if (button.value === "True") {
+            button.classList.add("btn-yes");
+        } else {
+            button.classList.add("btn-no");
+        }
+        };
+    
+</script>
+
+
 {% endblock %}
+
+

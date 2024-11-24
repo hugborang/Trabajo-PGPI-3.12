@@ -107,3 +107,93 @@
     color: #777;
     margin-top: 50px;
 }
+
+
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    width: 60%;
+    max-width: 500px;
+    height: auto;
+    display: none; 
+    z-index: 1000; 
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Título en modal */
+.modal-content h2 {
+    margin-top: 0;
+}
+
+/* Cerrar modal */
+.close {
+    font-size: 30px;
+    color: #aaa;
+    float: right;
+    cursor: pointer;
+}
+
+/* Botones en el modal */
+.modal-content .modal-buttons {
+    display: flex;
+    justify-content: space-between; /* Alinea los botones a los extremos */
+    gap: 20px;  /* Aumenta el espaciado entre botones */
+    margin-top: 20px;
+}
+
+.modal-content .btn-secondary {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+/* Botones generales */
+.btn {
+    padding: 12px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    margin: 0; /* Asegura que los botones no tengan márgenes adicionales */
+    width: 100%; /* Hace que los botones ocupen el 100% del ancho disponible */
+}
+
+.btn-primary {
+    background-color: #354573;
+    color: #FFFFFF;
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+/* Si deseas que los botones sean más pequeños y estén alineados, puedes ajustar el ancho */
+.modal-buttons button {
+    width: 48%; /* Establece el tamaño de los botones */
+    font-size: 16px;
+}
+
