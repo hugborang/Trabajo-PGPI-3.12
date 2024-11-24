@@ -1,0 +1,40 @@
+{% extends "headers/header.html" %}
+
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/review.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="review-container">
+  <h2>Deja una valoración para el apartamento</h2>
+
+  {% if messages %}
+  <div class="alert-container">
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="review-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="rating">Valoración (1-5 estrellas)</label>
+      {{ form.rating }}
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comentario</label>
+      {{ form.comment }}
+    </div>
+
+    <button type="submit" class="btn btn-submit">Enviar valoración</button>
+  </form>
+</div>
+{% endblock %}

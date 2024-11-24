@@ -1,0 +1,36 @@
+{% extends "headers/header.html" %}
+{% load static %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/review.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<h2>Valoraciones de tus apartamentos</h2>
+
+{% if reviews %}
+<div class="reviews-container">
+    {% for apartment, review_list in reviews.items %}
+    <div class="apartment-reviews">
+        <h3>{{ apartment.address }}</h3>
+        {% if review_list %}
+        <ul class="review-list">
+            {% for review in review_list %}
+            <li class="review-item">
+                <strong>{{ review.user.username }}:</strong>
+                <span>{{ review.rating }} estrellas</span>
+                <p>{{ review.comment }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No hay valoraciones para este apartamento.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No tienes apartamentos registrados.</p>
+{% endif %}
+{% endblock %}
