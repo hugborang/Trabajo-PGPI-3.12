@@ -21,6 +21,8 @@ from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, edit_profile, delete_account, menu
 from app.views.customers import customer_menu, manage_reservations
 from app.views.owners import owner_menu, manage_availability
+from app.views.customers import customer_menu, manage_reservations, customer_apartment_detail
+from app.views.owners import owner_menu, manage_availability, owner_reviews
 from django.conf import settings
 from django.conf.urls.static import static
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment
@@ -28,8 +30,10 @@ from app.views.reservation import create_reservation, delete_reservation, verify
 from app.views.apartment import delete_apartment, add_apartment, edit_apartment, add_availability, delete_availability
 from app.views.home import search_apartment
 from app.views.error import access_denied
+from app.views.review import ReviewCreateView
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 app_name = 'app'
 
@@ -57,6 +61,7 @@ urlpatterns = [
     path('reservation/<int:apartment_id>/', create_reservation, name='create_reservation'),
     path('reservation/delete/<int:reservation_id>/', delete_reservation, name='delete_reservation'),
     path('verify_payment/', verify_payment, name='verify_payment'),
+    path('review/<int:apartment_id>', ReviewCreateView.as_view(), name='create_review'),
 
 
     #Owner
@@ -67,6 +72,7 @@ urlpatterns = [
     path('manage_availability/<int:apartment_id>/', manage_availability, name='manage_availability'),
     path('add_availability/<int:apartment_id>/', add_availability, name='add_availability'),
     path('delete_availability/<int:availability_id>/', delete_availability, name='delete_availability'),
+     path('owner/reviews/', owner_reviews, name='owner_reviews'),
    
     path('auth/menu/', menu, name='menu'),
 
