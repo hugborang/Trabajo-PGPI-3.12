@@ -19,11 +19,6 @@
                 {% for error in form.non_field_errors %}
                     <li>{{ error }}</li>
                 {% endfor %}
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
             </ul>
         {% endif %}
 
@@ -39,6 +34,9 @@
 
         <label for="description">Descripción del Apartamento:</label>
         {{ form.description }}
+
+        <input type="hidden" id="availabilityField" name="is_visible" value="True">
+
 
         <label for="availability">Disponible:</label>
         <div class="availability-buttons">
@@ -62,7 +60,7 @@
         <label for="photos">Fotos del Apartamento:</label>
         <input type="file" name="photos" multiple accept=".jpg,.jpeg,.png,.gif">  
         
-        <button type="submit">{{ edit_mode|yesno:"Guardar Cambios,Guardar Apartamento" }}</button>
+        <button type="submit">{{ edit_mode|yesno:"Guardar Cambios,Guardar Apartamento" }} </button>
     </form>
 
     <a class="back-to-menu" href="{% url 'owner_menu' %}">Volver al Menú de Propietario</a>
@@ -72,13 +70,17 @@
 <script>
     function toggleAvailability() {
         var button = document.getElementById("availabilityButton");
+        var availabilityField = document.getElementById("availabilityField");
+
         if (button.innerHTML === "Sí") {
             button.innerHTML = "No";
+            availabilityField.value = "False"; 
             button.classList.remove("btn-yes");
             button.classList.add("btn-no");
             button.value = "False";  
         } else {
             button.innerHTML = "Sí";
+            availabilityField.value = "True"; 
             button.classList.remove("btn-no");
             button.classList.add("btn-yes");
             button.value = "True";  

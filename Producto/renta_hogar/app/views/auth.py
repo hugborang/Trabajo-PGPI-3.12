@@ -31,7 +31,7 @@ def register(request):
 
 
 
-def user_login(request):
+def user_login(request):    
     if request.method == 'POST':
         form = EmailAuthenticationForm(data=request.POST)
         if form.is_valid():

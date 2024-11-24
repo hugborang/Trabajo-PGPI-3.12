@@ -6,7 +6,7 @@ from django.http import HttpResponseForbidden, Http404
 from django.utils.timezone import now
 from app.forms.Apartmentform import ApartmentForm
 from app.forms.availability_form import AvailabilityForm
-from app.models import Apartment, ApartmentPhoto, Availability
+from app.models import Apartment, ApartmentPhoto, Availability, Reservation
 from app.models.apartmentPhoto import validate_image_extension
 from app.models.availability import validate_date_range
 from django.shortcuts import redirect, get_object_or_404
@@ -15,9 +15,7 @@ from app.utils.decorator import requires_role
 @login_required
 @requires_role('owner')
 def add_apartment(request):
-    if request.user.role != 'owner':
-        return HttpResponseForbidden("No tienes permiso para añadir apartamentos.")
-
+    
     if request.method == 'POST':
         form = ApartmentForm(request.POST, request.FILES)
         photos = request.FILES.getlist('photos')
@@ -44,13 +42,18 @@ def add_apartment(request):
 
             for photo in photos:
                 ApartmentPhoto.objects.create(apartment=apartment, photo=photo)
+   
 
             return redirect('owner_menu')
+        
 
         return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
-
+    
+    
     form = ApartmentForm()
     return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
+
+
 
 @login_required
 @requires_role('owner')
@@ -58,16 +61,28 @@ def delete_apartment(request, apartment_id):
     try:
         apartment = Apartment.objects.get(id=apartment_id)
 
+        # Verificar si el usuario es el propietario del apartamento
         if apartment.owner != request.user:
-            return HttpResponseForbidden("No tienes permiso para eliminar este apartamento.")
+            messages.error(request, "No tienes permiso para eliminar este apartamento.", extra_tags="delete_apartment")
+            return redirect('owner_menu')
+        
+        # Verificar si existen reservas asociadas al apartamento
+        if Reservation.objects.filter(apartment=apartment).exists():
+            messages.error(request, "Este apartamento no puede ser eliminado porque tiene reservas asociadas.", extra_tags="delete_apartment")
+            return redirect('owner_menu')
+
     except Apartment.DoesNotExist:
+        messages.error(request, "El apartamento no existe.", extra_tags="delete_apartment")
         return redirect('owner_menu')
 
     if request.method == "POST":
         apartment.delete()
+        messages.success(request, "Apartamento eliminado correctamente.", extra_tags="delete_apartment")
         return redirect('owner_menu')
 
     return redirect('owner_menu')
+
+
 
 @login_required
 @requires_role('owner')
