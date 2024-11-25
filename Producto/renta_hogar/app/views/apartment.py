@@ -63,8 +63,7 @@ def delete_apartment(request, apartment_id):
 
         # Verificar si el usuario es el propietario del apartamento
         if apartment.owner != request.user:
-            messages.error(request, "No tienes permiso para eliminar este apartamento.", extra_tags="delete_apartment")
-            return redirect('owner_menu')
+            return render(request, 'access_denied.html', status=403)
         
         # Verificar si existen reservas asociadas al apartamento
         if Reservation.objects.filter(apartment=apartment).exists():
@@ -73,7 +72,7 @@ def delete_apartment(request, apartment_id):
 
     except Apartment.DoesNotExist:
         messages.error(request, "El apartamento no existe.", extra_tags="delete_apartment")
-        return redirect('owner_menu')
+        return render(request, '404.html', status=404)
 
     if request.method == "POST":
         apartment.delete()

@@ -16,11 +16,14 @@
         
         {% if form.errors %}
             <ul class="errorlist">
-                {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
                 {% endfor %}
             </ul>
         {% endif %}
+
 
 
         <label for="address">Dirección del apartamento:</label>

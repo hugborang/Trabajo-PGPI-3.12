@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from freezegun import freeze_time
-from app.models import Apartment, ApartmentPhoto, Availability
+from app.models import Apartment, ApartmentPhoto, Availability, Reservation
 from PIL import Image
 import io
 
@@ -37,7 +37,7 @@ class ApartmentManagementTests(TestCase):
             guest_count=2,
             description="Apartamento de prueba",
             is_visible=True,
-            price=100.00  # Precio inicial
+            price=100.00
         )
 
         photos = [
@@ -51,6 +51,12 @@ class ApartmentManagementTests(TestCase):
             apartment=self.apartment,
             start_date="2024-01-01",
             end_date="2024-01-10"
+        )
+
+        Availability.objects.create(
+            apartment=self.apartment,
+            start_date="2024-12-17",
+            end_date="2024-12-25"
         )
         pass
 
@@ -91,10 +97,10 @@ class ApartmentManagementTests(TestCase):
         }, follow=True)
 
         self.assertEqual(response.status_code, 403)
-        self.assertIn("No tienes permiso para añadir apartamentos", response.content.decode())
+        self.assertTemplateUsed(response, 'access_denied.html')
         self.assertFalse(Apartment.objects.filter(address="789 New St").exists())
 
-    def test_add_apartment_with_invalid_guest_count(self):
+    def test_add_apartment_without_guest_count(self):
         self.client.login(username="owner1", password="password123")
         photo1 = self.create_test_image(name="photo1.jpg")
         response = self.client.post(reverse("add_apartment"), {
@@ -108,6 +114,21 @@ class ApartmentManagementTests(TestCase):
 
         self.assertContains(response, "La capacidad de huéspedes debe ser mayor que 0")
         self.assertFalse(Apartment.objects.filter(address="789 New St").exists())
+
+    def test_add_apartment_with_too_many_guest_count(self):
+        self.client.login(username="owner1", password="password123")
+        photo1 = self.create_test_image(name="photo1.jpg")
+        response = self.client.post(reverse("add_apartment"), {
+            'address': "Too many guests St",
+            'guest_count': 31,
+            'description': "Intento de añadir apartamento",
+            'is_visible': True,
+            'price': 100.00,
+            'photos': [photo1],
+        })
+
+        self.assertContains(response, "La capacidad de huéspedes no puede ser mayor que 30")
+        self.assertFalse(Apartment.objects.filter(address="Too many guests St").exists())
 
     def test_add_apartment_with_negative_price(self):
         self.client.login(username="owner1", password="password123")
@@ -165,7 +186,33 @@ class ApartmentManagementTests(TestCase):
         response = self.client.post(reverse("delete_apartment", args=[self.apartment.id]), follow=True)
         
         self.assertEqual(response.status_code, 403)
-        self.assertIn("No tienes permiso para eliminar este apartamento", response.content.decode())
+        self.assertTemplateUsed(response, 'access_denied.html')
+        self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
+
+    def test_delete_apartment_with_reservations(self):
+        self.client.login(username="customer1", password="password123")
+        Reservation.objects.create(
+            apartment=self.apartment,
+            cust=self.customer,
+            start_date="2024-12-19",
+            end_date="2024-12-23",
+            total_price=400.00
+        )
+        self.client.logout()
+        self.client.login(username="owner1", password="password123")
+        
+        response = self.client.post(reverse("delete_apartment", args=[self.apartment.id]), follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Este apartamento no puede ser eliminado porque tiene reservas asociadas.")
+        self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
+
+    def test_delete_nonexistent_apartment(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("delete_apartment", args=[100]), follow=True)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
         self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
 
     def test_delete_apartment_as_customer(self):
@@ -209,6 +256,7 @@ class ApartmentManagementTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
 
     def test_owner_cannot_edit_another_owners_apartment(self):
         self.client.login(username="owner2", password="password123")
@@ -249,7 +297,7 @@ class ApartmentManagementTests(TestCase):
         self.apartment.refresh_from_db()
         self.assertNotEqual(self.apartment.address, "789 Fail St")
 
-    def test_edit_apartment_with_invalid_guest_count(self):
+    def test_edit_apartment_without_guest_count(self):
         self.client.login(username="owner1", password="password123")
         photo4 = self.create_test_image(name="photo4.jpg")
         existing_photos = [photo.id for photo in self.apartment.photos.all()]
@@ -264,6 +312,24 @@ class ApartmentManagementTests(TestCase):
         })
 
         self.assertContains(response, "La capacidad de huéspedes debe ser mayor que 0")
+        self.apartment.refresh_from_db()
+        self.assertNotEqual(self.apartment.address, "123 Updated St")
+
+    def test_edit_apartment_with_too_many_guest_count(self):
+        self.client.login(username="owner1", password="password123")
+        photo4 = self.create_test_image(name="photo4.jpg")
+        existing_photos = [photo.id for photo in self.apartment.photos.all()]
+        response = self.client.post(reverse("edit_apartment", args=[self.apartment.id]), {
+            'address': "123 Updated St",
+            'guest_count': 31,
+            'description': "Intento de editar con demasiados huéspedes",
+            'is_visible': True,
+            'price': 200.00,
+            'photos': [photo4],
+            'existing_photos': existing_photos,
+        })
+
+        self.assertContains(response, "La capacidad de huéspedes no puede ser mayor que 30")
         self.apartment.refresh_from_db()
         self.assertNotEqual(self.apartment.address, "123 Updated St")
 
