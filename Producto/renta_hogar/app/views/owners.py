@@ -28,17 +28,3 @@ def manage_availability(request, apartment_id):
         return render(request, 'owner/manage_availability.html', {'apartment': apartment, 'availabilities': availabilities})
     except Apartment.DoesNotExist:
         return render(request, '404.html', status=404)
-
-@login_required
-def owner_reviews(request):
-    if request.user.role != 'owner':
-        return render(request, 'access_denied.html', status=403)
-
-    apartments = Apartment.objects.filter(owner=request.user) 
-
-    if apartments.exists():
-        reviews = {}
-        for apartment in apartments:
-            reviews[apartment] = Review.objects.filter(apartment=apartment)
-    
-    return render(request, 'owner/review_list.html', {'reviews': reviews})

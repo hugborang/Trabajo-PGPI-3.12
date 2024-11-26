@@ -86,15 +86,3 @@ class OwnerViewsTests(TestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, "access_denied.html")
-
-    def test_owner_reviews(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.get(reverse('owner_review'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "owner/review_list.html")
-
-    # def test_owner_reviews_as_customer(self):
-    #     self.client.login(username="customer1", password="password123")
-    #     response = self.client.get(reverse('owner_review'))
-    #     self.assertEqual(response.status_code, 403)
-    #     self.assertTemplateUsed(response, "access_denied.html")
