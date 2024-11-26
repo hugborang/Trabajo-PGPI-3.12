@@ -7,7 +7,7 @@ __pycache__/
 db.sqlite3
 
 # Ignorar la carpeta media (archivos subidos por el usuario)
-#media/
+Producto/renta_hogar/media/apartments/photos/test*
 
 # Ignorar configuraciones sensibles (si corresponde)
 *.env
