@@ -56,11 +56,12 @@ def add_apartment(request):
 @login_required
 @requires_role('owner')
 def delete_apartment(request, apartment_id):
-    if request.user.role != 'owner':
-        return render(request, 'access_denied.html', status=403)
     try:
         apartment = Apartment.objects.get(id=apartment_id)
+    except Apartment.DoesNotExist:
+        return render(request, '404.html', status=404)
 
+    if request.method == "POST":
         # Verificar si el usuario es el propietario del apartamento
         if apartment.owner != request.user:
             return render(request, 'access_denied.html', status=403)
@@ -70,11 +71,6 @@ def delete_apartment(request, apartment_id):
             messages.error(request, "Este apartamento no puede ser eliminado porque tiene reservas asociadas.", extra_tags="delete_apartment")
             return redirect('owner_menu')
 
-    except Apartment.DoesNotExist:
-        messages.error(request, "El apartamento no existe.", extra_tags="delete_apartment")
-        return render(request, '404.html', status=404)
-
-    if request.method == "POST":
         apartment.delete()
         return redirect('owner_menu')
 
@@ -85,8 +81,6 @@ def delete_apartment(request, apartment_id):
 @login_required
 @requires_role('owner')
 def edit_apartment(request, apartment_id):
-    if request.user.role != 'owner':
-        return render(request, 'access_denied.html', status=403)
 
     try:
         apartment = Apartment.objects.get(id=apartment_id)
@@ -145,11 +139,15 @@ def edit_apartment(request, apartment_id):
     })
 
 @login_required
+@requires_role('owner')
 def add_availability(request, apartment_id):
-    apartment = get_object_or_404(Apartment, id=apartment_id)
+    try:
+        apartment = Apartment.objects.get(id=apartment_id)
+    except Apartment.DoesNotExist:
+        return render(request, '404.html', status=404)
 
     if apartment.owner != request.user:
-        return HttpResponseForbidden("No tienes permiso para editar la disponibilidad de este apartamento.")
+        return render(request, 'access_denied.html', status=403)
     
     if request.method == 'POST':
         form = AvailabilityForm(request.POST)
@@ -187,9 +185,8 @@ def add_availability(request, apartment_id):
 
 
 @login_required
+@requires_role('owner')
 def delete_availability(request, availability_id):
-    if request.user.role != 'owner':
-        return render(request, 'access_denied.html', status=403)
 
     try:
         availability = Availability.objects.get(id=availability_id)

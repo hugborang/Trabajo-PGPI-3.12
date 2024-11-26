@@ -512,6 +512,7 @@ class ApartmentManagementTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
         self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
 
     def test_add_availability_as_customer(self):
@@ -522,6 +523,18 @@ class ApartmentManagementTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
+        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
+    
+    def test_add_availability_in_another_owner_apartment(self):
+        self.client.login(username="owner2", password="password123")
+        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
+            'start_date': "2024-01-11",
+            'end_date': "2024-01-20",
+        })
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
         self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
 
     def test_add_availability_in_the_past(self):
