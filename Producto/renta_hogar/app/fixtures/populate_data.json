@@ -145,5 +145,16 @@
             "end_date": "2024-12-10",
             "total_price": 900.00
         }
+    },
+    {
+        "model": "app.reservation",
+        "pk": 2,
+        "fields": {
+            "cust": 3,
+            "apartment": 1,
+            "start_date": "2024-10-01",
+            "end_date": "2024-10-10",
+            "total_price": 900.00
+        }
     }
 ]
