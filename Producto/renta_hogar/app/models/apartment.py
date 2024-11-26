@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Apartment(models.Model):
     owner = models.ForeignKey(
@@ -11,7 +11,10 @@ class Apartment(models.Model):
     )
     address = models.CharField(max_length=255, unique=True)
     guest_count = models.PositiveIntegerField(
-        validators=[MinValueValidator(1, message="La capacidad de huéspedes debe ser mayor que 0")],
+        validators=[
+            MinValueValidator(1, message="La capacidad de huéspedes debe ser mayor que 0"),
+            MaxValueValidator(30, message="La capacidad de huéspedes no puede ser mayor que 30")
+        ],
     )
     description = models.TextField(blank=True, null=True)
     is_visible = models.BooleanField(default=False)
@@ -21,7 +24,8 @@ class Apartment(models.Model):
 
 
     def __str__(self):
-        return f"{self.address} - {self.owner.username}"
+        return f"Apartamento en {self.address} - Propietario: {self.owner.username}, Capacidad: {self.guest_count} huéspedes, Precio: {self.price}€ visible {self.is_visible}"
+
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)

@@ -49,6 +49,7 @@ def manage_reservations(request):
             
 
 
+
     
     
     return render(request, 'customer/manage_reservations.html', {'reservations': reservations})

@@ -12,25 +12,24 @@ def create_reviews(request, apartment_id):
     apartment = get_object_or_404(Apartment, id=apartment_id)
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
-
+        # Pasar request y apartment al formulario
+        form = ReviewForm(request.POST, request=request, apartment=apartment)
         if form.is_valid():
-            try:
-                review = form.save(commit=False)
-                review.user = request.user
-                review.apartment = apartment
-                review.save()
-                messages.success(request, "Gracias por dejar tu valoración.")
-                return redirect('customer_menu')
-            except IntegrityError:
-                messages.error(request, "Ya has dejado una valoración para este apartamento.")
+            # Crear la reseña si el formulario es válido
+            review = form.save(commit=False)
+            review.user = request.user
+            review.apartment = apartment
+            review.save()
+            messages.success(request, "Gracias por dejar tu valoración.")
+            return redirect('customer_menu')  # Ajusta esta redirección según sea necesario
         else:
-            messages.error(request, "No puedes dejar una valoración hasta que no hayas disfrutado de tu estancia.")
-
+            messages.error(request, "Solo puedes dejar una valoracion y debe ser despues de tu haber estancia.")
     else:
-        form = ReviewForm()
+        # Crear un formulario vacío
+        form = ReviewForm(request=request, apartment=apartment)
 
     return render(request, 'customer/review_form.html', {'form': form, 'apartment': apartment})
+
 
 @login_required
 def apartment_review(request):

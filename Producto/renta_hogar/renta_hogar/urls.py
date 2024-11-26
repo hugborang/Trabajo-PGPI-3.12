@@ -85,4 +85,5 @@ urlpatterns = [
 
 
 handler404='app.views.error.error_404'
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -25,6 +25,9 @@
         </div>
     </div>
 
+
+
+
     <div class="apartments-list">
         {% for apartment in apartments %}
             <div class="apartment-card">
@@ -38,10 +41,18 @@
                     <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
                     <p><strong>Precio:</strong> {{ apartment.price }} €</p>
                 </div>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        {% if "delete_apartment" in message.tags %}
+                            <li class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
                 <div class="apartment-actions">
-                    <a href="{% url 'manage_availability' apartment.id %}" class="btn btn-availability">
-                        <i class="fas fa-calendar-alt"></i> Disponibilidad
-                    </a>
                     <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-edit">
                         <i class="fas fa-edit"></i> Editar
                     </a>
@@ -58,4 +69,8 @@
         {% endfor %}
     </div>
 </div>
+
+
+
+
 {% endblock %}
