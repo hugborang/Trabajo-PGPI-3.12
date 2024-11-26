@@ -23,8 +23,6 @@ def add_apartment(request):
 
         if not photos:
             photo_errors.append("Debes subir al menos una foto del apartamento.")
-        elif len(photos) > 5:
-            photo_errors.append("Solo puedes subir hasta 5 fotos del apartamento.")
         else:
             for photo in photos:
                 try:
@@ -58,6 +56,8 @@ def add_apartment(request):
 @login_required
 @requires_role('owner')
 def delete_apartment(request, apartment_id):
+    if request.user.role != 'owner':
+        return render(request, 'access_denied.html', status=403)
     try:
         apartment = Apartment.objects.get(id=apartment_id)
 
@@ -76,7 +76,6 @@ def delete_apartment(request, apartment_id):
 
     if request.method == "POST":
         apartment.delete()
-        messages.success(request, "Apartamento eliminado correctamente.", extra_tags="delete_apartment")
         return redirect('owner_menu')
 
     return redirect('owner_menu')
@@ -87,15 +86,15 @@ def delete_apartment(request, apartment_id):
 @requires_role('owner')
 def edit_apartment(request, apartment_id):
     if request.user.role != 'owner':
-        return HttpResponseForbidden("No tienes permiso para editar apartamentos.")
+        return render(request, 'access_denied.html', status=403)
 
     try:
         apartment = Apartment.objects.get(id=apartment_id)
     except Apartment.DoesNotExist:
-        raise Http404("El apartamento no existe.")
+        return render(request, '404.html', status=404)
 
     if apartment.owner != request.user:
-        return HttpResponseForbidden("No tienes permiso para editar este apartamento.")
+        return render(request, 'access_denied.html', status=403)
 
     if request.method == 'POST':
         form = ApartmentForm(request.POST, instance=apartment)
@@ -189,11 +188,22 @@ def add_availability(request, apartment_id):
 
 @login_required
 def delete_availability(request, availability_id):
-    availability = get_object_or_404(Availability, id=availability_id)
-    apartment_id = availability.apartment.id
-    apartment = get_object_or_404(Apartment, id=apartment_id)
+    if request.user.role != 'owner':
+        return render(request, 'access_denied.html', status=403)
+
+    try:
+        availability = Availability.objects.get(id=availability_id)
+        apartment_id = availability.apartment.id
+        apartment = Apartment.objects.get(id=apartment_id)
+    except Availability.DoesNotExist:
+        return render(request, '404.html', status=404)
+
     if apartment.owner != request.user:
-        return HttpResponseForbidden("No tienes permiso para editar la disponibilidad de este apartamento.")
+        return render(request, 'access_denied.html', status=403)
+    
+    if Reservation.objects.filter(apartment=apartment, start_date__gte=availability.start_date, end_date__lte=availability.end_date).exists():
+        messages.error(request, "No puedes eliminar esta disponibilidad porque tiene reservas asociadas.", extra_tags="delete_availability")
+        return redirect('manage_availability', apartment_id=apartment_id)
 
     if request.method == 'POST':
         availability.delete()

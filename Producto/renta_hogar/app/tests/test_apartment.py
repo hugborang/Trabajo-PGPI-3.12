@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from freezegun import freeze_time
 from app.models import Apartment, ApartmentPhoto, Availability, Reservation
+from app.forms.Apartmentform import ApartmentForm
+from app.forms.availability_form import AvailabilityForm
 from PIL import Image
 import io
 
@@ -47,16 +49,30 @@ class ApartmentManagementTests(TestCase):
         for photo in photos:
             ApartmentPhoto.objects.create(apartment=self.apartment, photo=photo)
 
-        Availability.objects.create(
+        self.availability = Availability.objects.create(
             apartment=self.apartment,
             start_date="2024-01-01",
             end_date="2024-01-10"
         )
 
-        Availability.objects.create(
+        self.availability2 = Availability.objects.create(
             apartment=self.apartment,
             start_date="2024-12-17",
             end_date="2024-12-25"
+        )
+
+        self.availability3 = Availability.objects.create(
+            apartment=self.apartment,
+            start_date="2024-12-26",
+            end_date="2025-01-02"
+        )
+
+        self.reservation = Reservation.objects.create(
+            apartment=self.apartment,
+            cust=self.customer,
+            start_date="2024-12-26",
+            end_date="2024-12-30",
+            total_price=400.00
         )
         pass
 
@@ -69,6 +85,16 @@ class ApartmentManagementTests(TestCase):
         return SimpleUploadedFile(name, file.read(), content_type="image/jpeg")
     
     ### Pruebas de añadir apartamento ###
+    def test_add_apartment_get_request(self):
+        self.client.login(username='owner1', password='password123')
+        response = self.client.get(reverse('add_apartment'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'owner/apartment_form.html')
+        self.assertIsInstance(response.context['form'], ApartmentForm)
+        self.assertFalse(response.context['form'].is_bound)
+        self.assertFalse(response.context['edit_mode'])
+
     def test_add_apartment_as_owner(self):
         self.client.login(username="owner1", password="password123")
         photo1 = self.create_test_image(name="photo1.jpg")
@@ -174,12 +200,30 @@ class ApartmentManagementTests(TestCase):
         self.assertFalse(Apartment.objects.filter(address="987 Photo St").exists())
 
     ### Pruebas de eliminar apartamento ###
+    def test_delete_apartment_get_request(self):
+        self.client.login(username='owner1', password='password123')
+        response = self.client.get(reverse('delete_apartment', args=[self.apartment.id]))
+
+        self.assertRedirects(response, reverse('owner_menu'))
+        self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
+
     def test_delete_apartment_as_owner(self):
+        self.client.login(username="customer1", password="password123")
+        self.client.post(reverse("delete_reservation", args=[self.reservation.id]), follow=True)
+        self.client.logout()
         self.client.login(username="owner1", password="password123")
         response = self.client.post(reverse("delete_apartment", args=[self.apartment.id]), follow=True)
         
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Apartment.objects.filter(id=self.apartment.id).exists())
+
+    def test_delete_apartment_as_customer(self):
+        self.client.login(username="customer1", password="password123")
+        response = self.client.post(reverse("delete_apartment", args=[self.apartment.id]), follow=True)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
+        self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
 
     def test_owner_cannot_delete_another_owners_apartment(self):
         self.client.login(username="owner2", password="password123")
@@ -220,9 +264,22 @@ class ApartmentManagementTests(TestCase):
         response = self.client.post(reverse("delete_apartment", args=[self.apartment.id]), follow=True)
 
         self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
         self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
 
     ### Pruebas de editar apartamento ###
+    def test_edit_apartment_get_request(self):
+        self.client.login(username='owner1', password='password123')
+        response = self.client.get(reverse('edit_apartment', args=[self.apartment.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('form', response.context)
+        form = response.context['form']
+        self.assertIsInstance(form, ApartmentForm)
+        self.assertEqual(form.instance, self.apartment)
+        self.assertTrue(response.context['edit_mode'])
+        self.assertEqual(response.context['apartment'], self.apartment)
+
     def test_edit_apartment_as_owner(self):
         self.client.login(username="owner1", password="password123")
         photo4 = self.create_test_image(name="photo4.jpg")
@@ -273,7 +330,7 @@ class ApartmentManagementTests(TestCase):
         }, follow=True)
 
         self.assertEqual(response.status_code, 403)
-        self.assertIn("No tienes permiso para editar este apartamento", response.content.decode())
+        self.assertTemplateUsed(response, 'access_denied.html')
         apartment = Apartment.objects.get(id=self.apartment.id)
         self.assertNotEqual(apartment.address, "Nuevo domicilio")
         self.assertNotEqual(apartment.guest_count, 4)
@@ -294,6 +351,7 @@ class ApartmentManagementTests(TestCase):
         }, follow=True)
 
         self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
         self.apartment.refresh_from_db()
         self.assertNotEqual(self.apartment.address, "789 Fail St")
 
@@ -403,6 +461,18 @@ class ApartmentManagementTests(TestCase):
         self.assertNotEqual(self.apartment.address, "456 Updated St")
 
     ### Pruebas añadir disponibilidad a un apartamento ###
+    def test_add_availability_get_request(self):
+        self.client.login(username='owner1', password='password123')
+        response = self.client.get(reverse('add_availability', args=[self.apartment.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('form', response.context)
+        form = response.context['form']
+        self.assertIsInstance(form, AvailabilityForm)
+        self.assertFalse(form.is_bound)
+        self.assertEqual(response.context['apartment'], self.apartment)
+        self.assertTemplateUsed(response, 'owner/add_availability.html')
+
     @freeze_time("2024-01-01")
     def test_add_availability_as_owner(self):
         self.client.login(username="owner1", password="password123")
@@ -463,3 +533,49 @@ class ApartmentManagementTests(TestCase):
 
         self.assertContains(response, "No puedes añadir disponibilidad en el pasado.")
         self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2023-01-11", end_date="2023-01-20").exists())
+
+    ### Pruebas eliminar disponibilidad de un apartamento ###
+    def test_delete_availability_get_request(self):
+        self.client.login(username='owner1', password='password123')
+        response = self.client.get(reverse('delete_availability', args=[self.availability.id]))
+
+        self.assertRedirects(response, reverse('manage_availability', args=[self.apartment.id]))
+        self.assertTrue(Availability.objects.filter(id=self.availability.id).exists())
+
+    def test_delete_availability_as_owner(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("delete_availability", args=[self.availability2.id]), follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Availability.objects.filter(id=self.availability2.id).exists())
+
+    def test_delete_availability_as_customer(self):
+        self.client.login(username="customer1", password="password123")
+        response = self.client.post(reverse("delete_availability", args=[self.availability2.id]), follow=True)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
+        self.assertTrue(Availability.objects.filter(id=self.availability2.id).exists())
+
+    def test_delete_nonexistent_availability(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("delete_availability", args=[100]), follow=True)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
+    def test_delete_availability_of_another_owner(self):
+        self.client.login(username="owner2", password="password123")
+        response = self.client.post(reverse("delete_availability", args=[self.availability2.id]), follow=True)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'access_denied.html')
+        self.assertTrue(Availability.objects.filter(id=self.availability2.id).exists())
+
+    def test_delete_availability_with_reservations(self):
+        self.client.login(username="owner1", password="password123")
+        response = self.client.post(reverse("delete_availability", args=[self.availability3.id]), follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No puedes eliminar esta disponibilidad porque tiene reservas asociadas.")
+        self.assertTrue(Availability.objects.filter(id=self.availability3.id).exists())
