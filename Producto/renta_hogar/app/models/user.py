@@ -28,9 +28,7 @@ class CustomUser(AbstractUser):
 
 
     def __str__(self):
-        return f"{self.username} ({self.first_name} {self.surnames}) - {self.get_role_display()} correo: <{self.email}>  - <{self.password}>"
-
-    
+        return f"{self.username}"
     
     
     @property
