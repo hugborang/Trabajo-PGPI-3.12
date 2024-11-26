@@ -44,12 +44,9 @@ def manage_reservations(request):
     
     
     for r in reservations:
-        print(r.can_cancel)
         if r.start_date - now < timedelta(days=30):
             r.can_cancel = False
-            print(r.can_cancel)
             
-    print("holaaaaaa")
 
 
     
