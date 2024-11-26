@@ -24,6 +24,7 @@ class ReviewForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)  
+        self.apartment = kwargs.pop('apartment', None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -34,7 +35,7 @@ class ReviewForm(forms.ModelForm):
         if not self.request:
             raise ValidationError("Se requiere un objeto request.")
 
-        reservation = Reservation.objects.get(user=self.request.user, apartment=self.apartment)  
+        reservation = Reservation.objects.get(cust=self.request.user, apartment=self.apartment)  
         if reservation.end_date > timezone.now().date():
             raise ValidationError("La reserva debe haber finalizado para dejar una valoración.")
 
