@@ -23,7 +23,7 @@ class TestReviewInterfaz(LiveServerTestCase):
         self.browser.get(self.live_server_url)  # Cambia a URL del servidor de pruebas
     
     def teardown_method(self):
-      self.driver.quit()
+      self.browser.quit()
     
     def test_negativo_review_customer(self):
       self.browser.get(self.live_server_url)  # Cambia a URL del servidor de pruebas
