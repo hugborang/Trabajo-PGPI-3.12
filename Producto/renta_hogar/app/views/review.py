@@ -10,6 +10,7 @@ from django.utils import timezone
 from app.utils.decorator import requires_role
 
 @login_required
+@requires_role('customer')
 def create_reviews(request, apartment_id):
     try:
         apartment = Apartment.objects.get(id=apartment_id)
