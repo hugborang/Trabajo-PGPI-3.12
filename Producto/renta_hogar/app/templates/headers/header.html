@@ -32,6 +32,10 @@
                         {% if user.is_customer %}
                             <a href="/manage_reservations" class="user-menu-item">Gestionar reservas</a>
                         {% endif %}
+                        {% if user.is_owner %}
+                            <a href="/owner_reservations" class="user-menu-item">Gestionar reservas</a>
+                        {% endif %}
+
                         <form action="{% url 'logout' %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="user-menu-item logout-btn">Cerrar sesión</button>

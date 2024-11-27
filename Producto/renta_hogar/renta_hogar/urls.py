@@ -20,7 +20,7 @@ from django.urls import path
 from django.views.generic.base import RedirectView
 from app.views.auth import register, user_login, edit_profile, delete_account, menu
 from app.views.customers import customer_menu, manage_reservations
-from app.views.owners import owner_menu, manage_availability
+from app.views.owners import owner_menu, manage_availability, owner_reservations
 from app.views.customers import customer_menu, manage_reservations
 from app.views.owners import owner_menu, manage_availability
 from django.conf import settings
@@ -73,6 +73,7 @@ urlpatterns = [
     path('add_availability/<int:apartment_id>/', add_availability, name='add_availability'),
     path('delete_availability/<int:availability_id>/', delete_availability, name='delete_availability'),
     path('apartment/reviews/', apartment_review, name='owner_review'),
+    path('owner_reservations/', owner_reservations, name='owner_reservations'),
    
     path('auth/menu/', menu, name='menu'),
 
