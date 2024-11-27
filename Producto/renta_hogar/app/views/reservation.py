@@ -25,8 +25,10 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 @login_required
 @requires_role("customer")
 def create_reservation(request, apartment_id):
-    apartment = get_object_or_404(Apartment, id=apartment_id)
-    current_year = datetime.now().year
+    try:
+        apartment = Apartment.objects.get(id=apartment_id)
+    except Apartment.DoesNotExist:
+        return render(request, '404.html', status=404)
 
     reservations = Reservation.objects.filter(apartment=apartment)
     reserved_days = []
@@ -37,10 +39,6 @@ def create_reservation(request, apartment_id):
     reserved_dates = [reserved_day.strftime('%Y-%m-%d') for reserved_day in reserved_days]
     reserved_dates_json = json.dumps(reserved_dates)
 
-    days = range(1, 32)
-    months = [{"value": i, "name": datetime(2000, i, 1).strftime("%B")} for i in range(1, 13)]
-    years = list(range(current_year, current_year + 5))
-
     errors = []
 
     if request.method == "POST":
@@ -50,50 +48,55 @@ def create_reservation(request, apartment_id):
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
 
-        reservation = Reservation(
-            cust=request.user,
+        overlapping_reservations = Reservation.objects.filter(
             apartment=apartment,
-            start_date=start_date,
-            end_date=end_date,
-            total_price=apartment.price * (end_date - start_date).days
+            end_date__gt=start_date,
+            start_date__lt=end_date
         )
+        if overlapping_reservations.exists():
+            errors.append("El apartamento no está disponible en las fechas seleccionadas.")
 
-        try:
-            session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[{
-                    'price_data': {
-                        'currency': 'eur',
-                        'product_data': {
-                            'name': f'Reserva de apartamento {apartment.address}',
-                        },
-                        'unit_amount': int(reservation.total_price * 100),  
-                    },
-                    'quantity': 1,
-                }],
-                mode='payment',
-                success_url=request.build_absolute_uri('/verify_payment/') + "?session_id={CHECKOUT_SESSION_ID}",
-                cancel_url=request.build_absolute_uri('/reservation/' + str(apartment_id) + "/"),
-                metadata={  
-                'apartment_id': str(apartment.id),
-                'start_date': start_date.strftime("%Y-%m-%d"),
-                'end_date': end_date.strftime("%Y-%m-%d"),
-                },
+        if not errors:
+            reservation = Reservation(
+                cust=request.user,
+                apartment=apartment,
+                start_date=start_date,
+                end_date=end_date,
+                total_price=apartment.price * (end_date - start_date).days
             )
 
-            reservation.session_id = session.id  
-            reservation.status = 'pending'  
+            try:
+                session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=[{
+                        'price_data': {
+                            'currency': 'eur',
+                            'product_data': {
+                                'name': f'Reserva de apartamento {apartment.address}',
+                            },
+                            'unit_amount': int(reservation.total_price * 100),  
+                        },
+                        'quantity': 1,
+                    }],
+                    mode='payment',
+                    success_url=request.build_absolute_uri('/verify_payment/') + "?session_id={CHECKOUT_SESSION_ID}",
+                    cancel_url=request.build_absolute_uri('/reservation/' + str(apartment_id) + "/"),
+                    metadata={  
+                    'apartment_id': str(apartment.id),
+                    'start_date': start_date.strftime("%Y-%m-%d"),
+                    'end_date': end_date.strftime("%Y-%m-%d"),
+                    },
+                )
 
-            return redirect(session.url, code=303)  
+                reservation.session_id = session.id  
+                reservation.status = 'pending'
+                return redirect(session.url, code=303)  
 
-        except Exception as e:
-            errors.append(f"Error al crear la sesión de pago: {str(e)}")
+            except Exception as e:
+                errors.append(f"Error al crear la sesión de pago: {str(e)}")
 
     return render(request, "customer/create_reservation.html", {
         "apartment": apartment,
-        "days": days,
-        "months": months,
-        "years": years,
         "errors": errors,
         "reserved_dates": reserved_dates_json,
     })
@@ -119,8 +122,7 @@ def verify_payment(request):
                 return render(request, "customer/payment_failed.html", {
                         "error": "Ya tienes una reserva para este apartamento en estas fechas.",
                         })
-
-
+            
             reservation = Reservation(
                 cust=request.user,
                 apartment=Apartment.objects.get(id=session.metadata['apartment_id']),
@@ -169,7 +171,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 @login_required
 def delete_reservation(request, reservation_id):
-    reservation = get_object_or_404(Reservation, id=reservation_id)
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+    except Reservation.DoesNotExist:
+        return render(request, '404.html', status=404)
+    
+    if reservation.cust != request.user:
+        return render(request, 'access_denied.html', status=403)
     reservations = Reservation.objects.filter(cust=request.user)
   
     if request.method == "POST":
@@ -193,6 +201,4 @@ def delete_reservation(request, reservation_id):
         
         return redirect("manage_reservations")
 
-  
-    
-    return render(request, 'manage_reservations.html', {'reservations': reservations})
+    return render(request, 'customer/manage_reservations.html', {'reservations': reservations})

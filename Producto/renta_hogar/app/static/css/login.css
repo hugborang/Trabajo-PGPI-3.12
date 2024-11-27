@@ -92,3 +92,11 @@
     margin-top: 10px; /* Espacio adicional entre el título y la descripción */
     text-align: center; /* Alineación centrada para mantener consistencia */
 }
+
+.errorlist {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: 5px;
+    list-style-type: none;
+    padding: 0;
+}
