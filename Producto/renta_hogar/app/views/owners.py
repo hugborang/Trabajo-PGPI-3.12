@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -53,5 +54,12 @@ def owner_reservations(request):
     
     # Filtrar las reservas relacionadas con estos apartamentos
     reservations = Reservation.objects.filter(apartment__in=owner_apartments)
+    
+    now = datetime.now().date()
+    
+    for r in reservations:
+        if r.start_date - now < timedelta(days=30):
+            r.can_cancel = False
+            r.save()
     
     return render(request, 'owner/manage_reservations.html', {'reservations': reservations})
