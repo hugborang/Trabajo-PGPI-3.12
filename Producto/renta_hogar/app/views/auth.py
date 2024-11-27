@@ -83,7 +83,7 @@ def edit_profile(request):
 @login_required
 def delete_account(request):
     request.user.delete()
-    return redirect('home/search')
+    return redirect('/')
 
 @login_required
 def user_logout(request):

@@ -31,6 +31,7 @@ def create_reviews(request, apartment_id):
 
     return render(request, 'customer/review_form.html', {'form': form, 'apartment': apartment})
 
+
 @login_required
 @requires_role('owner')
 def apartment_review(request):
