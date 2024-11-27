@@ -9,8 +9,5 @@ class Review(models.Model):
     comment = models.TextField(blank=True)  # Comentario opcional
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ('apartment', 'user')  # Para evitar múltiples valoraciones del mismo usuario al mismo apartamento
-
     def __str__(self):
         return f"Review by {self.user} for {self.apartment}"

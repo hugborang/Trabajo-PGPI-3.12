@@ -22,6 +22,14 @@
     flex-direction: column;
 }
 
+.errorlist {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: 5px;
+    list-style-type: none;
+    padding: 0;
+}
+
 label {
     font-size: 1.1rem;
     margin-bottom: 10px;

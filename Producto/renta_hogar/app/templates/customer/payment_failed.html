@@ -11,6 +11,15 @@
 
 <div class="content-login">
     <h1 class="login-title">¡Upps! Parece que has recargado la página.</h1>
+    {% if form.errors %}
+        <ul class="errorlist">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
     <p class="login-description">
         El pago se ha completado y se ha realizado la reserva correctamente.
         Pulse en "Ver reservas" para acceder a la reserva realizada.

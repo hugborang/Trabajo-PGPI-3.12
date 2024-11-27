@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from app.models import Apartment, CustomUser
+from django.db.models import Q
+from app.models import Apartment
+from django.utils.dateparse import parse_date
+from django.core.exceptions import ValidationError
 
 
 def search_apartment(request):
@@ -14,42 +17,45 @@ def search_apartment(request):
 
     if huespedes:
         try:
-            huespedes = int(huespedes)  
-            apartments = apartments.filter(guest_count=huespedes, is_visible=True)
+            huespedes = int(huespedes)
             if huespedes < 1:
                 error_message = "El número de huéspedes debe ser mayor a 0."
+            else:
+                apartments = apartments.filter(guest_count=huespedes)
         except ValueError:
             error_message = "El número de huéspedes debe ser un número entero."
-    
-    # Validar precios, asegurándonos de convertir a números
+
     if price_min:
         try:
             price_min = float(price_min)
-            apartments = apartments.filter(price__gte=price_min, is_visible=True)
+            apartments = apartments.filter(price__gte=price_min)
         except ValueError:
             error_message = "El precio mínimo debe ser un número válido."
-    
+
     if price_max:
         try:
             price_max = float(price_max)
-            apartments = apartments.filter(price__lte=price_max, is_visible=True)
+            apartments = apartments.filter(price__lte=price_max)
         except ValueError:
             error_message = "El precio máximo debe ser un número válido."
 
-    # Validar que el precio máximo no sea menor que el precio mínimo
     if price_min and price_max and price_max < price_min:
         error_message = "El precio máximo no puede ser menor al precio mínimo."
-    
-    # Validar fechas
-    if fecha_inicio and fecha_fin:
-        apartments = apartments.exclude(
-            availabilities__start_date__lt=fecha_fin,
-            availabilities__end_date__gt=fecha_inicio
-        ).filter(is_visible=True)
-        
+
+    if fecha_inicio and fecha_fin:           
+        try:
+            start_date = parse_date(fecha_inicio)
+            end_date = parse_date(fecha_fin)
+
+            apartments = apartments.filter(
+                Q(availabilities__start_date__lte=start_date) &
+                Q(availabilities__end_date__gte=end_date)
+            )
+        except ValueError:  # Si las fechas no son válidas, lanzamos un mensaje
+            error_message = "Las fechas deben ser válidas."
 
     return render(request, 'home.html', {
-        'apartments': apartments,
+        'apartments': apartments.distinct(),
         'request': request,
-        'error_message': error_message
+        'error_message': error_message,
     })

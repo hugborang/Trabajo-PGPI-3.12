@@ -17,19 +17,19 @@ def owner_menu(request):
 def manage_availability(request, apartment_id):
     # Verificar que el usuario sea un propietario
     if request.user.role != 'owner':
-        messages.error(request, "No tienes permiso para acceder a esta página.")
-        return redirect('home')
+        return render(request, 'access_denied.html', status=403)
     
     # Verificar que el apartamento exista
-    apartment = get_object_or_404(Apartment, id=apartment_id)
+    try:
+        apartment = Apartment.objects.get(id=apartment_id)
 
-    # Verificar que el apartamento pertenezca al propietario
-    if apartment.owner != request.user:
-        messages.error(request, "No tienes permiso para acceder a esta página.")
-        return redirect('home')
-
-    availabilities = apartment.availabilities.all()
-    return render(request, 'owner/manage_availability.html', {'apartment': apartment, 'availabilities': availabilities})
+        if apartment.owner != request.user:
+            return render(request, 'access_denied.html', status=403)
+        
+        availabilities = apartment.availabilities.all()
+        return render(request, 'owner/manage_availability.html', {'apartment': apartment, 'availabilities': availabilities})
+    except Apartment.DoesNotExist:
+        return render(request, '404.html', status=404)
 
 @login_required
 @requires_role('owner')

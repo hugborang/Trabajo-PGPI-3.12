@@ -23,8 +23,8 @@ class ReviewForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None) 
-        self.apartment = kwargs.pop('apartment', None) 
+        self.request = kwargs.pop('request', None)  
+        self.apartment = kwargs.pop('apartment', None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -41,7 +41,7 @@ class ReviewForm(forms.ModelForm):
         if not reservation:
             raise ValidationError("No tienes una reserva activa para este apartamento.")
         if reservation.end_date > timezone.now().date():
-            raise ValidationError("Solo puedes valorar apartamentos después de tu estancia.")
+            raise ValidationError("La reserva debe haber finalizado para dejar una valoración.")
 
         # Verificar si ya existe una reseña para este apartamento y usuario
         if Review.objects.filter(user=self.request.user, apartment=self.apartment).exists():

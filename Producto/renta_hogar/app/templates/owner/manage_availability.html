@@ -11,6 +11,14 @@
 <div class="content-availability-management">
     <h1>Gestión de Disponibilidad</h1>
 
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <div class="availability-list">
         {% for availability in availabilities %}
             <div class="availability-card">
