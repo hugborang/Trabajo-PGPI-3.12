@@ -123,7 +123,6 @@ class SearchApartmentTests(TestCase):
 
     def test_filter_by_dates_invalid(self):
         response = self.client.get(reverse('home_search'), {'fecha_inicio': '2023-02-29', 'fecha_fin': '2023-03-03'})
-        print(response.content.decode())
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Las fechas deben ser válidas.")
 
