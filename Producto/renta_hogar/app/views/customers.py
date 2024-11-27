@@ -47,9 +47,4 @@ def manage_reservations(request):
         if r.start_date - now < timedelta(days=30):
             r.can_cancel = False
             
-
-
-
-    
-    
     return render(request, 'customer/manage_reservations.html', {'reservations': reservations})

@@ -100,6 +100,7 @@ def create_reservation(request, apartment_id):
     
     
 @login_required
+@requires_role("customer")
 def verify_payment(request):
     session_id = request.GET.get('session_id')
     if not session_id:
@@ -162,16 +163,18 @@ def verify_payment(request):
         })
 
 
-from datetime import datetime, timedelta
-from django.db.models import F
-from django.http import HttpResponseForbidden
+
 from django.shortcuts import render, redirect, get_object_or_404
 
 @login_required
+@requires_role("customer")
 def delete_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id)
     reservations = Reservation.objects.filter(cust=request.user)
-  
+    if reservation.cust != request.user:
+        return HttpResponseForbidden("No tienes permiso para cancelar esta reserva.")
+    
+
     if request.method == "POST":
         reservation.delete()
         

@@ -6,8 +6,10 @@ from django.contrib.auth.decorators import login_required
 from app.forms.review_form import ReviewForm
 from django.shortcuts import render, get_object_or_404
 from app.models.review import Review
+from app.utils.decorator import requires_role
 
 @login_required
+@requires_role('customer')
 def create_reviews(request, apartment_id):
     apartment = get_object_or_404(Apartment, id=apartment_id)
 
@@ -32,6 +34,7 @@ def create_reviews(request, apartment_id):
 
 
 @login_required
+@requires_role('owner')
 def apartment_review(request):
     apartments = Apartment.objects.filter(owner=request.user)
     
