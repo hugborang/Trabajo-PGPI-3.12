@@ -171,6 +171,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 @login_required
 @requires_role("customer")
 def delete_reservation(request, reservation_id):
+
     try:
         reservation = Reservation.objects.get(id=reservation_id)
     except Reservation.DoesNotExist:
@@ -184,7 +185,6 @@ def delete_reservation(request, reservation_id):
     
 
     if request.method == "POST":
-        reservation.delete()
         
         # Enviar notificación al cliente
         enviar_notificacion_correo(
@@ -201,7 +201,48 @@ def delete_reservation(request, reservation_id):
             f"Puedes contactar con el cliente mediante su email: {request.user.email}.",
             reservation.apartment.owner.email
         )
+        reservation.delete()
+
         
         return redirect("manage_reservations")
 
     return render(request, 'customer/manage_reservations.html', {'reservations': reservations})
+
+
+
+@login_required
+@requires_role("owner")
+def delete_reservation_owner(request, reservation_id):
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+    except Reservation.DoesNotExist:
+        return render(request, '404.html', status=404)
+
+    if reservation.apartment.owner != request.user:
+        return HttpResponseForbidden("No tienes permiso para cancelar esta reserva.")
+
+    # Continúa con la lógica de cancelación si el propietario coincide
+    reservations = Reservation.objects.filter(cust=request.user)
+    if request.method == "POST":
+        
+        # Enviar notificación al cliente
+        enviar_notificacion_correo(
+            f"Reserva cancelada para el apartamento {reservation.apartment.address}",
+            f"La reserva del apartamento {reservation.apartment.address} ha sido cancelada por el proppietario.\n"
+            f"Si tienes alguna duda, contacta con el propietario {reservation.apartment.owner.username} mediante su email: {reservation.apartment.owner.email}.",
+            request.user.email
+        )
+        
+        # Enviar notificación al propietario
+        enviar_notificacion_correo(
+            f"Reserva cancelada para el apartamento {reservation.apartment.address}",
+            f"La reserva del apartamento {reservation.apartment.address} ha sido cancelada {request.user.username}.\n"
+            f"Puedes contactar con el cliente mediante su email: {request.user.email}.",
+            reservation.apartment.owner.email
+        )
+        reservation.delete()
+
+        return redirect("owner_reservations")
+
+    return render(request, 'owner/manage_reservations.html', {'reservations': reservations})
+
