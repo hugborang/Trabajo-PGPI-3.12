@@ -15,7 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOGOUT_REDIRECT_URL = '/'  # Redirigir a la página principal después de cerrar sesión
+LOGOUT_REDIRECT_URL = '/home/search'  # Redirigir a la página principal después de cerrar sesión
 
 
 # Quick-start development settings - unsuitable for production

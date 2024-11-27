@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.views.generic.base import RedirectView
-from app.views.auth import register, user_login, edit_profile, delete_account, menu
+from app.views.auth import register, user_login, edit_profile, delete_account, menu, user_logout
 from app.views.customers import customer_menu, manage_reservations
 from app.views.owners import owner_menu, manage_availability
 from app.views.customers import customer_menu, manage_reservations
@@ -49,7 +49,7 @@ urlpatterns = [
     #Auths
     path('auth/register/', register, name='register'),  
     path('auth/login/', user_login, name='login'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
+    path('logout/', user_logout, name='logout'),
     path('auth/edit_profile/', edit_profile, name='edit_profile'),
     path('auth/delete_account/', delete_account, name='delete_account'),
     path('auth/menu/', menu, name='menu'),
