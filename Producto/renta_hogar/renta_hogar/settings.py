@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-842(&gb3(ud)pbxo*z$w*92f2z*9uud@mo%cn(bn^%nrc*x-zk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rentahogar.onrender.com', 'localhost', '127.0.0.1']
 
 # Duración de la sesión (1 hora en este caso)
 SESSION_COOKIE_AGE = 3600  # Tiempo en segundos
