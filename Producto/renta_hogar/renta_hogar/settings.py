@@ -45,6 +45,10 @@ CSRF_USE_SESSIONS = False
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://rentahogar.onrender.com'  # Dominios confiables para solicitudes seguras
+]
+
 # Application definition
 
 INSTALLED_APPS = [
