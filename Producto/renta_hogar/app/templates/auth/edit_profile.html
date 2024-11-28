@@ -58,17 +58,14 @@
 </div>
 
 <script>
-    // Función para abrir el modal
     function openModal() {
         document.getElementById("deleteAccountModal").style.display = "block";
     }
 
-    // Función para cerrar el modal
     function closeModal() {
         document.getElementById("deleteAccountModal").style.display = "none";
     }
 
-    // Cierra el modal si el usuario hace clic fuera del contenido
     window.onclick = function(event) {
         const modal = document.getElementById("deleteAccountModal");
         if (event.target == modal) {

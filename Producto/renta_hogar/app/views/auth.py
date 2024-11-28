@@ -17,11 +17,11 @@ def register(request):
             username = form.cleaned_data['username']
             
             if role == 'customer':
-                mensaje = "Gracias"+ username+ "por registrarte en RentaHogar, como nuevo inquilino busca y disfruta de los mejores apartamentos al mejor precio"
+                mensaje = "Gracias "+ username+ " por registrarte en RentaHogar, como nuevo inquilino busca y disfruta de los mejores apartamentos al mejor precio."
             else:
-                mensaje = "Gracias" + username+ "por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero" 
+                mensaje = "Gracias " + username+ " por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero." 
                 
-            enviar_notificacion_correo("!Bienvenido a RentaHogar!", mensaje, form.cleaned_data['email'])
+            enviar_notificacion_correo("!BIENVENIDO a RentaHogar!", mensaje, form.cleaned_data['email'])
             
             return redirect('/auth/login/')
 
@@ -31,7 +31,7 @@ def register(request):
 
 
 
-def user_login(request):
+def user_login(request):    
     if request.method == 'POST':
         form = EmailAuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -83,9 +83,9 @@ def edit_profile(request):
 @login_required
 def delete_account(request):
     request.user.delete()
-    return redirect('home/search')
+    return redirect('/')
 
 @login_required
 def user_logout(request):
     logout(request)  
-    return redirect('home/search')  
+    return redirect('/')  

@@ -95,6 +95,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'TEST': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME':  BASE_DIR /  'test_db.sqlite3',  
+        }
     }
 }
 
@@ -134,6 +138,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
+
 
 # settings.py
 AUTH_USER_MODEL = 'app.CustomUser'  
@@ -155,3 +161,6 @@ EMAIL_HOST_USER = 'rentahogarenterprise@gmail.com'
 EMAIL_HOST_PASSWORD = 'rlot qyua uqwx fdpb'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+STRIPE_PUBLIC_KEY = 'pk_test_51QL8Px4D4pmiqiJUMeUDdknLXOb4BfD5Jw6yXej4EelaVwNnvgtazYvzzwrRphGPFNpdaCrC1RRHzE5vrx6eOPco00Vn1FfbqA'
+STRIPE_SECRET_KEY = 'sk_test_51QL8Px4D4pmiqiJUtneJyqbhulvAmbKHbhv7LIAm2uAp1UEA5dzlOR8XsONB6D4bOlECceGxRV2s4spUejX5t6CZ00566A4GQx'

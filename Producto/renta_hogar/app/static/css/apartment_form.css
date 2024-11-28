@@ -128,7 +128,7 @@
 .add-apartment-form button {
     width: 100%;
     padding: 10px;
-    background-color: #5cb85c;
+    background-color: #0f3f6d;
     border: none;
     border-radius: 4px;
     color: #fff;
@@ -138,7 +138,7 @@
 }
 
 .add-apartment-form button:hover {
-    background-color: #4cae4c;
+    background-color: #3d71b1;
 }
 
 /* Enlace para volver al menú */
@@ -146,11 +146,40 @@
     display: block;
     margin-top: 15px;
     text-align: center;
-    color: #5cb85c;
+    color:#123b6e;
     text-decoration: none;
     font-size: 14px;
 }
 
 .back-to-menu:hover {
-    color: #4cae4c;
+    color: #123b6e;
+}
+
+
+.availability-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-yes {
+    background-color: #2E8B57 !important;  
+}
+
+.btn-no {
+    background-color: #354573 !important; 
+}
+
+.btn:hover {
+    background-color: #2c3e50;
 }

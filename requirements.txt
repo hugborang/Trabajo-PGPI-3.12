@@ -1,0 +1,9 @@
+Django==1.11.15
+Django==2.1
+Django==4.2.16
+freezegun==1.5.1
+Pillow==9.2.0
+Pillow==11.0.0
+selenium==4.27.1
+stripe==11.3.0
+webdriver_manager==4.0.2

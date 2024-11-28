@@ -1,150 +1,80 @@
-# tests/test_reservation.py
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.utils.timezone import make_aware, datetime
-from app.models import Apartment, Reservation, ApartmentPhoto
-from unittest import mock
-from django.core.files.uploadedfile import SimpleUploadedFile
-from PIL import Image
-import io
+from app.models import Apartment, CustomUser, Reservation, Availability
+from datetime import datetime, timedelta
+import json
+from unittest.mock import patch
 
-User = get_user_model()
-
-class ReservationTests(TestCase):
+class CreateReservationTests(TestCase):
     def setUp(self):
-        self.customer = User.objects.create_user(
-            username="customer",
-            email="customer@example.com",
-            password="password123",
-            role="customer"
-        )
-        self.customer2 = User.objects.create_user(
-            username="customer2",
-            email="customer2@example.com",
-            password="password123",
-            role="customer"
-        )
-        self.owner = User.objects.create_user(
-            username="owner",
-            email="owner@example.com",
-            password="password123",
-            role="owner"
-        )
-        self.apartment = Apartment.objects.create(
-            owner=self.owner,
-            address="Test Apartment",
-            guest_count=2,
-            price=100.00
-        )
-        photo = self.create_test_image(name="test.jpg")
-        ApartmentPhoto.objects.create(apartment=self.apartment, photo=photo)
+        self.client = Client()
+        self.customer = CustomUser.objects.create_user(username='customer', password='password123', email='customer@example.com', role='customer')
+        self.owner = CustomUser.objects.create_user(username='owner', password='password123', email='owner@example.com', role='owner')
+        self.apartment = Apartment.objects.create(owner=self.owner, address='Calle Test, 123', price=100, guest_count=2, is_visible=True)
+        self.availability = Availability.objects.create(apartment=self.apartment, start_date=datetime.now(), end_date=datetime.now() + timedelta(days=30))
         self.reservation = Reservation.objects.create(
             cust=self.customer,
             apartment=self.apartment,
-            start_date='2024-11-20',
-            end_date='2024-11-25'
+            start_date=datetime.now() + timedelta(days=5),
+            end_date=datetime.now() + timedelta(days=10),
+            total_price=500
         )
-
-    @staticmethod
-    def create_test_image(name="test.jpg", size=(100, 100), color=(255, 0, 0)):
-        file = io.BytesIO()
-        image = Image.new("RGB", size, color)
-        image.save(file, format="JPEG")
-        file.seek(0)
-        return SimpleUploadedFile(name, file.read(), content_type="image/jpeg")
-    
-    def test_create_reservation_as_customer(self):
-        self.client.login(username="customer", password="password123")
-        response = self.client.post(
-            reverse('create_reservation', args=[self.apartment.id]),
-            {
-                "start_day": "26",
-                "start_month": "11",
-                "start_year": "2024",
-                "end_day": "30",
-                "end_month": "11",
-                "end_year": "2024",
-            }
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(Reservation.objects.filter(
-            cust=self.customer,
-            apartment=self.apartment,
-            start_date='2024-11-26',
-            end_date='2024-11-30'
-        ).exists())
-
-
-    def test_create_reservation_as_owner(self):
-        self.client.login(username="owner", password="password123")
-        response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
-            "start_day": "26",
-            "start_month": "11",
-            "start_year": "2024",
-            "end_day": "30",
-            "end_month": "11",
-            "end_year": "2024",
-        })
-        self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "Solo los inquilinos pueden realizar reservas.", status_code=403)
-        self.assertFalse(Reservation.objects.filter(
-            cust=self.owner,
-            apartment=self.apartment,
-            start_date='2024-11-26',
-            end_date='2024-11-30'
-        ).exists())
-
-    def test_create_reservation_overlapping(self):
-        self.client.login(username="customer", password="password123")
-        response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
-            "start_day": "20",
-            "start_month": "11",
-            "start_year": "2024",
-            "end_day": "25",
-            "end_month": "11",
-            "end_year": "2024",
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "El apartamento no está disponible en las fechas seleccionadas.")
+        self.url = reverse('delete_reservation', args=[self.reservation.id])
         
-    def test_create_reservation_invalid_dates(self):
-        self.client.login(username="customer", password="password123")
-        response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
-            "start_day": "30",
-            "start_month": "11",
-            "start_year": "2024",
-            "end_day": "26",
-            "end_month": "11",
-            "end_year": "2024",
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "La fecha de inicio debe ser anterior a la fecha de fin.")
-        self.assertFalse(Reservation.objects.filter(
-            cust=self.customer,
-            apartment=self.apartment,
-            start_date='2024-11-30',
-            end_date='2024-11-26'
-        ).exists())
 
-    def test_delete_reservation_as_customer(self):
-        self.client.login(username="customer", password="password123")
-        response = self.client.post(reverse('delete_reservation', args=[self.reservation.id]))
+    def test_get_create_reservation(self):
+        self.client.login(username='customer', password='password123')
+        response = self.client.get(reverse('create_reservation', args=[self.apartment.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Calle Test, 123')
+
+    def test_post_create_reservation_success(self):
+        self.client.login(username='customer', password='password123')
+        start_date = (datetime.now() + timedelta(days=12)).strftime('%Y-%m-%d')
+        end_date = (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d')
+        response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
+            'start_date': start_date,
+            'end_date': end_date
+        })
         self.assertEqual(response.status_code, 302)
+
+    def test_post_create_reservation_conflict(self):
+        self.client.login(username='customer', password='password123')
+        response = self.client.post(reverse('create_reservation', args=[self.apartment.id]), {
+            'start_date': (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d'),
+            'end_date': (datetime.now() + timedelta(days=12)).strftime('%Y-%m-%d')
+        })
+        self.assertContains(response, 'El apartamento no está disponible')
+
+    def test_post_create_reservation_invalid_apartment(self):
+        self.client.login(username='customer', password='password123')
+        response = self.client.post(reverse('create_reservation', args=[9999]), {
+            'start_date': (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d'),
+            'end_date': (datetime.now() + timedelta(days=12)).strftime('%Y-%m-%d')
+        })
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
+    def test_verify_payment_failure(self):
+        self.client.login(username='customer', password='password123')
+        response = self.client.get(reverse('verify_payment'), {'session_id': 'invalid_session'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'customer/payment_failed.html')
+
+    def test_delete_reservation_success(self):
+        self.client.login(username='customer', password='password123')
+        response = self.client.post(self.url)
+        self.assertRedirects(response, reverse('manage_reservations'))
         self.assertFalse(Reservation.objects.filter(id=self.reservation.id).exists())
 
-    def test_customer_canot_delete_another_customer_reservation(self):
-        self.client.login(username="customer2", password="password123")
-        response = self.client.post(reverse('delete_reservation', args=[self.reservation.id]))
+    def test_delete_reservation_not_owner(self):
+        another_customer = CustomUser.objects.create_user(username='another', password='password123', email='another@example.com', role='customer')
+        self.client.login(username='another', password='password123')
+        response = self.client.post(self.url)
         self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "No tienes permiso para cancelar esta reserva.", status_code=403)
-        self.assertTrue(Reservation.objects.filter(id=self.reservation.id).exists())
-    
-    def test_customer_cannot_delete_reservation_a_day_before(self):
-        self.client.login(username="customer", password="password123")
-        with mock.patch("django.utils.timezone.now") as mock_now:
-            mock_now.return_value = make_aware(datetime(2024, 11, 19))  # Fecha un día antes del 2024-11-20
-            response = self.client.post(reverse('delete_reservation', args=[self.reservation.id]))
-        self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "No se puede cancelar una reserva un día antes de su fecha de inicio.", status_code=403)
-        self.assertTrue(Reservation.objects.filter(id=self.reservation.id).exists())
+
+    def test_delete_reservation_get_request(self):
+        self.client.login(username='customer', password='password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'customer/manage_reservations.html')

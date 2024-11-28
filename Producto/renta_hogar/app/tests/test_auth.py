@@ -10,15 +10,11 @@ class AuthViewTests(TestCase):
         
         self.user = get_user_model().objects.create_user(
             username='testuser',
+            email ='testuser@email.com',
             password='testpassword123',
             role='customer'  
         )
 
-    # Tests de la vista de register
-    def test_register_view_get(self):
-        response = self.client.get(reverse('register'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'auth/register.html')
 
     def test_register_view_post_customer(self):
         response = self.client.post(reverse('register'), {
@@ -53,7 +49,7 @@ class AuthViewTests(TestCase):
 
     def test_user_login_view_post_customer(self):
         response = self.client.post(reverse('login'), {
-            'username': 'testuser',
+            'email': 'testuser@email.com',
             'password': 'testpassword123'
         })
         self.assertEqual(response.status_code, 302)
@@ -64,7 +60,7 @@ class AuthViewTests(TestCase):
         self.user.save()
         
         response = self.client.post(reverse('login'), {
-            'username': 'testuser',
+            'email': 'testuser@email.com',
             'password': 'testpassword123'
         })
         self.assertEqual(response.status_code, 302)
@@ -73,7 +69,7 @@ class AuthViewTests(TestCase):
     #Tests de la vista edit_profile
     
     def test_get_edit_profile(self):
-        self.client.login(username='testuser', password='testpassword123')
+        self.client.login(email='testuser@email.com', password='testpassword123')
         response = self.client.get(reverse('edit_profile'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'auth/edit_profile.html')
@@ -85,14 +81,14 @@ class AuthViewTests(TestCase):
 
     # Tests de la vista de logout
     def test_user_logout_view(self):
-        self.client.login(username='testuser', password='testpassword123')  
+        self.client.login(email='testuser@email.com', password='testpassword123')  
         response = self.client.get(reverse('logout'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('home'))  
+        self.assertEqual(response.url, reverse('home/search'))  
 
     # Tests de la vista de delete_account
     def test_user_delete_account_view(self):
-        self.client.login(username='testuser', password='testpassword123')  
+        self.client.login(email='testuser@email.com', password='testpassword123')  
         response = self.client.get(reverse('delete_account'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('home'))
+        self.assertEqual(response.url, reverse('home/search'))

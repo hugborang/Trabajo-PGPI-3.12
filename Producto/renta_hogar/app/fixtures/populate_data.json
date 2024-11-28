@@ -58,9 +58,9 @@
         "pk": 1,
         "fields": {
             "owner": 1,
-            "address": "123 City Street",
+            "address": "123 Maplewood Avenue, Brooklyn, NY 11215",
             "guest_count": 4,
-            "description": "Modern apartment with city views.",
+            "description": "Apartamento moderno con vistas imprestionantes de la ciudad. No dude en reservar ya!",
             "is_visible": true, 
             "price": 100.00
         }
@@ -70,9 +70,9 @@
         "pk": 2,
         "fields": {
             "owner": 1,
-            "address": "456 Park Avenue",
+            "address": "456 Liberty Street, Manhattan, NY 10010",
             "guest_count": 2,
-            "description": "Cozy apartment near the park.",
+            "description": "Apartamento muy agradable cerca del parque central. Muy amplio y con opciones de entretenimiento.",
             "is_visible": true,
             "price": 200.00
         }
@@ -82,9 +82,9 @@
         "pk": 3,
         "fields": {
             "owner": 2,
-            "address": "789 Ocean Drive",
+            "address": "789 Sunset Boulevard, Queens, NY 11375",
             "guest_count": 3,
-            "description": "Spacious apartment close to the beach.",
+            "description": "Asombroso apartamento con vista al mar. Ideal para una escapada romántica.",
             "is_visible": true,
             "price": 300.00
             
@@ -141,9 +141,31 @@
         "fields": {
             "cust": 3,
             "apartment": 1,
-            "start_date": "2024-12-01",
-            "end_date": "2024-12-10",
+            "start_date": "2024-10-01",
+            "end_date": "2024-10-10",
             "total_price": 900.00
+        }
+    },
+    {
+        "model": "app.reservation",
+        "pk": 2,
+        "fields": {
+            "cust": 3,
+            "apartment": 1,
+            "start_date": "2024-12-02",
+            "end_date": "2024-12-07",
+            "total_price": 500.00
+        }
+    },
+    {
+        "model": "app.reservation",
+        "pk": 2,
+        "fields": {
+            "cust": 3,
+            "apartment": 1,
+            "start_date": "2025-02-02",
+            "end_date": "2025-02-07",
+            "total_price": 500.00
         }
     }
 ]

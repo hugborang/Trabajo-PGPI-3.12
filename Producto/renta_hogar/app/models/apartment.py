@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Apartment(models.Model):
     owner = models.ForeignKey(
@@ -11,21 +11,28 @@ class Apartment(models.Model):
     )
     address = models.CharField(max_length=255, unique=True)
     guest_count = models.PositiveIntegerField(
-        validators=[MinValueValidator(1, message="La capacidad de huéspedes debe ser mayor que 0")],
+        validators=[
+            MinValueValidator(1, message="La capacidad de huéspedes debe ser mayor que 0"),
+            MaxValueValidator(30, message="La capacidad de huéspedes no puede ser mayor que 30")
+        ],
     )
     description = models.TextField(blank=True, null=True)
     is_visible = models.BooleanField(default=False)
-    price = models.DecimalField(max_digits=10,decimal_places=2,
-                                validators=[MinValueValidator(0, message="El precio no puede ser negativo")],
-                                )
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(1, message="El precio no puede ser negativo"),
+            MaxValueValidator(9999.99, message="El precio no puede ser mayor a 9999.99")
+        ],
+)
 
 
     def __str__(self):
-        return f"{self.address} - {self.owner.username}"
+        return f"Apartamento en {self.address} - Propietario: {self.owner.username}, Capacidad: {self.guest_count} huéspedes, Precio: {self.price}€ visible {self.is_visible}"
+
 
     def delete(self, *args, **kwargs):
-        if self.has_reservations():
-            raise ValueError("No se puede eliminar un apartamento con reservas asociadas.")
         super().delete(*args, **kwargs)
 
     def has_reservations(self):

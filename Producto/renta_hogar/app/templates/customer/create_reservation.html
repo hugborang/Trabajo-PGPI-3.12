@@ -5,6 +5,7 @@
 {% block style_css %}
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/create_reservation.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
 
 {% block contenido %}
@@ -16,15 +17,19 @@
             <img src="{{ apartment.photos.first.photo.url }}" alt="Foto del Apartamento">
         </div>
         <div class="apartment-details">
-            <h2>{{ apartment.address }}</h2>
-            <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
-            <p><strong>Precio por noche:</strong> ${{ apartment.price }}</p>
+            <h2>Dirección: <span class="atribute">{{ apartment.address }}</span></h2>
+            <h2>Capacidad: <span class="atribute">{{ apartment.guest_count }}  huéspedes</span></h2>
+            <h2>Precio por noche: <span class="atribute">{{ apartment.price }} €</span></h2>
+            <h2>Anfitrión: <span class="atribute">{{ apartment.owner }}</span></h2>
+            <h2>Email de contacto: <span class="atribute">{{ apartment.owner.email }}</span></h2>
+            <h2>Descripción: <span class="atribute">{{ apartment.description }}</span></h2>
         </div>
+    
     </div>
 
-    <form method="post" class="reservation-form">
+    <form method="post" class="reservation-form" data-reservations="{{ reserved_dates|escapejs }}">
         {% csrf_token %}
-        
+
         {% if errors %}
             <div class="error-messages">
                 {% for error in errors %}
@@ -33,73 +38,124 @@
             </div>
         {% endif %}
 
-        
         <div class="form-group">
-            <label for="id_start_date">Fecha de Inicio</label>
-            <div class="date-row">
-                <select name="start_day" class="form-control">
-                    <option>Día</option>
-                    {% for day in days %}
-                    <option value="{{ day }}">{{ day }}</option>
-                    {% endfor %}
-                </select>
-                <select name="start_month" class="form-control">
-                    <option>Mes</option>
-                    {% for month in months %}
-                    <option value="{{ month.value }}">{{ month.name }}</option>
-                    {% endfor %}
-                </select>
-                <select name="start_year" class="form-control">
-                    <option>Año</option>
-                    {% for year in years %}
-                    <option value="{{ year }}">{{ year }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <h2 class = "select-date">Selecciona las fechas en las que quieres alquilar</h2>
+            <input type="text" id="fecha_rango" name="date_range" required>
         </div>
-        
-        <div class="form-group">
-            <label for="id_end_date">Fecha de Fin</label>
-            <div class="date-row">
-                <select name="end_day" class="form-control">
-                    <option>Día</option>
-                    {% for day in days %}
-                    <option value="{{ day }}">{{ day }}</option>
-                    {% endfor %}
-                </select>
-                <select name="end_month" class="form-control">
-                    <option>Mes</option>
-                    {% for month in months %}
-                    <option value="{{ month.value }}">{{ month.name }}</option>
-                    {% endfor %}
-                </select>
-                <select name="end_year" class="form-control">
-                    <option>Año</option>
-                    {% for year in years %}
-                    <option value="{{ year }}">{{ year }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-                
-        <button type="submit" class="btn btn-primary">Reservar</button>
+
+        <button type="button" data-price="{{ apartment.price }}" class="btn-primary" style="width: 300px;" id="openModalButton" onclick="openModal()">Reservar</button>
     </form>
 
-
-<!-- Modal de confirmación -->
-<div id="deleteAccountModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Confirmar eliminación</h2>
-        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
-        <form method="post" action="{% url 'delete_account' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Sí, eliminar cuenta</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        </form>
+    <div id="reservationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeModalButton">&times;</span>
+            <h2>Confirmar Reserva</h2>
+            <p>¿Estás seguro de que deseas confirmar la reserva para las siguientes fechas?</p>
+            <p><strong>Fecha de inicio:</strong> <span id="modalStartDate"></span></p>
+            <p><strong>Fecha de fin:</strong> <span id="modalEndDate"></span></p>
+            <p><strong>Número total de noches:</strong> <span id="modalNight"></span></p>
+            <p><strong id="totalPrice">€0.00</strong></p> 
+            <form method="post" action="{% url 'create_reservation' apartment.id %}">
+                {% csrf_token %}
+                <input type="hidden" id="modalStartDateInput" name="start_date">
+                <input type="hidden" id="modalEndDateInput" name="end_date">
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Sí, pagar reserva</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalButtonCancel">Cancelar</button>
+                </div>
+                <div class="warning-box">
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-text">
+                        <strong>Cuidado:</strong> Una vez pagada la reserva, solo podrás cancelarla si quedan 30 días o más para la fecha de inicio.
+                    </span>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/es.js"></script>
+<script>
+    const reservedDates = JSON.parse('{{ reserved_dates|escapejs }}');
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); 
+    const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+
+
+    flatpickr("#fecha_rango", {
+        locale: "es",  
+        dateFormat: "Y-m-d",  
+        mode: "range",  
+        disable: reservedDates,  
+        minDate: tomorrowFormatted,
+        onDayCreate: function(dObj, dStr, dFltr) {
+            const dateStr = dStr; 
+
+            if (reservedDates.includes(dateStr)) {
+                dObj.classList.add("reserved");  
+            }
+        },
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                const startDate = selectedDates[0].toISOString().split('T')[0];
+                const endDate = selectedDates[1].toISOString().split('T')[0];
+
+                document.getElementById('modalStartDate').textContent = startDate;
+                document.getElementById('modalEndDate').textContent = endDate;
+                document.getElementById('modalNight').textContent = endDate;
+
+
+                document.getElementById('modalStartDateInput').value = startDate;
+                document.getElementById('modalEndDateInput').value = endDate;
+
+                const pricePerNight = parseFloat(document.getElementById('openModalButton').getAttribute("data-price"));
+                const differenceInTime = selectedDates[1] - selectedDates[0];
+                const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+                const totalPrice = pricePerNight * differenceInDays;
+
+                document.getElementById('modalNight').textContent = differenceInDays;
+                document.getElementById('totalPrice').textContent = `Precio total: ${totalPrice.toFixed(2)}€`;
+            }
+        }
+    });
+
+    // Modal
+    document.addEventListener('DOMContentLoaded', function () {
+        const openModalButton = document.getElementById('openModalButton');
+        const reservationModal = document.getElementById('reservationModal');
+        const closeModalButtons = document.querySelectorAll('#closeModalButton, #closeModalButtonCancel');
+
+        function openModal() {
+            const dateRange = document.getElementById('fecha_rango').value;
+            if (!dateRange) {
+                alert('Por favor, selecciona un rango de fechas.');
+                return;
+            }
+
+            reservationModal.style.display = 'block';
+        }
+
+        function closeModal() {
+            reservationModal.style.display = 'none';
+        }
+
+        openModalButton.addEventListener('click', openModal);
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === reservationModal) {
+                closeModal();
+            }
+        });
+    });
+</script>
+
+
+
 {% endblock %}
