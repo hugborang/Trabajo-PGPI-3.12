@@ -160,7 +160,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rentahogarenterprise@gmail.com'
 EMAIL_HOST_PASSWORD = 'rlot qyua uqwx fdpb'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 STRIPE_PUBLIC_KEY = 'pk_test_51QL8Px4D4pmiqiJUMeUDdknLXOb4BfD5Jw6yXej4EelaVwNnvgtazYvzzwrRphGPFNpdaCrC1RRHzE5vrx6eOPco00Vn1FfbqA'
 STRIPE_SECRET_KEY = 'sk_test_51QL8Px4D4pmiqiJUtneJyqbhulvAmbKHbhv7LIAm2uAp1UEA5dzlOR8XsONB6D4bOlECceGxRV2s4spUejX5t6CZ00566A4GQx'
