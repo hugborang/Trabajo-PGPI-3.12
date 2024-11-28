@@ -22,7 +22,7 @@ class Apartment(models.Model):
         max_digits=6,
         decimal_places=2,
         validators=[
-            MinValueValidator(0, message="El precio no puede ser negativo"),
+            MinValueValidator(1, message="El precio no puede ser negativo"),
             MaxValueValidator(9999.99, message="El precio no puede ser mayor a 9999.99")
         ],
 )
