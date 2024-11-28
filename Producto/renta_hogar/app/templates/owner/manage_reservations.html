@@ -24,12 +24,89 @@
                 <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
                 <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
                 <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
+
             </div>
+            {% if reservation.can_cancel == True %}
+            <div class="reservation-actions">
+                <button type="button" class="btn btn-danger open-modal" data-id="{{ reservation.id }}">Cancelar Reserva</button>
+            </div>
+            {% else %}
+                <div class="reservation-actions">
+                    <div class="alert alert-warning" style="background-color: #354573; color: white; border-radius: 8px; font-size: 14px;">
+                        No puedes cancelar la reserva si quedan menos de 30 días.
+                    </div>
+                    
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <p>No tienes reservas actualmente.</p>
+    <p class="no-reservations">No tienes reservas activas.</p>
     {% endif %}
 </div>
+
+
+
+<div id="cancelationModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" id="closeModalButton">&times;</span>
+        <h2>Cancelar Reserva</h2>
+        <p>¿Estás seguro de que deseas cancelar la reserva?</p>
+        <form method="post" id="cancelForm" action="">
+            {% csrf_token %}
+            <div class="modal-content">
+                <h2>¿Estás seguro que deseas cancelar la reserva?</h2>
+        
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn btn-primary">Sí, cancelar reserva</button>
+                        <button type="button" class="btn btn-secondary" id="closeModalButtonCancel">Cancelar</button>
+                    </div>
+                
+                
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cancelationModal = document.getElementById('cancelationModal');
+        const closeModalButtons = document.querySelectorAll('#closeModalButton, #closeModalButtonCancel');
+        const cancelForm = document.getElementById('cancelForm');
+
+        function openModal(reservationId) {
+            cancelForm.action = "{% url 'delete_reservation_owner' 0 %}".replace('0', reservationId);
+            cancelationModal.style.display = 'block';
+        }
+
+        function closeModal() {
+            cancelationModal.style.display = 'none';
+        }
+
+        const openModalButtons = document.querySelectorAll('.open-modal');
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const reservationId = button.getAttribute('data-id');
+                openModal(reservationId);
+            });
+        });
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === cancelationModal) {
+                closeModal();
+            }
+        });
+    });
+</script>
+
+
+
+{% endblock %}
 {% endblock %}

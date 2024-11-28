@@ -88,4 +88,4 @@ def delete_account(request):
 @login_required
 def user_logout(request):
     logout(request)  
-    return redirect('home/search')  
+    return redirect('/')  
