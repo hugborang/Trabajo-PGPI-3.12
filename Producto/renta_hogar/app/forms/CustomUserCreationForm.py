@@ -34,11 +34,10 @@ class CustomUserChangeForm(forms.ModelForm):
 
         if password1 and password2:
             if password1 != password2:
-                raise forms.ValidationError("Las contraseñas no coinciden.")
+                self.add_error('password2', "Las contraseñas no coinciden.") 
 
             try:
                 validate_password(password1)  
             except ValidationError as e:
-                raise forms.ValidationError(f"Error en la contraseña: {', '.join(e.messages)}")
-
+                self.add_error('password1', e.messages)
         return cleaned_data
