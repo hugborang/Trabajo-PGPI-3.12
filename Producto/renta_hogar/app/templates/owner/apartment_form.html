@@ -47,7 +47,7 @@
             </ul>
         {% endif %}
 
-        <label for="description">Descripción del Apartamento:</label>
+        <label for="description">Descripción del apartamento:</label>
         {{ form.description }}
         {% if form.description.errors %}
             <ul class="error-list">
@@ -66,20 +66,19 @@
         </div>
 
         {% if edit_mode and apartment.photos.exists %}   
-            <h3>Fotos existentes</h3>
+            <h3>Foto actual:</h3>
             <ul>
                 {% for photo in apartment.photos.all %}
                     <li>
-                        <input type="checkbox" name="existing_photos" value="{{ photo.id }}" checked>
-                        <img src="{{ photo.photo.url }}" alt="Foto del apartamento" style="max-width: 100px; margin: 10px 0;">
+                        <img src="{{ photo.photo.url }}" alt="Foto del apartamento" style="max-width: 100px; margin: 10px 0; margin-right: 50;">
                     </li>
                 {% endfor %}
             </ul>
         {% endif %}
         
-        <h3>{% if edit_mode %}Añadir Nuevas Fotos{% else %}Subir Fotos del Apartamento{% endif %}</h3>
-        <label for="photos">Fotos del Apartamento:</label>
-        <input type="file" name="photos" multiple accept=".jpg,.jpeg,.png,.gif">  
+        <h3>{% if edit_mode %}Cambiar foto del apartamento{% else %}Subir foto del apartamento{% endif %}</h3>
+        <label for="photos">Foto del apartamento:</label>
+        <input type="file" name="photos" accept=".jpg,.jpeg,.png,.gif">  
         {% if photo_errors %}
             <ul class="error-list">
                 {% for error in photo_errors %}

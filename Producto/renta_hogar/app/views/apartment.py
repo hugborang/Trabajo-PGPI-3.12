@@ -18,31 +18,27 @@ def add_apartment(request):
     
     if request.method == 'POST':
         form = ApartmentForm(request.POST, request.FILES)
-        photos = request.FILES.getlist('photos')
+        photo = request.FILES.get('photos')
         photo_errors = []
 
-        if not photos:
+        if not photo:
             photo_errors.append("Debes subir al menos una foto del apartamento.")
         else:
-            for photo in photos:
-                try:
-                    validate_image_extension(photo)
-                except ValidationError as e:
-                    photo_errors.append(e.message)
+            try:
+                validate_image_extension(photo)
+            except ValidationError as e:
+                photo_errors.append(e.message)
 
         for error in photo_errors:
-            print(error)
             form.add_error(None, error)
 
-        if form.is_valid():
+        if form.is_valid() and not photo_errors:
             apartment = form.save(commit=False)
             apartment.owner = request.user
             apartment.save()
 
-            for photo in photos:
-                ApartmentPhoto.objects.create(apartment=apartment, photo=photo)
+            ApartmentPhoto.objects.create(apartment=apartment, photo=photo)
    
-
             return redirect('owner_menu')
         
 
@@ -93,35 +89,29 @@ def edit_apartment(request, apartment_id):
 
     if request.method == 'POST':
         form = ApartmentForm(request.POST, instance=apartment)
-        photos = request.FILES.getlist('photos')
-        existing_photos = request.POST.getlist('existing_photos')
+        new_photo = request.FILES.get('photos')
         photo_errors = []
 
-        if not photos and not existing_photos:
+        if not new_photo and not apartment.photos.exists():
             photo_errors.append("El apartamento debe tener al menos una foto.")
-        elif (len(photos) + len(existing_photos)) > 5:
-            photo_errors.append("Solo puedes subir hasta 5 fotos del apartamento.")
-        else:
-            for photo in photos:
-                try:
-                    validate_image_extension(photo)
-                except ValidationError as e:
-                    photo_errors.append(e.message)
+        elif new_photo:
+            try:
+                validate_image_extension(new_photo)
+            except ValidationError as e:
+                photo_errors.append(e.message)
 
         for error in photo_errors:
             form.add_error(None, error)
 
-        if form.is_valid():
+        if form.is_valid() and not photo_errors:
             apartment = form.save(commit=False)
             apartment.owner = request.user
             apartment.save()
 
-            # Elimina fotos no seleccionadas
-            ApartmentPhoto.objects.filter(apartment=apartment).exclude(id__in=existing_photos).delete()
-
-            # Guarda nuevas fotos
-            for photo in photos:
-                ApartmentPhoto.objects.create(apartment=apartment, photo=photo)
+            # Elimina la foto existente
+            if new_photo:
+                apartment.photos.all().delete()
+                ApartmentPhoto.objects.create(apartment=apartment, photo=new_photo)
 
             messages.success(request, "Apartamento editado exitosamente.")
             return redirect('owner_menu')
@@ -130,6 +120,7 @@ def edit_apartment(request, apartment_id):
             'form': form,
             'apartment': apartment,
             'edit_mode': True,
+            'photo_errors': photo_errors
         })
 
     form = ApartmentForm(instance=apartment)
