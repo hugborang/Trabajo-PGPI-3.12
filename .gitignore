@@ -9,6 +9,9 @@ db.sqlite3
 # Ignorar la carpeta media (archivos subidos por el usuario)
 Producto/renta_hogar/media/apartments/photos/test*
 
+#Ignorar archivo generado por la cobertura
+.coverage
+
 # Ignorar configuraciones sensibles (si corresponde)
 *.env
 venv/

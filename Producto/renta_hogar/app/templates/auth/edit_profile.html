@@ -16,24 +16,52 @@
 
 
 <div class="content-edit-profile">
-    <h1>Edita tus datos</h1>
+    <h1 class="register-title">Mis datos</h1>
     <form id="formulario" method="post" action="">
         {% csrf_token %}
         <div>
             <label for="id_username">Nombre de usuario:</label>
             {{ form.username }}
+            {% if form.username.errors %}
+                <ul class="error-list">
+                    {% for error in form.username.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div>
             <label for="id_email">Email</label>
             {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="error-list">
+                    {% for error in form.email.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div>
             <label for="id_password1">Nueva contraseña</label>
             {{ form.password1 }}
+            {% if form.password1.errors %}
+                <ul class="error-list">
+                    {% for error in form.password1.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div>
             <label for="id_password2">Confirmar la contraseña</label>
             {{ form.password2 }}
+            {% if form.password2.errors %}
+                <ul class="error-list">
+                    {% for error in form.password2.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
     <div>        
         <p><input type="submit" value="Actualizar" /></p>
@@ -41,7 +69,12 @@
 
 
 
-<button type="button" class="btn btn-danger" onclick="openModal()">Eliminar cuenta</button>
+    <form action="{% url 'delete_account' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="button" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?');">
+            Eliminar cuenta
+        </button>
+    </form>
 
 <!-- Modal de confirmación -->
 <div id="deleteAccountModal" class="modal" style="display: none;">

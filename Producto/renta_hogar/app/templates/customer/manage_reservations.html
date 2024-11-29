@@ -39,7 +39,7 @@
                 </div>
             {% endif %}
             <div class="reservation-actions">
-                {% if user.is_authenticated  %}
+                {% if user.is_authenticated %}
                 <form action="{% url 'create_review' apartment_id=reservation.apartment.id %}" method="get">
                     <button type="submit" class="btn btn-success" style="background-color: #ffc107;">
                         <i class="fas fa-star"></i> Deja una valoración

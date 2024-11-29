@@ -5,7 +5,7 @@ from django import forms
 
 class CustomUser(AbstractUser):
     surnames = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, error_messages={'unique': 'Ya existe un usuario con este correo electrónico.'})
     ROLE_CHOICES = [
         ('owner', 'Propietario'),
         ('customer', 'Inquilino'),

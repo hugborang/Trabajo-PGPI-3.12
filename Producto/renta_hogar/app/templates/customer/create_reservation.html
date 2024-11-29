@@ -10,7 +10,7 @@
 
 {% block contenido %}
 <div class="reservation-container">
-    <h1>Reservar Apartamento</h1>
+    <h1>¡Crea tu reserva!</h1>
 
     <div class="apartment-info">
         <div class="apartment-photo">
@@ -39,8 +39,8 @@
         {% endif %}
 
         <div class="form-group">
-            <h2 class = "select-date">Selecciona las fechas en las que quieres alquilar</h2>
-            <input type="text" id="fecha_rango" name="date_range" required>
+            <h2 class = "select-date">Selecciona la fecha en las que quieres reservar</h2>
+            <input type="text" id="fecha_rango" name="date_range" placeholder="Seleccione aquí" required>
         </div>
 
         <button type="button" data-price="{{ apartment.price }}" class="btn-primary" style="width: 300px;" id="openModalButton" onclick="openModal()">Reservar</button>

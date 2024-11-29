@@ -9,7 +9,7 @@
 
 {% block contenido %}
 <div class="review-container">
-  <h2>Deja una valoración para el apartamento</h2>
+  <h2>¿Qué tal te pareció la experiencia?</h2>
 
   {% if messages %}
   <div class="alert-container">
@@ -22,10 +22,10 @@
   {% endif %}
 
   {% if form.errors %}
-      <ul class="errorlist">
+      <ul class="error-list">
           {% for field, errors in form.errors.items %}
               {% for error in errors %}
-                  <li>{{ error }}</li>
+                  <li class="error">{{ error }}</li>
               {% endfor %}
           {% endfor %}
       </ul>

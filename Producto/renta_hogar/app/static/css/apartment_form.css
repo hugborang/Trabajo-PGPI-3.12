@@ -1,39 +1,40 @@
 .contenido {
-    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    min-height: 100%; /* Asegura que ocupe toda la altura disponible */
+    height: 100%; 
     background-color: #eeecfb;
-    box-sizing: border-box;
-    padding: 20px 0; /* Espaciado superior e inferior */
+    box-sizing: border-box; 
+    overflow: auto;  /* Añade una barra de desplazamiento si el contenido es demasiado grande */
 }
 
 /* Contenedor principal */
 .add-apartment-container {
-    background-color: #f4f4f9;
-    display: flex;
-    flex-direction: column;
+    background-color: #76a1d6;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
     align-items: center;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    margin: auto;
+    margin-bottom: 5vh;
 }
 
 /* Título */
 .add-apartment-form h2 {
+    margin-bottom: 50px;
+    color: #354573;;
+    font-size: 35px;
+    font-weight: bold;
     text-align: center;
-    color: #000000;
-    font-size: 24px;
-    margin-bottom: 20px;
 }
 
 /* Estilos del formulario */
 .add-apartment-form {
     background-color: #76a1d6;
-    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
 }
 
@@ -42,35 +43,30 @@
 }
 
 .add-apartment-form label {
+    color: #354573; /* Gris Oscuro */
+    font-weight: 600;
     display: block;
+    text-align: left;
     margin-bottom: 5px;
-    color: #333;
-    font-weight: bold;
 }
 
 .add-apartment-form input,
 .add-apartment-form textarea {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 10px;
+    border: 1px solid #BDC3C7;
     border-radius: 4px;
     box-sizing: border-box;
-}
-
-.add-apartment-form .errorlist {
-    color: #d9534f;
-    font-size: 14px;
-    margin-top: 5px;
-    list-style-type: none;
-    padding: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
 }
 
 .add-apartment-form .current-photos {
-    margin-top: 15px;
+    margin-top: 10px;
     padding: 10px;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid #BDC3C7;
+    border-radius: 4px;
 }
 
 .add-apartment-form .current-photos img {
@@ -79,9 +75,6 @@
     border-radius: 5px;
 }
 
-.add-apartment-form .errorlist li {
-    margin-bottom: 5px;
-}
 .uploaded-photos {
     margin-top: 15px;
     background-color: #f9f9f9;
@@ -126,19 +119,19 @@
 }
 
 .add-apartment-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #0f3f6d;
+    background-color: #354573;
+    color: #FFFFFF;
     border: none;
+    padding: 10px 20px;
     border-radius: 4px;
-    color: #fff;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 .add-apartment-form button:hover {
-    background-color: #3d71b1;
+    background-color: #354573;
 }
 
 /* Enlace para volver al menú */
@@ -158,8 +151,9 @@
 
 .availability-buttons {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 10px;
+    margin-left: 5px;
 }
 
 .btn {
@@ -173,13 +167,37 @@
 }
 
 .btn-yes {
-    background-color: #2E8B57 !important;  
+    background-color: #2E8B57 !important;
 }
 
 .btn-no {
-    background-color: #354573 !important; 
+    background-color: #ff4d4d !important; 
 }
 
 .btn:hover {
     background-color: #2c3e50;
+}
+
+/* Estilos para los mensajes de error */
+.error-list {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: #ffe6e6; /* Fondo suave en rojo */
+    border-left: 4px solid #ff4d4d; /* Barra de énfasis */
+    border-radius: 4px;
+    color: #b30000; /* Texto en rojo oscuro */
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.error {
+    color: #b30000; /* Texto en rojo oscuro */
+    font-weight: bold;
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    margin-left: 1rem;
+    display: list-item; /* Para que se alinee con los puntos de la lista */
+    list-style: circle; /* Cambia el estilo de los puntos */
 }

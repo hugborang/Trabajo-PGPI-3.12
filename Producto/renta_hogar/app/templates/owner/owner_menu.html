@@ -10,8 +10,6 @@
 {% block contenido %}
 <div class="content-property-management">
 
-    <h2 class="title">Gestión de Apartamentos</h2>
-
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -38,6 +36,8 @@
             </a>
         </div>
     </div>
+
+    <h2 class="title">Tus apartamentos:</h2>
 
     <div class="apartments-list">
         {% for apartment in apartments %}
@@ -69,7 +69,7 @@
                     </a>
                     <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                        <button type="button" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
                             <i class="fas fa-trash-alt"></i> Eliminar
                         </button>
                     </form>

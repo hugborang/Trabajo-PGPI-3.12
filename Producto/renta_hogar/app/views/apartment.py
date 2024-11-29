@@ -31,6 +31,7 @@ def add_apartment(request):
                     photo_errors.append(e.message)
 
         for error in photo_errors:
+            print(error)
             form.add_error(None, error)
 
         if form.is_valid():
@@ -45,11 +46,11 @@ def add_apartment(request):
             return redirect('owner_menu')
         
 
-        return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
+        return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False, 'photo_errors': photo_errors})
     
     
     form = ApartmentForm()
-    return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False})
+    return render(request, 'owner/apartment_form.html', {'form': form, 'edit_mode': False, 'photo_errors': []})
 
 
 
