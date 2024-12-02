@@ -82,8 +82,9 @@ def edit_profile(request):
 
 @login_required
 def delete_account(request):
-    request.user.delete()
-    return redirect('/')
+    if request.method == 'POST':
+        request.user.delete()
+        return redirect('/')
 
 @login_required
 def user_logout(request):

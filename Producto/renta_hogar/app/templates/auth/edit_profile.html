@@ -71,41 +71,11 @@
 
     <form action="{% url 'delete_account' %}" method="post" style="display:inline;">
         {% csrf_token %}
-        <button type="button" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?');">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?');">
             Eliminar cuenta
         </button>
     </form>
 
-<!-- Modal de confirmación -->
-<div id="deleteAccountModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Confirmar eliminación</h2>
-        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
-        <form method="post" action="{% url 'delete_account' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Sí, eliminar cuenta</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        </form>
-    </div>
-</div>
-
-<script>
-    function openModal() {
-        document.getElementById("deleteAccountModal").style.display = "block";
-    }
-
-    function closeModal() {
-        document.getElementById("deleteAccountModal").style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById("deleteAccountModal");
-        if (event.target == modal) {
-            closeModal();
-        }
-    }
-</script>
 
 
     {% if messages %}
