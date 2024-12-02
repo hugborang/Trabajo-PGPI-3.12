@@ -118,24 +118,6 @@
         }
     },
     {
-        "model": "app.availability",
-        "pk": 1,
-        "fields": {
-            "apartment": 1,
-            "start_date": "2024-11-14",
-            "end_date": "2024-11-22"
-        }
-    },
-    {
-        "model": "app.availability",
-        "pk": 2,
-        "fields": {
-            "apartment": 1,
-            "start_date": "2024-12-01",
-            "end_date": "2024-12-13"
-        }
-    },
-    {
         "model": "app.reservation",
         "pk": 1,
         "fields": {
@@ -166,6 +148,17 @@
             "start_date": "2025-02-02",
             "end_date": "2025-02-07",
             "total_price": 500.00
+        }
+    },
+    {
+        "model": "app.review",
+        "pk": 1,
+        "fields": {
+            "apartment": 1,
+            "user": 3,
+            "rating": 5,
+            "comment": "Excelente apartamento, muy limpio y con una vista increíble.",
+            "created_at": "2024-10-11"
         }
     }
 ]

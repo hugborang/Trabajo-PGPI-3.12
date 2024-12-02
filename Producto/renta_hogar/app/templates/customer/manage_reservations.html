@@ -24,18 +24,18 @@
                 <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
                 <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
                 <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
-
+            
             </div>
             {% if reservation.can_cancel == True %}
             <div class="reservation-actions">
                 <button type="button" class="btn btn-danger open-modal" data-id="{{ reservation.id }}">Cancelar Reserva</button>
             </div>
+            {% elif now > reservation.end_date %}
             {% else %}
                 <div class="reservation-actions">
                     <div class="alert alert-warning" style="background-color: #354573; color: white; border-radius: 8px; font-size: 14px;">
                         No puedes cancelar la reserva si quedan menos de 30 días.
                     </div>
-                    
                 </div>
             {% endif %}
             <div class="reservation-actions">
