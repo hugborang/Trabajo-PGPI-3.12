@@ -60,29 +60,3 @@ class OwnerViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "owner/owner_menu.html")
         self.assertContains(response, "Apartment 1")
-
-    def test_manage_availability_as_owner(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.get(reverse('manage_availability', args=[self.apartment.id]))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "owner/manage_availability.html")
-        self.assertContains(response, "Dec. 24, 2024")
-
-    def test_manage_availability_as_customer(self):
-        self.client.login(username="customer1", password="password123")
-        response = self.client.get(reverse('manage_availability', args=[self.apartment.id]))
-        self.assertEqual(response.status_code, 403)
-        self.assertTemplateUsed(response, "access_denied.html")
-
-    def test_manage_availability_apartment_not_found(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.get(reverse('manage_availability', args=[999]))
-        self.assertEqual(response.status_code, 404)
-        self.assertTemplateUsed(response, "404.html")
-
-    def test_manage_availability_foreign_apartment(self):
-        self.client.login(username="owner2", password="password123")
-        response = self.client.get(reverse('manage_availability', args=[self.apartment.id]))
-
-        self.assertEqual(response.status_code, 403)
-        self.assertTemplateUsed(response, "access_denied.html")

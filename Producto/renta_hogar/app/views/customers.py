@@ -54,4 +54,4 @@ def manage_reservations(request):
             r.can_cancel = False
             r.save()
             
-    return render(request, 'customer/manage_reservations.html', {'reservations': reservations})
+    return render(request, 'customer/manage_reservations.html', {'reservations': reservations, 'now': now})
