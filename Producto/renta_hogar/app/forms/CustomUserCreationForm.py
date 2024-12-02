@@ -12,29 +12,33 @@ class CustomUserCreationForm(UserCreationForm):
         
         
 class CustomUserChangeForm(forms.ModelForm):
-    password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        label='Nueva contraseña',
-        required=True
-    )
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        label='Confirmar nueva contraseña',
-        required=True
-    )
-    
     class Meta:
         model = CustomUser
-        fields = ['username', 'email']  
+        fields = ['username', 'email'] 
+    
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
+        label='Nueva contraseña',
+        required=False
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
+        label='Confirmar nueva contraseña',
+        required=False
+    )
 
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')
 
-        if password1 and password2:
+        if password1 or password2:
+            if not password1:
+                self.add_error('password1', "Debes ingresar una nueva contraseña.")
+            if not password2:
+                self.add_error('password2', "Debes confirmar la nueva contraseña.")
             if password1 != password2:
-                self.add_error('password2', "Las contraseñas no coinciden.") 
+                self.add_error('password2', "Las contraseñas no coinciden.")
 
             try:
                 validate_password(password1)  

@@ -66,8 +66,12 @@ def edit_profile(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
-            user = form.save()
-            user.set_password(form.cleaned_data['password1'])
+            user = form.save(commit=False)
+
+            password1 = form.cleaned_data.get('password1')
+            if password1:
+                user.set_password(password1)
+            
             user.save()
             update_session_auth_hash(request, user)
             if user.role == 'customer':
