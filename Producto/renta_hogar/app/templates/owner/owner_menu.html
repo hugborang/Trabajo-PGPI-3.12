@@ -65,11 +65,11 @@
                 {% endif %}
                 <div class="apartment-actions">
                     <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-edit">
-                        <i class="fas fa-edit"></i> Editar
+                        <i class="fas fa-edit" style="align-items: center;"></i> Editar
                     </a>
-                    <form action="{% url 'delete_apartment' apartment.id %}" method="post" style="display:inline;">
+                    <form action="{% url 'delete_apartment' apartment.id %}" method="post">
                         {% csrf_token %}
-                        <button type="button" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este apartamento?');">
                             <i class="fas fa-trash-alt"></i> Eliminar
                         </button>
                     </form>

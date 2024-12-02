@@ -74,6 +74,7 @@
     background-color: #007bff;
     color: white;
     text-decoration: none;
+    margin-bottom: 12px;
 }
 
 .btn-edit:hover {
