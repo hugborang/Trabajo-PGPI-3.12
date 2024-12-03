@@ -134,20 +134,31 @@
         "fields": {
             "cust": 3,
             "apartment": 1,
-            "start_date": "2024-12-02",
-            "end_date": "2024-12-07",
+            "start_date": "2025-02-02",
+            "end_date": "2025-02-07",
             "total_price": 500.00
         }
     },
     {
         "model": "app.reservation",
-        "pk": 2,
+        "pk": 3,
         "fields": {
             "cust": 3,
-            "apartment": 1,
-            "start_date": "2025-02-02",
-            "end_date": "2025-02-07",
-            "total_price": 500.00
+            "apartment": 2,
+            "start_date": "2024-10-19",
+            "end_date": "2024-10-26",
+            "total_price": 1400.00
+        }
+    },
+    {
+        "model": "app.reservation",
+        "pk": 4,
+        "fields": {
+            "cust": 3,
+            "apartment": 3,
+            "start_date": "2024-12-01",
+            "end_date": "2024-12-10",
+            "total_price": 2700.00
         }
     },
     {
