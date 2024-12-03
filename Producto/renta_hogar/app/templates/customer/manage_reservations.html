@@ -23,7 +23,7 @@
                 <p><strong>Capacidad:</strong> {{ reservation.apartment.guest_count }} huéspedes</p>
                 <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
                 <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
-                <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
+                <p><strong>Precio:</strong> {{ reservation.total_price }}€</p>
             
             </div>
             {% if reservation.can_cancel == True %}
@@ -32,23 +32,20 @@
             </div>
             {% elif now > reservation.end_date %}
             {% else %}
-                <div class="reservation-actions">
-                    <div class="alert alert-warning" style="background-color: #354573; color: white; border-radius: 8px; font-size: 14px;">
-                        No puedes cancelar la reserva si quedan menos de 30 días.
-                    </div>
+            <div class="reservation-actions">
+                <div class="alert alert-warning" style="background-color: #354573; color: white; border-radius: 8px; font-size: 14px;">
+                    No puedes cancelar la reserva si quedan menos de 30 días.
+                </div>
                 </div>
             {% endif %}
-            <div class="reservation-actions">
-                {% if user.is_authenticated %}
-                <form action="{% url 'create_review' apartment_id=reservation.apartment.id %}" method="get">
-                    <button type="submit" class="btn btn-success" style="background-color: #ffc107;">
+            
+            {% if user.is_authenticated and now > reservation.end_date %}
+                <div class="reservation-actions">
+                    <button type="button" class="btn btn-success" style="background-color: #ffc107; border-radius: 8px;" onclick="redirectToReview('{{ reservation.apartment_id }}')">
                         <i class="fas fa-star"></i> Deja una valoración
                     </button>
-                </form>
-                {% else %}
-                <p>Debes haber reservado este apartamento para dejar una valoración.</p>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
@@ -115,6 +112,11 @@
             }
         });
     });
+
+    function redirectToReview(apartmentId) {
+        // Redirige al usuario a la URL de la valoración usando el ID del apartamento
+        window.location.href = "{% url 'create_review' apartment_id='0' %}".replace('0', apartmentId);
+    }
 </script>
 
 
