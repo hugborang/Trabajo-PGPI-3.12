@@ -65,7 +65,7 @@ def delete_apartment(request, apartment_id):
         
         # Verificar si existen reservas asociadas al apartamento
         if Reservation.objects.filter(apartment=apartment).exists():
-            messages.error(request, "Este apartamento no puede ser eliminado porque tiene reservas asociadas.", extra_tags="delete_apartment")
+            messages.error(request, "El apartamento seleccionado no puede ser eliminado porque tiene reservas asociadas.", extra_tags="delete_apartment")
             return redirect('owner_menu')
 
         apartment.delete()

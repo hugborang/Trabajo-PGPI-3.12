@@ -10,6 +10,8 @@
 {% block contenido %}
 <div class="content-property-management">
 
+   
+
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -38,6 +40,17 @@
     </div>
 
     <h2 class="title">Tus apartamentos:</h2>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            {% if "delete_apartment" in message.tags %}
+                <li class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
 
     <div class="apartments-list">
         {% for apartment in apartments %}
@@ -52,17 +65,7 @@
                     <p><strong>Capacidad:</strong> {{ apartment.guest_count }} huéspedes</p>
                     <p><strong>Precio:</strong> {{ apartment.price }} €</p>
                 </div>
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        {% if "delete_apartment" in message.tags %}
-                            <li class="alert alert-{{ message.tags }}">
-                                {{ message }}
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-                {% endif %}
+               
                 <div class="apartment-actions">
                     <a href="{% url 'edit_apartment' apartment.id %}" class="btn btn-edit">
                         <i class="fas fa-edit" style="align-items: center;"></i> Editar
@@ -74,11 +77,15 @@
                         </button>
                     </form>
                 </div>
+               
             </div>
+           
         {% empty %}
             <p class="no-apartments">No tienes apartamentos registrados.</p>
         {% endfor %}
+      
     </div>
+  
 </div>
 
 
