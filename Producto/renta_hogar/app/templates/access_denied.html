@@ -1,3 +1,7 @@
+{% extends "headers/header.html" %}
+{% load static %}
+
+{% block contenido %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,7 +28,7 @@
             background-repeat: no-repeat; /* Evita que la imagen se repita */
             background-size: contain; /* La imagen se ajusta manteniendo su proporción */
             background-position: center;
-            background-color: #000; /* Color de fondo para rellenar */
+            background-color: #eeecfb; /* Color de fondo para rellenar */
         }
 
         .content {
@@ -54,3 +58,4 @@
     </div>
 </body>
 </html>
+{% endblock %}
