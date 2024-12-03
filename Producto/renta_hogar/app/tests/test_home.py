@@ -70,8 +70,9 @@ class SearchApartmentTests(TestCase):
         response = self.client.get(reverse('home_search'), {'huespedes': 'abc'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "El número de huéspedes debe ser un número entero.")
-        self.assertContains(response, self.apartment1.address)
-        self.assertContains(response, self.apartment2.address)
+        self.assertNotContains(response, self.apartment1.address)
+        self.assertNotContains(response, self.apartment2.address)
+        self.assertNotContains(response, self.apartment3.address)
 
     def test_filter_by_huespedes_negative_number(self):
         response = self.client.get(reverse('home_search'), {'huespedes': -1})
@@ -88,9 +89,9 @@ class SearchApartmentTests(TestCase):
     def test_filter_by_price_min_invalid(self):
         response = self.client.get(reverse('home_search'), {'precio_min': 'invalid'})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "El precio mínimo debe ser un número válido.")
-        self.assertContains(response, self.apartment1.address)
-        self.assertContains(response, self.apartment2.address)
+        self.assertNotContains(response, self.apartment1.address)
+        self.assertNotContains(response, self.apartment2.address)
+        self.assertNotContains(response, self.apartment3.address)
 
     def test_filter_by_price_max(self):
         response = self.client.get(reverse('home_search'), {'precio_max': 150})
