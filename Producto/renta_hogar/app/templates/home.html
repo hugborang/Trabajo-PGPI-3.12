@@ -39,9 +39,11 @@
             </div>
             
         </form>
-        {% if error_message %}
-                <p class="error-message">{{ error_message }}</p>
-            {% endif %}
+        {% if error_messages %}
+            {% for message in error_messages %}
+                <p class="error-message">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div class="resultados">

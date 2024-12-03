@@ -37,6 +37,11 @@
                 <button type="submit" class="btn-buscar" style="margin-top: 25px;">Buscar</button>
             </div>
         </form>
+        {% if error_messages %}
+            {% for message in error_messages %}
+                <p class="error-message">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div class="resultados">
