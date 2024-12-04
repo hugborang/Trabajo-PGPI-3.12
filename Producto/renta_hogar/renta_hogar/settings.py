@@ -15,7 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOGOUT_REDIRECT_URL = '/'  # Redirigir a la página principal después de cerrar sesión
+LOGOUT_REDIRECT_URL = '/home/search'  # Redirigir a la página principal después de cerrar sesión
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-842(&gb3(ud)pbxo*z$w*92f2z*9uud@mo%cn(bn^%nrc*x-zk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rentahogar.onrender.com', 'localhost', '127.0.0.1']
 
 # Duración de la sesión (1 hora en este caso)
 SESSION_COOKIE_AGE = 3600  # Tiempo en segundos
@@ -44,6 +44,10 @@ CSRF_USE_SESSIONS = False
 # En desarrollo, mantener esto en False
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://rentahogar.onrender.com'  # Dominios confiables para solicitudes seguras
+]
 
 # Application definition
 
@@ -161,7 +165,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rentahogarenterprise@gmail.com'
 EMAIL_HOST_PASSWORD = 'rlot qyua uqwx fdpb'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 STRIPE_PUBLIC_KEY = 'pk_test_51QL8Px4D4pmiqiJUMeUDdknLXOb4BfD5Jw6yXej4EelaVwNnvgtazYvzzwrRphGPFNpdaCrC1RRHzE5vrx6eOPco00Vn1FfbqA'
 STRIPE_SECRET_KEY = 'sk_test_51QL8Px4D4pmiqiJUtneJyqbhulvAmbKHbhv7LIAm2uAp1UEA5dzlOR8XsONB6D4bOlECceGxRV2s4spUejX5t6CZ00566A4GQx'

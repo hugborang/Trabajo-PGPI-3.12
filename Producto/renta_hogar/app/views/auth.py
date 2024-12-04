@@ -40,9 +40,9 @@ def user_login(request):
             login(request, user)
 
             if user.role == 'customer':
-                return redirect('/customer_menu')  
+                return redirect('customer_menu')  
             elif user.role == 'owner':
-                return redirect('/owner_menu')  
+                return redirect('owner_menu')  
 
     else:
         form = EmailAuthenticationForm()
@@ -56,9 +56,9 @@ def menu(request):
     user_role = request.user.role  # 'role' puede ser 'customer' o 'owner'
     
     if user_role == 'customer':
-        return redirect('/customer_menu')
+        return redirect('customer_menu')
     elif user_role == 'owner':
-        return redirect('/owner_menu')
+        return redirect('owner_menu')
 
 
 @login_required

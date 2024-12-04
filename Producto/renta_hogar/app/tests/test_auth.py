@@ -79,6 +79,15 @@ class AuthViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/')  
 
+    def test_login_view_invalid_credentials(self):
+        data = {
+            'email': 'nonexistent@example.com',
+            'password': 'wrongpassword',
+        }
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'auth/login.html')
+
     # Tests de la vista de delete_account
     def test_user_delete_account_view(self):
         self.client.login(email='testuser@email.com', password='testpassword123')  
