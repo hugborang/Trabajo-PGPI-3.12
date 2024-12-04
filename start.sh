@@ -11,4 +11,4 @@ python manage.py migrate
 python manage.py loaddata populate_data.json
 
 # Iniciar el servidor Django
-python manage.py runserver
+python manage.py runserver 0.0.0.0:$PORT
