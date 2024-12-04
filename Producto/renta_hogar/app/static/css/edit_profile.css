@@ -1,6 +1,6 @@
 .content-edit-profile {
     background-color: #76a1d6;
-    padding: 30px;
+    padding: 25px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
@@ -120,3 +120,26 @@
     box-shadow: 0 0 5px rgba(170, 170, 170, 0.5); /* Sombra de enfoque */
 }
 
+/* Estilos para los mensajes de error */
+.error-list {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: #ffe6e6; /* Fondo suave en rojo */
+    border-left: 4px solid #ff4d4d; /* Barra de énfasis */
+    border-radius: 4px;
+    color: #b30000; /* Texto en rojo oscuro */
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.error {
+    color: #b30000; /* Texto en rojo oscuro */
+    font-weight: bold;
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    margin-left: 1rem;
+    display: list-item; /* Para que se alinee con los puntos de la lista */
+    list-style: circle; /* Cambia el estilo de los puntos */
+}

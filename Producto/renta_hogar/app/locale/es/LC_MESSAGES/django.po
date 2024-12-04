@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+#. Translators: Error message for short password
+msgid "This password is too short. It must contain at least 8 characters."
+msgstr "Esta contraseña es demasiado corta. Debe contener al menos 8 caracteres."
+
+#. Translators: Error message for common password
+msgid "This password is too common."
+msgstr "Esta contraseña es demasiado común."
+
+#. Translators: Error message for numeric password
+msgid "This password is entirely numeric."
+msgstr "Esta contraseña es completamente numérica."

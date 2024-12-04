@@ -8,35 +8,54 @@
 {% endblock %}
 
 {% block contenido %}
-
-<div class="add-apartment-container">
+{% if edit_mode %}
+    <div class="add-apartment-container" style="margin-top: 60vh;">
+{% else %}
+    <div class="add-apartment-container" style="margin-top: 40vh;">
+{% endif %}
     <form class="add-apartment-form" method="post" enctype="multipart/form-data">
-        <h2>{{ edit_mode|yesno:"Editar Apartamento,Añadir Apartamento" }}</h2>
+        <h2>{{ edit_mode|yesno:"Editar apartamento,Añadir apartamento" }}</h2>
         {% csrf_token %}
-        
-        {% if form.errors %}
-            <ul class="errorlist">
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
+ 
+        <label for="address">Dirección del apartamento:</label>
+        {{ form.address }}
+        {% if form.address.errors %}
+            <ul class="error-list">
+                {% for error in form.address.errors %}
+                    <li class="error">{{ error }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
 
-
-
-        <label for="address">Dirección del apartamento:</label>
-        {{ form.address }}
-
         <label for="guest_count">Cantidad de huépedes:</label>
         {{ form.guest_count }}
+        {% if form.guest_count.errors %}
+            <ul class="error-list">
+                {% for error in form.guest_count.errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <label for="price">Precio por noche:</label>
         {{ form.price }}
+        {% if form.price.errors %}
+            <ul class="error-list">
+                {% for error in form.price.errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        <label for="description">Descripción del Apartamento:</label>
+        <label for="description">Descripción del apartamento:</label>
         {{ form.description }}
+        {% if form.description.errors %}
+            <ul class="error-list">
+                {% for error in form.description.errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <input type="hidden" id="availabilityField" name="is_visible" value="True">
 
@@ -46,23 +65,27 @@
             <button type="button" id="availabilityButton" class="btn btn-yes" name="is_visible" value="True" onclick="toggleAvailability()">Sí</button>
         </div>
 
-        
-        {% if edit_mode and apartment.photos.exists %}
-            <h3>Fotos existentes</h3>
+        {% if edit_mode and apartment.photos.exists %}   
+            <h3>Foto actual:</h3>
             <ul>
                 {% for photo in apartment.photos.all %}
                     <li>
-                        <input type="checkbox" name="existing_photos" value="{{ photo.id }}" checked>
-                        <img src="{{ photo.photo.url }}" alt="Foto del apartamento" style="max-width: 100px; margin: 10px 0;">
+                        <img src="{{ photo.photo.url }}" alt="Foto del apartamento" style="max-width: 100px; margin: 10px 0; margin-right: 50;">
                     </li>
                 {% endfor %}
             </ul>
         {% endif %}
         
-        <h3>{% if edit_mode %}Añadir Nuevas Fotos{% else %}Subir Fotos del Apartamento{% endif %}</h3>
-        <label for="photos">Fotos del Apartamento:</label>
-        <input type="file" name="photos" multiple accept=".jpg,.jpeg,.png,.gif">  
-        
+        <h3>{% if edit_mode %}Cambiar foto del apartamento{% else %}Subir foto del apartamento{% endif %}</h3>
+        <label for="photos">Foto del apartamento:</label>
+        <input type="file" name="photos" accept=".jpg,.jpeg,.png,.gif">  
+        {% if photo_errors %}
+            <ul class="error-list">
+                {% for error in photo_errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <button type="submit">{{ edit_mode|yesno:"Guardar Cambios,Guardar Apartamento" }} </button>
     </form>
 

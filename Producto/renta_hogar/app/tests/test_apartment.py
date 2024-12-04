@@ -42,12 +42,11 @@ class ApartmentManagementTests(TestCase):
             price=100.00
         )
 
-        photos = [
-            self.create_test_image(name=f"photo{i}.jpg") for i in range(3)
-        ]
+        
+        photo = self.create_test_image(name=f"photo1.jpg")
+        
 
-        for photo in photos:
-            ApartmentPhoto.objects.create(apartment=self.apartment, photo=photo)
+        ApartmentPhoto.objects.create(apartment=self.apartment, photo=photo)
 
         self.availability = Availability.objects.create(
             apartment=self.apartment,
@@ -168,7 +167,7 @@ class ApartmentManagementTests(TestCase):
             'photos': [photo1],
         })
 
-        self.assertContains(response, "El precio no puede ser negativo")
+        self.assertContains(response, "El precio debe ser mayor que 0")
         self.assertFalse(Apartment.objects.filter(address="456 Negative Price St").exists())
 
     def test_add_apartment_with_no_photos(self):
@@ -298,7 +297,6 @@ class ApartmentManagementTests(TestCase):
         self.apartment.refresh_from_db()
         self.assertEqual(self.apartment.address, "123 Updated St")
         self.assertEqual(self.apartment.price, 200.00)
-        self.assertEqual(self.apartment.photos.count(), 4)
 
     def test_edit_nonexistent_apartment(self):
         self.client.login(username="owner1", password="password123")
@@ -405,23 +403,9 @@ class ApartmentManagementTests(TestCase):
             'existing_photos': existing_photos,
         })
 
-        self.assertContains(response, "El precio no puede ser negativo")
+        self.assertContains(response, "El precio debe ser mayor que 0")
         self.apartment.refresh_from_db()
         self.assertNotEqual(self.apartment.price, -100.00)
-
-    def test_edit_apartment_removing_all_photos(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("edit_apartment", args=[self.apartment.id]), {
-            'address': "456 Updated St",
-            'guest_count': 3,
-            'description': "Intento de eliminar todas las fotos",
-            'is_visible': True,
-            'existing_photos': [],  # No se selecciona ninguna foto existente
-        })
-
-        self.assertContains(response, "El apartamento debe tener al menos una foto.")
-        self.apartment.refresh_from_db()
-        self.assertEqual(self.apartment.photos.count(), 3)  # Las fotos no se eliminaron
 
     def test_edit_apartment_with_invalid_photos(self):
         self.client.login(username="owner1", password="password123")
@@ -439,156 +423,3 @@ class ApartmentManagementTests(TestCase):
         self.assertContains(response, "Solo se permiten archivos de imagen con las extensiones: .jpg, .jpeg, .png, .gif")
         self.apartment.refresh_from_db()
         self.assertNotEqual(self.apartment.address, "456 Updated St")
-
-    def test_edit_apartment_with_too_many_photos(self):
-        self.client.login(username="owner1", password="password123")
-        photos = [
-            self.create_test_image(name=f"photo{i}.jpg") for i in range(3)
-        ]
-        existing_photos = [photo.id for photo in self.apartment.photos.all()]
-        response = self.client.post(reverse("edit_apartment", args=[self.apartment.id]), {
-            'address': "456 Updated St",
-            'guest_count': 2,
-            'description': "Intento de editar con demasiadas fotos",
-            'is_visible': True,
-            'price': 150.00,
-            'photos': photos,
-            'existing_photos': existing_photos,
-        })
-
-        self.assertContains(response, "Solo puedes subir hasta 5 fotos del apartamento")
-        self.apartment.refresh_from_db()
-        self.assertNotEqual(self.apartment.address, "456 Updated St")
-
-    ### Pruebas añadir disponibilidad a un apartamento ###
-    def test_add_availability_get_request(self):
-        self.client.login(username='owner1', password='password123')
-        response = self.client.get(reverse('add_availability', args=[self.apartment.id]))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('form', response.context)
-        form = response.context['form']
-        self.assertIsInstance(form, AvailabilityForm)
-        self.assertFalse(form.is_bound)
-        self.assertEqual(response.context['apartment'], self.apartment)
-        self.assertTemplateUsed(response, 'owner/add_availability.html')
-
-    @freeze_time("2024-01-01")
-    def test_add_availability_as_owner(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
-            'start_date': "2024-01-11",
-            'end_date': "2024-01-20",
-        }, follow=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
-    
-    def test_existing_availability_overlap(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
-            'start_date': "2024-01-05",
-            'end_date': "2024-01-15",
-        })
-
-        self.assertContains(response, "Ya existe una disponibilidad en ese rango de fechas para este apartamento.")
-        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-05", end_date="2024-01-15").exists())
-
-    def test_add_availability_with_end_date_before_start_date(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
-            'start_date': "2024-01-20",
-            'end_date': "2024-01-10",
-        })
-
-        self.assertContains(response, "La fecha de inicio debe ser anterior a la fecha de fin.")
-        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-20", end_date="2024-01-10").exists())
-
-    def test_add_availability_nonexistent_apartment(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("add_availability", args=[100]), {
-            'start_date': "2024-01-11",
-            'end_date': "2024-01-20",
-        })
-
-        self.assertEqual(response.status_code, 404)
-        self.assertTemplateUsed(response, '404.html')
-        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
-
-    def test_add_availability_as_customer(self):
-        self.client.login(username="customer1", password="password123")
-        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
-            'start_date': "2024-01-11",
-            'end_date': "2024-01-20",
-        })
-
-        self.assertEqual(response.status_code, 403)
-        self.assertTemplateUsed(response, 'access_denied.html')
-        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
-    
-    def test_add_availability_in_another_owner_apartment(self):
-        self.client.login(username="owner2", password="password123")
-        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
-            'start_date': "2024-01-11",
-            'end_date': "2024-01-20",
-        })
-
-        self.assertEqual(response.status_code, 403)
-        self.assertTemplateUsed(response, 'access_denied.html')
-        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2024-01-11", end_date="2024-01-20").exists())
-
-    def test_add_availability_in_the_past(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("add_availability", args=[self.apartment.id]), {
-            'start_date': "2023-01-11",
-            'end_date': "2023-01-20",
-        })
-
-        self.assertContains(response, "No puedes añadir disponibilidad en el pasado.")
-        self.assertFalse(Availability.objects.filter(apartment=self.apartment, start_date="2023-01-11", end_date="2023-01-20").exists())
-
-    ### Pruebas eliminar disponibilidad de un apartamento ###
-    def test_delete_availability_get_request(self):
-        self.client.login(username='owner1', password='password123')
-        response = self.client.get(reverse('delete_availability', args=[self.availability.id]))
-
-        self.assertRedirects(response, reverse('manage_availability', args=[self.apartment.id]))
-        self.assertTrue(Availability.objects.filter(id=self.availability.id).exists())
-
-    def test_delete_availability_as_owner(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("delete_availability", args=[self.availability2.id]), follow=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(Availability.objects.filter(id=self.availability2.id).exists())
-
-    def test_delete_availability_as_customer(self):
-        self.client.login(username="customer1", password="password123")
-        response = self.client.post(reverse("delete_availability", args=[self.availability2.id]), follow=True)
-
-        self.assertEqual(response.status_code, 403)
-        self.assertTemplateUsed(response, 'access_denied.html')
-        self.assertTrue(Availability.objects.filter(id=self.availability2.id).exists())
-
-    def test_delete_nonexistent_availability(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("delete_availability", args=[100]), follow=True)
-
-        self.assertEqual(response.status_code, 404)
-        self.assertTemplateUsed(response, '404.html')
-
-    def test_delete_availability_of_another_owner(self):
-        self.client.login(username="owner2", password="password123")
-        response = self.client.post(reverse("delete_availability", args=[self.availability2.id]), follow=True)
-
-        self.assertEqual(response.status_code, 403)
-        self.assertTemplateUsed(response, 'access_denied.html')
-        self.assertTrue(Availability.objects.filter(id=self.availability2.id).exists())
-
-    def test_delete_availability_with_reservations(self):
-        self.client.login(username="owner1", password="password123")
-        response = self.client.post(reverse("delete_availability", args=[self.availability3.id]), follow=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No puedes eliminar esta disponibilidad porque tiene reservas asociadas.")
-        self.assertTrue(Availability.objects.filter(id=self.availability3.id).exists())

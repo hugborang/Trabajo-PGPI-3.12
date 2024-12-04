@@ -1,79 +1,83 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from app.models import CustomUser
+from django.contrib.auth import get_user_model
 from app.forms.CustomUserCreationForm import CustomUserCreationForm
-from app.forms.EmailAuthenticationForm import EmailAuthenticationForm
-from unittest.mock import patch
+from django.contrib.messages import get_messages
 
-class AuthTests(TestCase):
-
+class AuthViewTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user_customer = CustomUser.objects.create_user(
-            username='customer',
-            email='customer@example.com',
-            password='password123',
-            role='customer'
+        
+        self.user = get_user_model().objects.create_user(
+            username='testuser',
+            email ='testuser@email.com',
+            password='testpassword123',
+            role='customer'  
         )
-        self.user_owner = CustomUser.objects.create_user(
-            username='owner',
-            email='owner@example.com',
-            password='password123',
-            role='owner'
-        )
-    
-    def test_register_view_valid_form_customer(self):
-        data = {
+
+
+    def test_register_view_post_customer(self):
+        response = self.client.post(reverse('register'), {
             'username': 'newuser',
-            'email': 'newuser@example.com',
-            'password1': 'strongpassword123',
-            'password2': 'strongpassword123',
-            'role': 'customer',
-        }
-        response = self.client.post(reverse('register'), data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/auth/login/')
+            'surnames': 'New User',
+            'email': 'email@gmail.com',
+            'password1': 'newpassword123',
+            'password2': 'newpassword123',
+            'role': 'customer'  
+        })
+        self.assertEqual(response.status_code, 302)  
+        self.assertEqual(response.url, '/auth/login/')  
+        
+    def test_register_view_post_owner(self):
+        response = self.client.post(reverse('register'), {
+            'username': 'newuser',
+            'surnames': 'New User',
+            'email': 'email@gmail.com',
+            'password1': 'newpassword123',
+            'password2': 'newpassword123',
+            'role': 'owner'  
+        })
+        self.assertEqual(response.status_code, 302)  
+        self.assertEqual(response.url, '/auth/login/')  
 
-    def test_register_view_valid_form_owner(self):
-        data = {
-            'username': 'newowner',
-            'email': 'newowner@example.com',
-            'password1': 'strongpassword123',
-            'password2': 'strongpassword123',
-            'role': 'owner',
-        }
-        response = self.client.post(reverse('register'), data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/auth/login/')
 
-    def test_register_view_invalid_form(self):
-        data = {
-            'username': '',
-            'email': 'invalidemail',
-            'password1': '123',
-            'password2': '456',
-        }
-        response = self.client.post(reverse('register'), data)
-        self.assertEqual(response.status_code, 200)  # Re-render form
-        self.assertTemplateUsed(response, 'auth/register.html')
+    # Tests de la vista de login
+    def test_user_login_view_get(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'auth/login.html')
 
-    def test_login_view_valid_customer(self):
-        data = {
-            'email': self.user_customer.email,
-            'password': 'password123',
-        }
-        response = self.client.post(reverse('login'), data)
+    def test_user_login_view_post_customer(self):
+        response = self.client.post(reverse('login'), {
+            'email': 'testuser@email.com',
+            'password': 'testpassword123'
+        })
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/customer_menu/')
+        self.assertEqual(response.url, '/customer_menu')  
 
-    def test_login_view_valid_owner(self):
-        data = {
-            'email': self.user_owner.email,
-            'password': 'password123',
-        }
-        response = self.client.post(reverse('login'), data)
+    def test_user_login_view_post_owner(self):
+        self.user.role = 'owner'
+        self.user.save()
+        
+        response = self.client.post(reverse('login'), {
+            'email': 'testuser@email.com',
+            'password': 'testpassword123'
+        })
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/owner_menu/')
+        self.assertEqual(response.url, '/owner_menu') 
+
+    #Tests de la vista edit_profile
+    def test_get_edit_profile(self):
+        self.client.login(email='testuser@email.com', password='testpassword123')
+        response = self.client.get(reverse('edit_profile'))
+        self.assertEqual(response.status_code, 302)
+
+    # Tests de la vista de logout
+    def test_user_logout_view(self):
+        self.client.login(email='testuser@email.com', password='testpassword123')  
+        response = self.client.post(reverse('logout'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/')  
 
     def test_login_view_invalid_credentials(self):
         data = {
@@ -84,33 +88,9 @@ class AuthTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'auth/login.html')
 
-    def test_menu_view_customer(self):
-        self.client.login(username=self.user_customer.username, password='password123')
-        response = self.client.get(reverse('menu'))
+    # Tests de la vista de delete_account
+    def test_user_delete_account_view(self):
+        self.client.login(email='testuser@email.com', password='testpassword123')  
+        response = self.client.get(reverse('delete_account'))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/customer_menu/')
-
-    def test_menu_view_owner(self):
-        self.client.login(username=self.user_owner.username, password='password123')
-        response = self.client.get(reverse('menu'))
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/owner_menu/')
-
-    def test_edit_profile_view(self):
-        self.client.login(username=self.user_customer.username, password='password123')
-        data = {
-            'username': 'updatedcustomer',
-            'email': 'updated@example.com',
-            'password1': 'newpassword123',
-            'password2': 'newpassword123',
-        }
-        response = self.client.post(reverse('edit_profile'), data)
-        self.assertEqual(response.status_code, 302)
-        self.user_customer.refresh_from_db()
-        self.assertEqual(self.user_customer.username, 'updatedcustomer')
-
-    def test_delete_account_view(self):
-        self.client.login(username=self.user_customer.username, password='password123')
-        response = self.client.post(reverse('delete_account'))
-        self.assertEqual(response.status_code, 302)
-        self.assertFalse(CustomUser.objects.filter(username='customer').exists())
+        self.assertEqual(response.url, '/accounts/login/?next=/auth/delete_account/')

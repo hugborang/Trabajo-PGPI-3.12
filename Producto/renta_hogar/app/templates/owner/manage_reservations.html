@@ -23,7 +23,7 @@
                 <p><strong>Capacidad:</strong> {{ reservation.apartment.guest_count }} huéspedes</p>
                 <p><strong>Fecha de inicio:</strong> {{ reservation.start_date }}</p>
                 <p><strong>Fecha de fin:</strong> {{ reservation.end_date }}</p>
-                <p><strong>Precio:</strong> ${{ reservation.total_price }}</p>
+                <p><strong>Precio:</strong> {{ reservation.total_price }}€</p>
 
             </div>
             {% if reservation.can_cancel == True %}

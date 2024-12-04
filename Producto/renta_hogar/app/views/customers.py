@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from app.models import Reservation
 from app.utils.decorator import requires_role
 from django.utils.dateparse import parse_date
+from django.utils.timezone import now
+from django.db.models import Q
 
 @login_required
 @requires_role('customer')
@@ -18,28 +20,65 @@ def customer_menu(request):
     fecha_fin = request.GET.get('fecha_fin')
 
     apartments = Apartment.objects.filter(is_visible=True)  # Filtrar solo apartamentos visibles
+    error_messages = []
+
+    if huespedes:
+        try:
+            huespedes = int(huespedes)
+            if huespedes < 1:
+                error_messages.append("El número de huéspedes debe ser mayor a 0.")
+            else:
+                apartments = apartments.filter(guest_count=huespedes)
+        except ValueError:
+            error_messages.append("El número de huéspedes debe ser un número entero.")
 
     if price_min:
-        price_min = float(price_min)
-        apartments = apartments.filter(price__gte=price_min, is_visible=True)
+        try:
+            price_min = float(price_min)
+            if price_min >0:
+                apartments = apartments.filter(price__gte=price_min)
+            else:
+                error_messages.append("El precio mínimo debe ser mayor a 0.")
+        except ValueError:
+            error_messages.append("El precio mínimo debe ser un número válido.")
+
     if price_max:
-        price_max = float(price_max)
-        apartments = apartments.filter(price__lte=price_max, is_visible=True)
-    if huespedes:
-        huespedes = int(huespedes)
-        apartments = apartments.filter(guest_count=huespedes, is_visible=True)
-    if fecha_inicio and fecha_fin:
-        fecha_inicio = parse_date(fecha_inicio)
-        fecha_fin = parse_date(fecha_fin)
-        apartments = apartments.filter(
-        availabilities__start_date__lte=fecha_inicio,
-        availabilities__end_date__gte=fecha_fin,
-        is_visible=True
-        )
+        try:
+            price_max = float(price_max)
+            if price_max > 0:
+                apartments = apartments.filter(price__lte=price_max)
+            else:
+                error_messages.append("El precio máximo debe ser mayor a 0.")
+        except ValueError:
+            error_messages.append("El precio máximo debe ser un número válido.")
+
+    if price_min and price_max and price_max < price_min:
+        error_messages.append("El precio máximo no puede ser menor al precio mínimo.")
+
+    if fecha_inicio and fecha_fin:           
+        try:
+            start_date = parse_date(fecha_inicio)
+            end_date = parse_date(fecha_fin)
+
+            if start_date < now().date() or end_date < now().date():
+                error_messages.append("Las fechas no pueden ser anteriores a la fecha actual.")
+            elif start_date > end_date:
+                error_messages.append("La fecha de entrada no puede ser posterior a la fecha de salida.")   
+            else:
+                apartments = apartments.filter(
+                    Q(availabilities__start_date__lte=start_date) &
+                    Q(availabilities__end_date__gte=end_date)
+                )
+        except ValueError:
+            error_messages.append("Las fechas deben ser válidas.")
+
+    if error_messages:
+        apartments = Apartment.objects.none()
 
     return render(request, 'customer/customer_menu.html', {
         'apartments': apartments.distinct(),
-        'request': request  
+        'request': request,
+        'error_messages': error_messages
     })
 
 @login_required
@@ -54,4 +93,4 @@ def manage_reservations(request):
             r.can_cancel = False
             r.save()
             
-    return render(request, 'customer/manage_reservations.html', {'reservations': reservations})
+    return render(request, 'customer/manage_reservations.html', {'reservations': reservations, 'now': now})

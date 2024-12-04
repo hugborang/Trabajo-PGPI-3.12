@@ -24,7 +24,7 @@
                 <label for="huespedes">Número de huéspedes:</label>
                 <input type="number" id="huespedes" name="huespedes" placeholder="Ej: 4"
                     value="{{ request.GET.huespedes }}">
-                <button type="submit" class="btn-buscar" style="margin-top: 25px;">Buscar</button>
+                
             </div>
             <div class="filtro">
                 <label for="fecha_inicio">Fecha de entrada:</label>
@@ -33,15 +33,25 @@
                 <label for="fecha_fin">Fecha de salida:</label>
                 <input type="date" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
             </div>
-            <button type="button" class="boton-borrar" id="clear_filters">Borrar filtros</button>
+            <div class="filtro" style="padding-top: 7;">
+                <button type="button" class="boton-borrar" id="clear_filters">Borrar filtros</button>
+                <button type="submit" class="btn-buscar" style="margin-top: 25px;">Buscar</button>
+            </div>
+            
         </form>
-        {% if error_message %}
-                <p class="error-message">{{ error_message }}</p>
-            {% endif %}
+        {% if error_messages %}
+            {% for message in error_messages %}
+                <p class="error-message">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div class="resultados">
-        <h2>Resultados de búsqueda</h2>
+        {% if request.GET %}
+            <h2>Resultados de la búsqueda:</h2>
+        {% else %}
+            <h2>Todos los apartamentos:</h2>
+        {% endif %}
         {% if apartments %}
             <ul>
                 {% for apartment in apartments %}

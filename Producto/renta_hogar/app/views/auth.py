@@ -21,7 +21,7 @@ def register(request):
             else:
                 mensaje = "Gracias " + username+ " por registrarte en RentaHogar, como nuevo propietario, publica tus apartamentos y empieza a ganar dinero." 
                 
-            enviar_notificacion_correo("!BIENVENIDO a RentaHogar!", mensaje, form.cleaned_data['email'])
+            enviar_notificacion_correo("¡BIENVENIDO a RentaHogar!", mensaje, form.cleaned_data['email'])
             
             return redirect('/auth/login/')
 
@@ -66,8 +66,12 @@ def edit_profile(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
-            user = form.save()
-            user.set_password(form.cleaned_data['password1'])
+            user = form.save(commit=False)
+
+            password1 = form.cleaned_data.get('password1')
+            if password1:
+                user.set_password(password1)
+            
             user.save()
             update_session_auth_hash(request, user)
             if user.role == 'customer':
@@ -82,8 +86,9 @@ def edit_profile(request):
 
 @login_required
 def delete_account(request):
-    request.user.delete()
-    return redirect('/')
+    if request.method == 'POST':
+        request.user.delete()
+        return redirect('/')
 
 @login_required
 def user_logout(request):

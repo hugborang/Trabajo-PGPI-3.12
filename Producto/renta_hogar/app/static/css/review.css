@@ -9,6 +9,14 @@
     margin-top: 10%;
 }
 
+.review-container h2 {
+    margin-bottom: 50px;
+    color: #354573;;
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+}
+
 /* Estilo para el formulario */
 .review-form {
     display: flex;
@@ -170,4 +178,28 @@ textarea {
 
 .rating-stars .fa-star-o {
     color: lightgray;
+}
+
+/* Estilos para los mensajes de error */
+.error-list {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: #ffe6e6; /* Fondo suave en rojo */
+    border-left: 4px solid #ff4d4d; /* Barra de énfasis */
+    border-radius: 4px;
+    color: #b30000; /* Texto en rojo oscuro */
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.error {
+    color: #b30000; /* Texto en rojo oscuro */
+    font-weight: bold;
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    margin-left: 1rem;
+    display: list-item; /* Para que se alinee con los puntos de la lista */
+    list-style: circle; /* Cambia el estilo de los puntos */
 }
