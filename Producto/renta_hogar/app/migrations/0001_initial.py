@@ -100,7 +100,13 @@ class Migration(migrations.Migration):
                 ('apartment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='availabilities', to='app.apartment')),
             ],
             options={
-                'constraints': [models.CheckConstraint(condition=models.Q(('start_date__lt', models.F('end_date'))), name='start_date_before_end_date', violation_error_message='La fecha de inicio debe ser anterior a la fecha de fin.')],
+                'constraints': [
+    models.CheckConstraint(
+        check=models.Q(start_date__lt=models.F('end_date')),
+        name='start_date_before_end_date',
+        violation_error_message='La fecha de inicio debe ser anterior a la fecha de fin.'
+    ),
+],
             },
         ),
     ]
