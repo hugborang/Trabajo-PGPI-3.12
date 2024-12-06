@@ -53,7 +53,7 @@ class AuthViewTests(TestCase):
             'password': 'testpassword123'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/customer_menu')  
+        self.assertEqual(response.url, '/customer_menu/')  
 
     def test_user_login_view_post_owner(self):
         self.user.role = 'owner'
@@ -64,7 +64,7 @@ class AuthViewTests(TestCase):
             'password': 'testpassword123'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/owner_menu') 
+        self.assertEqual(response.url, '/owner_menu/') 
 
     #Tests de la vista edit_profile
     def test_get_edit_profile(self):
@@ -77,7 +77,7 @@ class AuthViewTests(TestCase):
         self.client.login(email='testuser@email.com', password='testpassword123')  
         response = self.client.post(reverse('logout'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')  
+        self.assertEqual(response.url, '/accounts/login/?next=/logout/')  
 
     def test_login_view_invalid_credentials(self):
         data = {
