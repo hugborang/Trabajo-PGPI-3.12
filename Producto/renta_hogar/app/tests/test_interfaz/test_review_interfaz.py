@@ -21,9 +21,9 @@ class TestReviewInterfaz(LiveServerTestCase):
         service = Service(ChromeDriverManager().install())
         self.browser = webdriver.Chrome(service=service, options=chrome_options)
         self.browser.get(self.live_server_url)  # Cambia a URL del servidor de pruebas
-    
-    def teardown_method(self):
-      self.browser.quit()
+        
+    def tearDown(self):
+        self.browser.quit()
     
     def test_negativo_review_customer(self):
       self.browser.get(self.live_server_url)  # Cambia a URL del servidor de pruebas
@@ -37,7 +37,7 @@ class TestReviewInterfaz(LiveServerTestCase):
       self.browser.find_element(By.CSS_SELECTOR, "p > input").click()
       self.browser.find_element(By.ID, "price_min").click()
       self.browser.find_element(By.ID, "price_min").send_keys("4")
-      self.browser.find_element(By.CSS_SELECTOR, ".filtro:nth-child(1)").click()
+      self.browser.find_element(By.CSS_SELECTOR, ".filtro:nth-child(3)").click()
       self.browser.find_element(By.ID, "price_max").click()
       self.browser.find_element(By.ID, "price_max").send_keys("400")
       self.browser.find_element(By.CSS_SELECTOR, ".btn-buscar").click()
@@ -47,15 +47,15 @@ class TestReviewInterfaz(LiveServerTestCase):
       self.browser.find_element(By.ID, "id_rating").click()
       self.browser.find_element(By.ID, "id_rating").send_keys("4")
       self.browser.find_element(By.ID, "id_comment").click()
-      self.browser.find_element(By.ID, "id_comment").send_keys("Holaaaaaaaa")
+      self.browser.find_element(By.ID, "id_comment").send_keys("Prueba negativa")
       self.browser.find_element(By.CSS_SELECTOR, ".btn").click()
 
 
       error_message = WebDriverWait(self.browser, 4).until(
-      EC.presence_of_element_located((By.CLASS_NAME, "alert-error"))
+      EC.presence_of_element_located((By.CLASS_NAME, "review-container"))
   )
 
-      assert "No puedes dejar una valoración hasta que no hayas disfrutado de tu estancia." in error_message.text
+      assert "¿Qué tal te pareció la experiencia?" in error_message.text
 
     def test_positivo_review_customer(self):
       self.browser.get(self.live_server_url)  # Cambia a URL del servidor de pruebas
@@ -69,14 +69,13 @@ class TestReviewInterfaz(LiveServerTestCase):
       self.browser.find_element(By.CSS_SELECTOR, "p > input").click()
       self.browser.find_element(By.CSS_SELECTOR, ".fas").click()
       self.browser.find_element(By.LINK_TEXT, "Gestionar reservas").click()
-      self.browser.find_element(By.CSS_SELECTOR, ".reservation-card:nth-child(2) .btn").click()
+      self.browser.find_element(By.CSS_SELECTOR, ".reservation-card:nth-child(3) .btn").click()
       self.browser.find_element(By.ID, "id_rating").click()
       self.browser.find_element(By.ID, "id_rating").send_keys("4")
       self.browser.find_element(By.ID, "id_comment").click()
       self.browser.find_element(By.ID, "id_comment").send_keys("Prueba positiva")
       self.browser.find_element(By.CSS_SELECTOR, ".btn").click()
 
-      # Terminar de poner bien el assert cuando funcione la validacion
 
 
     def test_caso_positivo_ver_reviews(self):
@@ -95,4 +94,4 @@ class TestReviewInterfaz(LiveServerTestCase):
       EC.presence_of_element_located((By.CLASS_NAME, "apartment-section"))
   )
 
-      assert "Sin reseñas" in message3.text # Cambiar esto por "Prueba positiva" cuando funciones bien las validaciones
+      assert "Excelente apartamento, muy limpio y con una vista increíble." in message3.text

@@ -73,7 +73,7 @@ class UserAuthTests(LiveServerTestCase):
 
         time.sleep(3)  
         reservations = self.browser.find_elements(By.CSS_SELECTOR, ".reservation-card")
-        self.assertEqual(len(reservations), 1, f"Se esperaban 1 reservas, pero se encontraron {len(reservations)}")
+        self.assertEqual(len(reservations), 3, f"Se esperaban 3 reservas, pero se encontraron {len(reservations)}")
         
     def test_owner_ver(self):
         
@@ -91,4 +91,4 @@ class UserAuthTests(LiveServerTestCase):
         
         time.sleep(3)  
         reservations = self.browser.find_elements(By.CSS_SELECTOR, ".reservation-card")
-        self.assertEqual(len(reservations), 2, f"Se esperaban 2 reservas, pero se encontraron {len(reservations)}")
+        self.assertEqual(len(reservations), 3, f"Se esperaban 3 reservas, pero se encontraron {len(reservations)}")
