@@ -7,3 +7,4 @@ Pillow==11.0.0
 selenium==4.27.1
 stripe==11.3.0
 webdriver_manager==4.0.2
+freezegun==1.5.1

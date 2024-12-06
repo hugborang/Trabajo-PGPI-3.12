@@ -245,9 +245,8 @@ class ApartmentManagementTests(TestCase):
         self.client.login(username="owner1", password="password123")
         
         response = self.client.post(reverse("delete_apartment", args=[self.apartment.id]), follow=True)
-
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Este apartamento no puede ser eliminado porque tiene reservas asociadas.")
+        self.assertContains(response, "El apartamento seleccionado no puede ser eliminado porque tiene reservas asociadas.")
         self.assertTrue(Apartment.objects.filter(id=self.apartment.id).exists())
 
     def test_delete_nonexistent_apartment(self):
