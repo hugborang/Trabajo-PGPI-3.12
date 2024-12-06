@@ -62,7 +62,7 @@ class UserAuthTests(LiveServerTestCase):
         add_apartment_button.click()
 
         
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
        
         address_field = WebDriverWait(self.browser, 10).until(
@@ -92,7 +92,7 @@ class UserAuthTests(LiveServerTestCase):
         self.assertIn("/owner_menu/", self.browser.current_url)
         self.assertIn("123 New Street",self.browser.page_source)
         self.assertIn("4 huéspedes", self.browser.page_source)
-        self.assertIn("120.00 €", self.browser.page_source)
+        self.assertIn("120,00 €", self.browser.page_source)
 
     def test_createApartment_largeAddress(self):
         self.browser.get(self.live_server_url)
@@ -130,7 +130,7 @@ class UserAuthTests(LiveServerTestCase):
         add_apartment_button.click()
 
         
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
        
         address_field = WebDriverWait(self.browser, 10).until(
@@ -192,7 +192,7 @@ class UserAuthTests(LiveServerTestCase):
         )
         add_apartment_button.click()
 
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         address_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "address"))
@@ -254,7 +254,7 @@ class UserAuthTests(LiveServerTestCase):
         )
         add_apartment_button.click()
 
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         address_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "address"))
@@ -316,7 +316,7 @@ class UserAuthTests(LiveServerTestCase):
         )
         add_apartment_button.click()
 
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         address_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "address"))
@@ -378,7 +378,7 @@ class UserAuthTests(LiveServerTestCase):
         )
         add_apartment_button.click()
 
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         address_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "address"))
@@ -440,7 +440,7 @@ class UserAuthTests(LiveServerTestCase):
         )
         add_apartment_button.click()
 
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         address_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "address"))
@@ -503,7 +503,7 @@ class UserAuthTests(LiveServerTestCase):
         )
         add_apartment_button.click()
 
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         address_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "address"))
@@ -567,7 +567,7 @@ class UserAuthTests(LiveServerTestCase):
         add_apartment_button.click()
 
         
-        self.assertIn("Añadir Apartamento", self.browser.page_source)
+        self.assertIn("Añadir apartamento", self.browser.page_source)
 
         buttons = self.browser.find_elements(By.CSS_SELECTOR, "button[type='submit']")
         for button in buttons:
@@ -612,7 +612,7 @@ class UserAuthTests(LiveServerTestCase):
         edit_apartment_button.click()
 
 
-        self.assertIn("Editar Apartamento", self.browser.page_source)
+        self.assertIn("Editar apartamento", self.browser.page_source)
 
 
         address_field = WebDriverWait(self.browser, 10).until(
@@ -645,7 +645,7 @@ class UserAuthTests(LiveServerTestCase):
                 break
         self.assertIn("/owner_menu/", self.browser.current_url)
         self.assertIn("456 Updated Street", self.browser.page_source)
-        self.assertIn("150.00 €", self.browser.page_source)
+        self.assertIn("150,00 €", self.browser.page_source)
         self.assertIn("6 huéspedes", self.browser.page_source)
 
     def test_deleteApartment(self):

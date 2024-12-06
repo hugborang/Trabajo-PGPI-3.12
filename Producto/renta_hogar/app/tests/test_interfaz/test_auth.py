@@ -145,7 +145,7 @@ class UserAuthTests(LiveServerTestCase):
 
         edit_profile.click()
         
-        self.assertIn("Edita tus datos", self.browser.page_source)
+        self.assertIn("Mis datos", self.browser.page_source)
 
         username_field = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
@@ -275,17 +275,17 @@ class UserAuthTests(LiveServerTestCase):
 
             edit_profile.click()
             
-            self.assertIn("Edita tus datos", self.browser.page_source)
+            self.assertIn("Mis datos", self.browser.page_source)
             
-            delete_account_button = WebDriverWait(self.browser, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn.btn-danger[type='button']"))
-            )
-            delete_account_button.click()
+            buttons = self.browser.find_elements(By.CSS_SELECTOR, "button[type='submit']")        
+            for button in buttons:
+             if button.text.strip() == "Eliminar cuenta":
+                button.click()
+                break 
             
-            confirm_delete_button = WebDriverWait(self.browser, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn.btn-danger[type='submit']"))
-            )
-            confirm_delete_button.click()
+            # Maneja el cuadro de diálogo de confirmación
+            alert = WebDriverWait(self.browser, 10).until(EC.alert_is_present())
+            alert.accept()
 
             
             user_icon = WebDriverWait(self.browser, 10).until(
